@@ -1,0 +1,1634 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PaintLead Pro - Prequalified Painter Contractor Leads in Greenville</title>
+  
+  <!-- Google Fonts: Oswald for high-impact headers, Plus Jakarta Sans for body text -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            oswald: ['"Oswald"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              dark: '#020712',
+              navy: '#071126',
+              accent: '#FFC700',
+              accentHover: '#F5B000',
+              lightBlue: '#0F2547',
+              border: 'rgba(255, 255, 255, 0.08)',
+              glassBg: 'rgba(7, 17, 38, 0.65)',
+              glassBgLight: 'rgba(255, 255, 255, 0.04)'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Premium Futuristic Dot Matrix Grid system matching the reference screenshot */
+    body {
+      background-color: #020712;
+      background-image: 
+        radial-gradient(rgba(255, 255, 255, 0.05) 1.2px, transparent 1.2px);
+      background-size: 24px 24px;
+      background-attachment: fixed;
+    }
+
+    /* Premium Glassmorphism Design Tokens */
+    .glass-navbar {
+      background: rgba(2, 7, 18, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    
+    .glass-card {
+      background: rgba(7, 17, 38, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    }
+
+    .glass-card-light {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .glass-card-accent {
+      background: rgba(255, 199, 0, 0.04);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 199, 0, 0.15);
+    }
+
+    .glass-input {
+      background: rgba(2, 7, 18, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(4px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .glass-input:focus {
+      border-color: #FFC700;
+      box-shadow: 0 0 15px rgba(255, 199, 0, 0.2);
+      background: rgba(2, 7, 18, 0.75);
+    }
+
+    /* Elegant Paint Splat Linear Background Stroke Clip */
+    .paint-header-stroke {
+      background: linear-gradient(135deg, #FFC700 0%, #FFA800 100%);
+      clip-path: polygon(2% 0%, 98% 3%, 100% 90%, 95% 98%, 3% 92%, 0% 15%);
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+
+    /* Custom Webkit scrollbar matching styling theme */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #020712;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(255, 199, 0, 0.5);
+      border-radius: 3px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #FFC700;
+    }
+
+    /* Premium Ambient Shimmering Background Orbs that shift behind the dot grid */
+    .glow-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(130px);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.16;
+      transition: all 2s ease-in-out;
+    }
+
+    /* Shifting Background Orbs Keyframe Animations */
+    @keyframes drift-slow-1 {
+      0%, 100% { transform: translate(0px, 0px) scale(1); }
+      33% { transform: translate(60px, -80px) scale(1.2); }
+      66% { transform: translate(-40px, 60px) scale(0.85); }
+    }
+    @keyframes drift-slow-2 {
+      0%, 100% { transform: translate(0px, 0px) scale(1.1); }
+      50% { transform: translate(-70px, 70px) scale(0.9); }
+    }
+    @keyframes drift-slow-3 {
+      0%, 100% { transform: translate(0px, 0px) scale(1); }
+      50% { transform: translate(80px, -60px) scale(1.15); }
+    }
+
+    .animate-drift-1 { animation: drift-slow-1 20s infinite ease-in-out; }
+    .animate-drift-2 { animation: drift-slow-2 24s infinite ease-in-out; }
+    .animate-drift-3 { animation: drift-slow-3 22s infinite ease-in-out; }
+
+    /* Elegant Sweeping Card Shimmer Glare */
+    .shimmer-card {
+      position: relative;
+      overflow: hidden;
+    }
+    .shimmer-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -150%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.1) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      transform: skewX(-25deg);
+      pointer-events: none;
+      z-index: 20;
+    }
+
+    /* Periodic continuous shimmer sweep for key CTAs and featured cards */
+    .shimmer-loop::before {
+      animation: sweep-shimmer 7s infinite ease-in-out;
+    }
+    /* Fast trigger swipe on manual hover */
+    .shimmer-card:hover::before {
+      animation: sweep-shimmer-fast 1.2s ease-out forwards;
+    }
+
+    @keyframes sweep-shimmer {
+      0% { left: -150%; }
+      15%, 100% { left: 150%; }
+    }
+    @keyframes sweep-shimmer-fast {
+      0% { left: -150%; }
+      100% { left: 150%; }
+    }
+
+    /* Sleek CTA Button Gleam Animation */
+    .btn-shine-effect {
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-shine-effect::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -60%;
+      width: 30%;
+      height: 200%;
+      background: rgba(255, 255, 255, 0.25);
+      transform: rotate(30deg);
+      transition: none;
+    }
+    .btn-shine-effect:hover::after {
+      left: 130%;
+      transition: all 0.7s ease-in-out;
+    }
+
+    @keyframes pulse-slow {
+      0%, 100% { transform: scale(1); opacity: 0.95; }
+      50% { transform: scale(1.02); opacity: 1; box-shadow: 0 0 30px rgba(255, 199, 0, 0.15); }
+    }
+    .pulse-glow {
+      animation: pulse-slow 4s infinite ease-in-out;
+    }
+
+    /* High-Performance Smooth Scroll-Reveal Effects */
+    .scroll-reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+    .scroll-reveal.reveal-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body class="text-white font-sans antialiased selection:bg-brand-accent selection:text-brand-dark overflow-x-hidden relative">
+
+  <!-- Background Ambient Shimmering Glow Orbs (Rendered under the dot matrix background) -->
+  <div class="glow-orb w-[450px] h-[450px] bg-blue-600 top-12 -left-20 animate-drift-1"></div>
+  <div class="glow-orb w-[600px] h-[600px] bg-yellow-500 top-1/4 right-0 opacity-[0.06] animate-drift-2"></div>
+  <div class="glow-orb w-[450px] h-[450px] bg-emerald-500 top-2/3 left-10 animate-drift-3"></div>
+  <div class="glow-orb w-[400px] h-[400px] bg-purple-600 bottom-10 right-10 animate-drift-1"></div>
+
+  <!-- Header / Navigation -->
+  <header class="sticky top-0 z-50 glass-navbar">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <!-- Logo -->
+      <a href="#" class="flex items-center gap-3 group">
+        <div class="bg-gradient-to-br from-brand-accent to-amber-500 p-2 rounded-xl text-brand-dark shadow-lg shadow-brand-accent/20 transition-all group-hover:scale-105">
+          <!-- Paint brush roller SVG icon -->
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M19 2H5c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM5 8V4h14v4H5zm12 4H7c-1.1 0-2 .9-2 2v2H3v2h2v4c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2v-4h2v-2h-2v-2c0-1.1-.9-2-2-2zm0 8H7v-4h10v4z"/>
+          </svg>
+        </div>
+        <span class="font-oswald text-2xl font-bold tracking-tight text-white transition-colors">PaintLead<span class="bg-gradient-to-r from-brand-accent to-amber-400 bg-clip-text text-transparent">Pro</span></span>
+      </a>
+
+      <!-- Desktop Navigation links -->
+      <nav class="hidden md:flex items-center gap-8">
+        <a href="#how-it-works" class="text-gray-300 hover:text-brand-accent transition-colors font-medium text-sm tracking-wide">How It Works</a>
+        <a href="#lead-quality" class="text-gray-300 hover:text-brand-accent transition-colors font-medium text-sm tracking-wide">Lead Quality</a>
+        <a href="#faq" class="text-gray-300 hover:text-brand-accent transition-colors font-medium text-sm tracking-wide">FAQ</a>
+        <a href="#qualification-form" class="text-gray-300 hover:text-brand-accent transition-colors font-medium text-sm tracking-wide">Check Availability</a>
+      </nav>
+
+      <!-- Header CTA Button -->
+      <a href="#qualification-form" class="btn-shine-effect bg-gradient-to-r from-brand-accent to-amber-500 text-brand-dark font-oswald uppercase tracking-wider font-bold py-2.5 px-6 rounded-lg hover:from-amber-400 hover:to-amber-600 transition shadow-lg shadow-brand-accent/20 text-sm">
+        Get Leads
+      </a>
+    </div>
+  </header>
+
+  <!-- Sticky Spots Remaining Counter Banner -->
+  <div class="glass-navbar relative z-40 bg-brand-accent/5 border-b border-brand-accent/15 py-3 px-4 text-center">
+    <div class="max-w-7xl mx-auto flex items-center justify-center gap-2.5 flex-wrap text-sm font-medium text-brand-accent">
+      <span class="inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+      <span class="tracking-wide" id="banner-spots-text">URGENT: Only <span class="font-bold underline" id="spots-counter">2 contractor spots</span> remaining in the Greenville, SC area today.</span>
+    </div>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="relative overflow-hidden py-20 lg:py-28 border-b border-brand-border">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="grid lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+        
+        <!-- Left Side: Copy and details -->
+        <div class="lg:col-span-7 space-y-6 scroll-reveal reveal-visible">
+          <div class="inline-block paint-header-stroke text-brand-dark px-4 py-1.5 font-oswald uppercase tracking-wider font-bold text-xs rounded shadow-md">
+            Exclusive Greenville-Area Leads
+          </div>
+          
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-oswald font-bold uppercase leading-[1.05] tracking-tight text-white">
+            Get Instant <span class="bg-gradient-to-r from-brand-accent to-amber-400 bg-clip-text text-transparent">Prequalified</span> <br class="hidden sm:inline">Homeowner Leads <br>Delivered To Your Inbox
+          </h1>
+          
+          <p class="text-gray-300 text-lg max-w-xl leading-relaxed">
+            Stop chasing cold leads. We connect local Greenville painting companies with homeowners actively looking for interior, exterior, cabinet, and deck staining estimates.
+          </p>
+
+          <!-- Action Buttons / CTA -->
+          <div class="flex flex-col sm:flex-row gap-4 pt-2">
+            <a href="#qualification-form" class="btn-shine-effect bg-gradient-to-r from-brand-accent to-amber-500 text-brand-dark font-oswald text-lg uppercase tracking-wider font-bold py-4 px-8 rounded-lg hover:from-amber-400 hover:to-amber-600 transition-all text-center shadow-xl shadow-brand-accent/25">
+              Get My First Leads
+            </a>
+            <a href="#qualification-form" class="glass-input hover:border-brand-accent text-white font-oswald text-lg uppercase tracking-wider font-bold py-4 px-8 rounded-lg transition-all text-center flex items-center justify-center gap-2 hover:bg-white/5">
+              <svg class="w-5 h-5 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+              </svg>
+              See If My Company Qualifies
+            </a>
+          </div>
+
+          <!-- Trust Signals list bar -->
+          <div class="grid grid-cols-2 gap-y-3 sm:grid-cols-4 pt-6 border-t border-brand-border">
+            <div class="flex items-center gap-2.5 text-xs text-gray-300">
+              <span class="text-brand-accent font-bold text-sm">✔</span> Exclusive Local Leads
+            </div>
+            <div class="flex items-center gap-2.5 text-xs text-gray-300">
+              <span class="text-brand-accent font-bold text-sm">✔</span> Prequalified Demands
+            </div>
+            <div class="flex items-center gap-2.5 text-xs text-gray-300">
+              <span class="text-brand-accent font-bold text-sm">✔</span> Cancel Anytime
+            </div>
+            <div class="flex items-center gap-2.5 text-xs text-gray-300">
+              <span class="text-brand-accent font-bold text-sm">✔</span> Instant Delivery
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Side: Beautiful Glass Cards and Layout Mockups -->
+        <div class="lg:col-span-5 relative scroll-reveal reveal-visible transition-all duration-1000 delay-200">
+          <!-- Ambient element back glow -->
+          <div class="absolute -inset-2 bg-gradient-to-r from-brand-accent/20 to-blue-500/20 rounded-3xl blur-xl opacity-70"></div>
+          
+          <div class="relative glass-card shimmer-card shimmer-loop rounded-2xl p-6 min-h-[480px] flex flex-col justify-between overflow-hidden">
+            <!-- Diagonal paint swoosh back vector overlay -->
+            <div class="absolute right-0 bottom-0 top-0 w-1/2 opacity-5 pointer-events-none">
+              <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <path d="M0,0 Q40,30 100,10 L100,100 L0,100 Z" fill="#FFC700"/>
+              </svg>
+            </div>
+
+            <!-- Card 1: Sarah M. -->
+            <div class="glass-card-light shimmer-card shimmer-loop rounded-xl p-4 shadow-xl border-l-4 border-emerald-500 relative z-10 pulse-glow">
+              <div class="flex justify-between items-center mb-3">
+                <div class="flex items-center gap-2.5">
+                  <div class="bg-brand-accent text-brand-dark font-bold text-xs h-8 w-8 rounded-lg flex items-center justify-center shadow-md">SM</div>
+                  <div>
+                    <h4 class="font-bold text-sm text-white leading-tight">Sarah M.</h4>
+                    <p class="text-[10px] text-gray-400">Greenville, SC</p>
+                  </div>
+                </div>
+                <span class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[10px] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1.5">
+                  <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Prequalified
+                </span>
+              </div>
+              
+              <div class="grid grid-cols-2 gap-y-2 text-xs text-gray-300">
+                <div><strong class="text-gray-500 font-medium">Project:</strong> Exterior Painting</div>
+                <div><strong class="text-gray-500 font-medium">Timeline:</strong> Within 2 Weeks</div>
+                <div><strong class="text-gray-500 font-medium">Budget:</strong> $4,500 – $7,000</div>
+                <div><strong class="text-gray-500 font-medium">Delivery:</strong> SMS & Email</div>
+              </div>
+            </div>
+
+            <!-- Intermediary live state feed bar -->
+            <div class="my-3 py-2 border-y border-brand-border flex items-center justify-between text-xs text-gray-400">
+              <span class="flex items-center gap-1.5">
+                <span class="h-2 w-2 rounded-full bg-brand-accent animate-pulse"></span>
+                Lead Dispatch Feed Active
+              </span>
+              <span class="font-bold text-brand-accent">24 repaints connected today</span>
+            </div>
+
+            <!-- Card 2: James R. -->
+            <div class="glass-card-light shimmer-card rounded-xl p-4 shadow-xl border-l-4 border-blue-400 relative z-10">
+              <div class="flex justify-between items-center mb-3">
+                <div class="flex items-center gap-2.5">
+                  <div class="bg-brand-accent text-brand-dark font-bold text-xs h-8 w-8 rounded-lg flex items-center justify-center shadow-md">JR</div>
+                  <div>
+                    <h4 class="font-bold text-sm text-white leading-tight">James R.</h4>
+                    <p class="text-[10px] text-gray-400">Simpsonville, SC</p>
+                  </div>
+                </div>
+                <span class="bg-blue-400/15 border border-blue-400/30 text-blue-300 text-[10px] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1.5">
+                  <span class="h-1.5 w-1.5 rounded-full bg-blue-400 animate-pulse"></span> Ready for Estimate
+                </span>
+              </div>
+              
+              <div class="grid grid-cols-2 gap-y-2 text-xs text-gray-300">
+                <div><strong class="text-gray-500 font-medium">Project:</strong> Cabinet Painting</div>
+                <div><strong class="text-gray-500 font-medium">Timeline:</strong> This Month</div>
+                <div><strong class="text-gray-500 font-medium">Budget:</strong> $2,000 – $3,500</div>
+                <div><strong class="text-gray-500 font-medium">Verified:</strong> Phone Call Confirmed</div>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Live Leads Feed Simulator Sandbox (Gemini LLM Upgraded) -->
+  <section class="py-16 border-b border-brand-border relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 scroll-reveal">
+      <div class="glass-card shimmer-card rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+        
+        <!-- Corner shine reflection decoration -->
+        <div class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-b from-white/5 to-transparent rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="grid lg:grid-cols-12 gap-8 items-center">
+          
+          <div class="lg:col-span-5 space-y-4">
+            <span class="text-brand-accent border border-brand-accent/30 font-semibold tracking-wider text-[10px] uppercase bg-brand-accent/5 px-3 py-1 rounded-full">Interactive Lead Sandbox</span>
+            <h3 class="text-3xl font-oswald uppercase font-bold text-white leading-tight">
+              Test-Drive the PaintLead Pro Delivery System
+            </h3>
+            <p class="text-gray-300 text-sm leading-relaxed">
+              Experience the fast-paced delivery. Select a common Greenville homeowner scope below, or use our **Gemini AI Generator** to generate a randomized custom local homeowner inquiry!
+            </p>
+            
+            <div class="grid grid-cols-2 gap-2.5 pt-2">
+              <button onclick="simulateLead('Exterior Siding Painting', '$6,500 - $9,000', 'Greenville, SC')" class="glass-input hover:border-brand-accent text-white p-3 rounded-xl text-xs font-semibold transition text-left hover:bg-white/5">
+                🏡 Exterior Siding
+              </button>
+              <button onclick="simulateLead('Interior Whole-House', '$4,000 - $6,500', 'Greer, SC')" class="glass-input hover:border-brand-accent text-white p-3 rounded-xl text-xs font-semibold transition text-left hover:bg-white/5">
+                🚪 Interior Walls
+              </button>
+              <button onclick="simulateLead('Cabinet & Trim Spraying', '$2,500 - $4,200', 'Simpsonville, SC')" class="glass-input hover:border-brand-accent text-white p-3 rounded-xl text-xs font-semibold transition text-left hover:bg-white/5">
+                ✨ Cabinet Coating
+              </button>
+              <button onclick="simulateLead('Deck & Fence Staining', '$1,800 - $3,000', 'Mauldin, SC')" class="glass-input hover:border-brand-accent text-white p-3 rounded-xl text-xs font-semibold transition text-left hover:bg-white/5">
+                🪵 Deck Staining
+              </button>
+            </div>
+
+            <!-- Gemini AI Lead Generator Trigger -->
+            <div class="pt-2">
+              <button onclick="generateAILead()" class="w-full bg-gradient-to-r from-violet-500 to-indigo-600 hover:from-violet-600 hover:to-indigo-700 text-white font-oswald uppercase text-xs tracking-wider py-3 px-4 rounded-xl flex items-center justify-center gap-2 shadow-lg transition-all duration-300">
+                <span>✨ Generate Custom AI Lead</span>
+                <span class="inline-flex h-2 w-2 rounded-full bg-cyan-400 animate-ping"></span>
+              </button>
+            </div>
+            
+            <!-- Audio Toggle Control -->
+            <div class="flex items-center gap-2 pt-2 text-xs text-gray-400">
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="simulator-sound" class="sr-only peer" checked>
+                <div class="w-9 h-5 bg-slate-800 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-accent"></div>
+                <span class="ml-2 font-medium">Enable Instant Dispatch Tone Alert 🔊</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Simulator Output Container -->
+          <div class="lg:col-span-7 glass-card-light p-5 rounded-2xl border border-white/5 flex flex-col justify-between min-h-[340px] shadow-inner relative">
+            <!-- Header status interface -->
+            <div class="flex items-center justify-between border-b border-white/5 pb-3.5 mb-4">
+              <div class="flex items-center gap-2">
+                <span class="flex h-2.5 w-2.5 relative">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                </span>
+                <span class="text-xs uppercase font-semibold text-gray-300 tracking-wider">Live System Stream</span>
+              </div>
+              <span id="simulator-timestamp" class="text-[10px] text-gray-400 font-mono tracking-wider bg-white/5 px-2.5 py-1 rounded">System Ready</span>
+            </div>
+
+            <!-- Dynamic content display -->
+            <div id="simulator-display-container" class="space-y-4 flex-grow flex flex-col justify-center">
+              <div class="text-center py-6 space-y-3">
+                <div class="mx-auto h-12 w-12 rounded-full bg-brand-accent/10 border border-brand-accent/20 flex items-center justify-center text-brand-accent text-xl animate-pulse">
+                  ⚡
+                </div>
+                <p class="text-gray-300 text-xs max-w-sm mx-auto">
+                  Click any of the project types, or click **✨ Generate Custom AI Lead** to load an inquiry with customized property parameters.
+                </p>
+              </div>
+            </div>
+
+            <!-- Inner AI processing/shimmer loader mask -->
+            <div id="simulator-inner-loader" class="hidden absolute inset-0 bg-brand-dark/95 rounded-2xl flex flex-col items-center justify-center space-y-3 z-30">
+              <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-brand-accent"></div>
+              <p class="text-xs text-gray-400">Gemini API is drafting custom Upstate property data...</p>
+            </div>
+
+            <!-- Foot note -->
+            <div class="border-t border-white/5 pt-3.5 mt-4 flex items-center justify-between text-[11px] text-gray-400">
+              <span>Required response metric: <span class="text-emerald-400 font-bold font-mono">Immediate</span></span>
+              <a href="#qualification-form" class="text-brand-accent hover:underline font-semibold font-oswald uppercase tracking-wider">Reserve Your Area &rarr;</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal Component: AI Sales Agent Outreach Playbook -->
+  <div id="ai-script-modal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-brand-dark/95 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="glass-card max-w-2xl w-full rounded-2xl overflow-hidden shadow-2xl relative border border-white/10 flex flex-col max-h-[85vh]">
+      <!-- Header -->
+      <div class="p-6 border-b border-white/5 flex items-center justify-between bg-brand-navy/80">
+        <div>
+          <h3 class="font-oswald text-xl uppercase font-bold text-white flex items-center gap-2">
+            <span>✨</span> Gemini Estimator Outreach Script
+          </h3>
+          <p class="text-[10px] text-gray-400">Tailored playbook built automatically for this specific homeowner</p>
+        </div>
+        <button onclick="closeScriptModal()" class="text-gray-400 hover:text-white font-bold text-2xl focus:outline-none">&times;</button>
+      </div>
+
+      <!-- Scrollable content -->
+      <div class="p-6 space-y-6 overflow-y-auto custom-scrollbar flex-grow" id="ai-script-content">
+        <!-- Injected script goes here -->
+      </div>
+
+      <!-- Footer action -->
+      <div class="p-4 border-t border-white/5 bg-brand-dark flex justify-end gap-2">
+        <button onclick="closeScriptModal()" class="bg-white/5 border border-white/5 text-gray-300 px-5 py-2.5 rounded-xl hover:bg-white/10 transition text-xs font-semibold">
+          Close Playbook
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 2: Problem & Fit -->
+  <section class="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative border-b border-brand-border">
+    <div class="text-center max-w-2xl mx-auto mb-16 space-y-4 scroll-reveal">
+      <h2 class="text-3xl sm:text-4xl lg:text-5xl font-oswald font-bold uppercase text-white tracking-tight">
+        Most Painting Leads Are Garbage. <br><span class="bg-gradient-to-r from-brand-accent to-amber-400 bg-clip-text text-transparent">These Aren't.</span>
+      </h2>
+      <p class="text-gray-300 leading-relaxed text-sm">
+        You do not need more tire-kickers, fake numbers, or homeowners asking for "ballpark prices over the phone." You need serious residential projects ready for estimations.
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-8 items-start">
+      <!-- Who This Is Fit For (Sleek Glass Look) -->
+      <div class="glass-card shimmer-card rounded-2xl p-8 space-y-6 relative border-t-2 border-t-emerald-500/50 scroll-reveal">
+        <h3 class="text-xl font-oswald uppercase font-bold text-emerald-400 border-b border-white/5 pb-4 flex items-center gap-2.5">
+          <span class="bg-emerald-500/10 p-1.5 rounded text-lg leading-none">👍</span> This is a fit if you:
+        </h3>
+        
+        <ul class="space-y-4">
+          <li class="flex items-start gap-3">
+            <span class="text-emerald-400 text-lg font-bold">✓</span>
+            <div>
+              <strong class="text-white block font-semibold text-sm">Serve the Greater Upstate Area</strong>
+              <span class="text-gray-400 text-xs mt-0.5 block">Greenville, Greer, Simpsonville, Mauldin, Taylors, and Easley.</span>
+            </div>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-emerald-400 text-lg font-bold">✓</span>
+            <div>
+              <strong class="text-white block font-semibold text-sm">Can handle residential repaint volume</strong>
+              <span class="text-gray-400 text-xs mt-0.5 block">You are ready to schedule, visit, and submit estimates weekly.</span>
+            </div>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-emerald-400 text-lg font-bold">✓</span>
+            <div>
+              <strong class="text-white block font-semibold text-sm">Answer calls quickly</strong>
+              <span class="text-gray-400 text-xs mt-0.5 block">Estimators understand speed-to-lead improves booking rates by over 3x.</span>
+            </div>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-emerald-400 text-lg font-bold">✓</span>
+            <div>
+              <strong class="text-white block font-semibold text-sm">Want high-ticket residential repaint jobs</strong>
+              <span class="text-gray-400 text-xs mt-0.5 block">Full exteriors, cabinet refinishing, and complete interiors.</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Who This Is NOT Fit For (Sleek Dark Accent Glass Look) -->
+      <div class="glass-card rounded-2xl p-8 space-y-6 relative border-t-2 border-t-red-500/40 scroll-reveal">
+        <h3 class="text-xl font-oswald uppercase font-bold text-red-400 border-b border-white/5 pb-4 flex items-center gap-2.5">
+          <span class="bg-red-500/10 p-1.5 rounded text-lg leading-none">🛑</span> NOT a fit if you:
+        </h3>
+        
+        <ul class="space-y-4">
+          <li class="flex items-start gap-3">
+            <span class="text-red-400 text-lg font-bold">✗</span>
+            <div>
+              <strong class="text-white block font-semibold text-sm">Let inbound inquiries sit for days</strong>
+              <span class="text-gray-400 text-xs mt-0.5 block">If you wait 24-48 hours to return homeowner messages, please do not purchase our leads.</span>
+            </div>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-red-400 text-lg font-bold">✗</span>
+            <div>
+              <strong class="text-white block font-semibold text-sm">Do not have a dedicated estimator</strong>
+              <span class="text-gray-300 text-xs mt-0.5 block">We provide prequalified inquiries, but you still need to walk the scope and sell.</span>
+            </div>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-red-400 text-lg font-bold">✗</span>
+            <div>
+              <strong class="text-white block font-semibold text-sm">Only want minor handyman repairs</strong>
+              <span class="text-gray-300 text-xs mt-0.5 block">Our marketing campaigns exclude minor drywall patches or handyman services.</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 3: How The Lead System Works -->
+  <section id="how-it-works" class="bg-brand-navy/30 py-24 border-y border-brand-border">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-2xl mx-auto mb-16 space-y-4 scroll-reveal">
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-oswald font-bold uppercase text-white tracking-tight">
+          How The Lead System Works
+        </h2>
+        <p class="text-gray-300 text-sm">
+          We manage the digital marketing complex machinery so you can focus on writing estimates and producing quality jobs.
+        </p>
+      </div>
+
+      <!-- Steps Workflow Grid -->
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 relative">
+        
+        <!-- Step 1 -->
+        <div class="glass-card shimmer-card p-6 rounded-2xl relative overflow-hidden group hover:border-brand-accent/40 transition-colors scroll-reveal">
+          <div class="absolute -right-4 -bottom-4 font-oswald text-8xl font-bold text-white/5 select-none transition-transform group-hover:scale-105">
+            01
+          </div>
+          <div class="h-10 w-10 rounded-xl bg-brand-accent/15 border border-brand-accent/30 text-brand-accent font-oswald font-bold text-lg flex items-center justify-center mb-5">
+            1
+          </div>
+          <div class="space-y-2 relative z-10">
+            <h4 class="font-oswald text-lg uppercase font-bold text-white">Homeowner Requests Estimate</h4>
+            <p class="text-xs leading-relaxed text-gray-300">
+              We run highly visible localized homeowner marketing offering estimate quotes in Greenville.
+            </p>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="glass-card shimmer-card p-6 rounded-2xl relative overflow-hidden group hover:border-brand-accent/40 transition-colors scroll-reveal">
+          <div class="absolute -right-4 -bottom-4 font-oswald text-8xl font-bold text-white/5 select-none transition-transform group-hover:scale-105">
+            02
+          </div>
+          <div class="h-10 w-10 rounded-xl bg-brand-accent/15 border border-brand-accent/30 text-brand-accent font-oswald font-bold text-lg flex items-center justify-center mb-5">
+            2
+          </div>
+          <div class="space-y-2 relative z-10">
+            <h4 class="font-oswald text-lg uppercase font-bold text-white">We Prequalify Projects</h4>
+            <p class="text-xs leading-relaxed text-gray-300">
+              Homeowners submit concrete project outlines: surface conditions, timeline, zip code, and contact info.
+            </p>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="glass-card shimmer-card p-6 rounded-2xl relative overflow-hidden group hover:border-brand-accent/40 transition-colors scroll-reveal">
+          <div class="absolute -right-4 -bottom-4 font-oswald text-8xl font-bold text-white/5 select-none transition-transform group-hover:scale-105">
+            03
+          </div>
+          <div class="h-10 w-10 rounded-xl bg-brand-accent/15 border border-brand-accent/30 text-brand-accent font-oswald font-bold text-lg flex items-center justify-center mb-5">
+            3
+          </div>
+          <div class="space-y-2 relative z-10">
+            <h4 class="font-oswald text-lg uppercase font-bold text-white">You Get Lead Instantly</h4>
+            <p class="text-xs leading-relaxed text-gray-300">
+              Information fires directly to your dashboard, email inbox, or mobile SMS gateway within seconds.
+            </p>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="glass-card shimmer-card p-6 rounded-2xl relative overflow-hidden group hover:border-brand-accent/40 transition-colors scroll-reveal">
+          <div class="absolute -right-4 -bottom-4 font-oswald text-8xl font-bold text-white/5 select-none transition-transform group-hover:scale-105">
+            04
+          </div>
+          <div class="h-10 w-10 rounded-xl bg-brand-accent/15 border border-brand-accent/30 text-brand-accent font-oswald font-bold text-lg flex items-center justify-center mb-5">
+            4
+          </div>
+          <div class="space-y-2 relative z-10">
+            <h4 class="font-oswald text-lg uppercase font-bold text-white">You Quote & Close Job</h4>
+            <p class="text-xs leading-relaxed text-gray-300">
+              Write the contract, supply the crews, and bank the revenue. Scaling your painting operation.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 4: What You Receive (Interactive Glass Card Showcase) -->
+  <section id="lead-quality" class="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative border-b border-brand-border">
+    <div class="grid lg:grid-cols-12 gap-12 items-center">
+      
+      <!-- Copy details left -->
+      <div class="lg:col-span-6 space-y-6 scroll-reveal">
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-oswald font-bold uppercase text-white leading-tight tracking-tight">
+          What You Receive <br>With <span class="bg-gradient-to-r from-brand-accent to-amber-400 bg-clip-text text-transparent">Every Single Lead</span>
+        </h2>
+        <p class="text-gray-300 text-sm leading-relaxed">
+          No missing context. We deliver data-rich profiles that show you exactly what the client expects before you schedule the site walk.
+        </p>
+
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="flex items-center gap-3 text-xs text-gray-200 bg-white/5 border border-white/5 px-4 py-3 rounded-xl hover:border-brand-accent/20 transition-all duration-300">
+            <span class="bg-brand-accent/20 text-brand-accent h-5 w-5 rounded-full flex items-center justify-center font-bold text-[10px]">✓</span>
+            Full Homeowner Name
+          </div>
+          <div class="flex items-center gap-3 text-xs text-gray-200 bg-white/5 border border-white/5 px-4 py-3 rounded-xl hover:border-brand-accent/20 transition-all duration-300">
+            <span class="bg-brand-accent/20 text-brand-accent h-5 w-5 rounded-full flex items-center justify-center font-bold text-[10px]">✓</span>
+            Verified Mobile Number
+          </div>
+          <div class="flex items-center gap-3 text-xs text-gray-200 bg-white/5 border border-white/5 px-4 py-3 rounded-xl hover:border-brand-accent/20 transition-all duration-300">
+            <span class="bg-brand-accent/20 text-brand-accent h-5 w-5 rounded-full flex items-center justify-center font-bold text-[10px]">✓</span>
+            Direct Email Address
+          </div>
+          <div class="flex items-center gap-3 text-xs text-gray-200 bg-white/5 border border-white/5 px-4 py-3 rounded-xl hover:border-brand-accent/20 transition-all duration-300">
+            <span class="bg-brand-accent/20 text-brand-accent h-5 w-5 rounded-full flex items-center justify-center font-bold text-[10px]">✓</span>
+            City & ZIP Boundaries
+          </div>
+          <div class="flex items-center gap-3 text-xs text-gray-200 bg-white/5 border border-white/5 px-4 py-3 rounded-xl hover:border-brand-accent/20 transition-all duration-300">
+            <span class="bg-brand-accent/20 text-brand-accent h-5 w-5 rounded-full flex items-center justify-center font-bold text-[10px]">✓</span>
+            Specific Surface Scopes
+          </div>
+          <div class="flex items-center gap-3 text-xs text-gray-200 bg-white/5 border border-white/5 px-4 py-3 rounded-xl hover:border-brand-accent/20 transition-all duration-300">
+            <span class="bg-brand-accent/20 text-brand-accent h-5 w-5 rounded-full flex items-center justify-center font-bold text-[10px]">✓</span>
+            Estimated Job Budget
+          </div>
+        </div>
+
+        <div class="glass-card-accent p-5 rounded-xl flex items-start gap-4">
+          <div class="text-3xl">🚀</div>
+          <div>
+            <h4 class="font-bold text-white text-sm">Response Time Optimization Alert</h4>
+            <p class="text-xs text-gray-400 mt-1 leading-relaxed">
+              We dispatch instantly to your crew. Set up automatic SMS alerts inside our portal to notify estimators the exact second data registers.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- High-fidelity John D Example Card right -->
+      <div class="lg:col-span-6 bg-slate-900/40 backdrop-blur-md border border-white/10 text-white rounded-2xl p-6 sm:p-8 shadow-2xl relative scroll-reveal transition-all duration-1000">
+        <div class="absolute top-4 right-4 bg-white/5 border border-white/10 text-brand-accent font-oswald text-[10px] uppercase tracking-widest px-3 py-1 rounded font-semibold">
+          High-Fidelity Sample Card
+        </div>
+        
+        <h3 class="font-oswald text-lg uppercase font-bold text-white mb-4 border-b border-white/10 pb-3 flex items-center gap-2">
+          <span>👤</span> Profile Details
+        </h3>
+
+        <div class="space-y-4 animate-fade-in">
+          <div class="flex items-start justify-between">
+            <div>
+              <h4 class="text-base font-bold text-white">John D.</h4>
+              <p class="text-xs text-gray-400">Simpsonville, SC 29681</p>
+            </div>
+            <span class="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold px-2.5 py-1 rounded-full">
+              Prequalified Active
+            </span>
+          </div>
+
+          <div class="grid sm:grid-cols-2 gap-2 text-xs bg-black/30 p-3.5 rounded-xl border border-white/5">
+            <div class="flex items-center gap-2">
+              <span class="text-gray-500">📞</span> (864) 555-0198
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-gray-500">✉</span> johnd@email.com
+            </div>
+          </div>
+
+          <div class="space-y-3 pt-2 text-xs text-gray-300">
+            <div class="flex justify-between border-b border-white/5 pb-2">
+              <span class="text-gray-400">Project Category:</span>
+              <span class="font-semibold text-white">Exterior Paint (Whole Siding Scope)</span>
+            </div>
+            <div class="flex justify-between border-b border-white/5 pb-2">
+              <span class="text-gray-400">Target Timeline:</span>
+              <span class="font-semibold text-brand-accent">Next 2-4 Weeks</span>
+            </div>
+            <div class="flex justify-between border-b border-white/5 pb-2">
+              <span class="text-gray-400">Job Budget Range:</span>
+              <span class="font-semibold text-emerald-400">$4,000 - $6,000</span>
+            </div>
+          </div>
+
+          <!-- Notes section -->
+          <div class="space-y-1">
+            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1">Project Scope & Notes:</span>
+            <p class="text-xs text-gray-300 bg-white/5 border border-white/5 p-3 rounded-lg leading-relaxed">
+              "Cedar shake siding. Need complete pressure wash prep, loose paint scraping, and premium whole-exterior coatings. Porch columns need small rot checks. Insured estimators only."
+            </p>
+          </div>
+
+          <!-- Simulated Image Attachments -->
+          <div>
+            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-2">Attached Scopes (Click to Expand):</span>
+            <div class="grid grid-cols-3 gap-2">
+              <div class="relative rounded-lg overflow-hidden border border-white/5 h-20 bg-gray-900 group cursor-pointer" onclick="openPhotoModal('https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&q=80&w=600', 'Front Elevation Overview')">
+                <div class="absolute inset-0 bg-brand-dark/40 group-hover:bg-transparent transition-all"></div>
+                <div class="h-full w-full flex items-center justify-center text-[10px] text-gray-300 font-medium">Front View</div>
+              </div>
+              <div class="relative rounded-lg overflow-hidden border border-white/5 h-20 bg-gray-900 group cursor-pointer" onclick="openPhotoModal('https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&q=80&w=600', 'Siding Details Close Up')">
+                <div class="absolute inset-0 bg-brand-dark/40 group-hover:bg-transparent transition-all"></div>
+                <div class="h-full w-full flex items-center justify-center text-[10px] text-gray-300 font-medium">Siding Detail</div>
+              </div>
+              <div class="relative rounded-lg overflow-hidden border border-white/5 h-20 bg-gray-900 group cursor-pointer" onclick="openPhotoModal('https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&q=80&w=600', 'Soffit & Trim Wear')">
+                <div class="absolute inset-0 bg-brand-dark/40 group-hover:bg-transparent transition-all"></div>
+                <div class="h-full w-full flex items-center justify-center text-[10px] text-gray-300 font-medium">Trim & Soffit</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Section 5: Testimonials Grid -->
+  <section class="bg-brand-navy/40 py-24 border-b border-brand-border">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-2xl mx-auto mb-16 space-y-4 scroll-reveal">
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-oswald font-bold uppercase text-white tracking-tight">
+          Greenville Contractors <br><span class="bg-gradient-to-r from-brand-accent to-amber-400 bg-clip-text text-transparent">Are Booking Real Jobs</span>
+        </h2>
+        <p class="text-gray-300 text-sm">
+          Hear from local Upstate painting company owners who have scaled operations with our exclusive pipeline.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Testimonial 1 -->
+        <div class="glass-card shimmer-card p-6 rounded-2xl border border-white/5 space-y-5 flex flex-col justify-between hover:border-brand-accent/25 transition-all scroll-reveal">
+          <div class="space-y-3">
+            <div class="text-brand-accent text-sm tracking-wide">★★★★★</div>
+            <p class="text-gray-300 text-xs italic leading-relaxed">
+              "We started getting leads within hours of system activation. We booked 4 estimators in our initial week and successfully closed 2 substantial exteriors. Phenomenal pipeline."
+            </p>
+          </div>
+          <div class="pt-4 border-t border-white/5 flex items-center justify-between text-xs">
+            <div>
+              <strong class="text-white text-xs block font-bold">— Mike T.</strong>
+              <span class="text-[10px] text-gray-500 block">Greenville Painting Pros</span>
+            </div>
+            <span class="text-[10px] bg-brand-accent/10 text-brand-accent px-2 py-0.5 rounded uppercase font-semibold">Active Partner</span>
+          </div>
+        </div>
+
+        <!-- Testimonial 2 -->
+        <div class="glass-card shimmer-card p-6 rounded-2xl border border-white/5 space-y-5 flex flex-col justify-between hover:border-brand-accent/25 transition-all scroll-reveal">
+          <div class="space-y-3">
+            <div class="text-brand-accent text-sm tracking-wide">★★★★★</div>
+            <p class="text-gray-300 text-xs italic leading-relaxed">
+              "The quality of these leads is vastly superior to the typical share lists where 5 painters calls are competing at once. These homeowners are ready to set schedule estimates."
+            </p>
+          </div>
+          <div class="pt-4 border-t border-white/5 flex items-center justify-between text-xs">
+            <div>
+              <strong class="text-white text-xs block font-bold">— Chris L.</strong>
+              <span class="text-[10px] text-gray-500 block">Southern Painting Co.</span>
+            </div>
+            <span class="text-[10px] bg-brand-accent/10 text-brand-accent px-2 py-0.5 rounded uppercase font-semibold">Active Partner</span>
+          </div>
+        </div>
+
+        <!-- Testimonial 3 -->
+        <div class="glass-card shimmer-card p-6 rounded-2xl border border-white/5 space-y-5 flex flex-col justify-between hover:border-brand-accent/25 transition-all scroll-reveal">
+          <div class="space-y-3">
+            <div class="text-brand-accent text-sm tracking-wide">★★★★★</div>
+            <p class="text-gray-300 text-xs italic leading-relaxed">
+              "This platform keeps our schedules completely optimized. We receive enough volume every month to support four complete crew operations. Excellent ROI."
+            </p>
+          </div>
+          <div class="pt-4 border-t border-white/5 flex items-center justify-between text-xs">
+            <div>
+              <strong class="text-white text-xs block font-bold">— Jason R.</strong>
+              <span class="text-[10px] text-gray-500 block">Upstate Paint Solutions</span>
+            </div>
+            <span class="text-[10px] bg-brand-accent/10 text-brand-accent px-2 py-0.5 rounded uppercase font-semibold">Active Partner</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 6: Local Availability Form & Core Offer -->
+  <section id="qualification-form" class="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative border-b border-brand-border">
+    <div class="grid lg:grid-cols-12 gap-12 items-start">
+      
+      <!-- Copy details text left -->
+      <div class="lg:col-span-5 space-y-6 scroll-reveal">
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-oswald font-bold uppercase text-white leading-tight tracking-tight">
+          Secure Exclusive <br><span class="bg-gradient-to-r from-brand-accent to-amber-400 bg-clip-text text-transparent">Homeowner Leads</span> <br>In Your Area
+        </h2>
+        <p class="text-gray-300 text-sm leading-relaxed">
+          We limit partnership to a strict number of active painting companies per territory to ensure high lead quality and conversion success. Complete the form to check your service area compatibility instantly.
+        </p>
+
+        <div class="glass-card-accent p-6 rounded-xl border border-brand-accent/20 space-y-4">
+          <h4 class="font-oswald text-base uppercase font-bold text-brand-accent flex items-center gap-2">
+            <span>🛡️</span> 100% Exclusive Territory Guarantee
+          </h4>
+          <p class="text-xs text-gray-300 leading-relaxed">
+            When you secure a territory, we turn off marketing campaigns for other contractors in that specific zip boundary. Every lead generated belongs to you and you alone.
+          </p>
+        </div>
+      </div>
+
+      <!-- qualification-form form component -->
+      <div class="lg:col-span-7 glass-card rounded-2xl p-6 sm:p-8 shadow-2xl relative border border-white/10 overflow-hidden">
+        
+        <!-- Form Header state progress indicators -->
+        <div class="flex items-center justify-between mb-8">
+          <span class="text-xs uppercase font-semibold text-gray-400 tracking-wider">Qualification Process</span>
+          <div class="flex items-center gap-2" id="form-progress-steps">
+            <span class="h-2 w-8 rounded bg-brand-accent transition-all duration-300" id="progress-step-1"></span>
+            <span class="h-2 w-8 rounded bg-white/10 transition-all duration-300" id="progress-step-2"></span>
+            <span class="h-2 w-8 rounded bg-white/10 transition-all duration-300" id="progress-step-3"></span>
+          </div>
+        </div>
+
+        <form id="multi-step-form" onsubmit="event.preventDefault();" class="space-y-6">
+          
+          <!-- Step 1: Area Boundaries -->
+          <div id="step-content-1" class="space-y-4 animate-fade-in">
+            <h3 class="font-oswald text-lg uppercase font-bold text-white">Select Your Primary Greenville Service Locations:</h3>
+            <p class="text-xs text-gray-400">Select all areas where your estimators can travel for site walks.</p>
+            
+            <div class="grid grid-cols-2 gap-3 pt-2">
+              <label class="glass-input p-4 rounded-xl flex items-center gap-3 cursor-pointer hover:border-brand-accent/40 hover:bg-white/5 transition-all">
+                <input type="checkbox" name="locations" value="Greenville" class="accent-brand-accent" checked>
+                <span class="text-xs font-semibold text-white">Greenville Proper</span>
+              </label>
+              <label class="glass-input p-4 rounded-xl flex items-center gap-3 cursor-pointer hover:border-brand-accent/40 hover:bg-white/5 transition-all">
+                <input type="checkbox" name="locations" value="Greer" class="accent-brand-accent" checked>
+                <span class="text-xs font-semibold text-white">Greer / Taylors</span>
+              </label>
+              <label class="glass-input p-4 rounded-xl flex items-center gap-3 cursor-pointer hover:border-brand-accent/40 hover:bg-white/5 transition-all">
+                <input type="checkbox" name="locations" value="Simpsonville" class="accent-brand-accent" checked>
+                <span class="text-xs font-semibold text-white">Simpsonville</span>
+              </label>
+              <label class="glass-input p-4 rounded-xl flex items-center gap-3 cursor-pointer hover:border-brand-accent/40 hover:bg-white/5 transition-all">
+                <input type="checkbox" name="locations" value="Mauldin" class="accent-brand-accent">
+                <span class="text-xs font-semibold text-white">Mauldin</span>
+              </label>
+              <label class="glass-input p-4 rounded-xl flex items-center gap-3 cursor-pointer hover:border-brand-accent/40 hover:bg-white/5 transition-all">
+                <input type="checkbox" name="locations" value="Easley" class="accent-brand-accent">
+                <span class="text-xs font-semibold text-white">Easley / Powdersville</span>
+              </label>
+              <label class="glass-input p-4 rounded-xl flex items-center gap-3 cursor-pointer hover:border-brand-accent/40 hover:bg-white/5 transition-all">
+                <input type="checkbox" name="locations" value="TravelersRest" class="accent-brand-accent">
+                <span class="text-xs font-semibold text-white">Travelers Rest</span>
+              </label>
+            </div>
+
+            <div class="pt-4 flex justify-end">
+              <button type="button" onclick="nextFormStep(2)" class="btn-shine-effect bg-gradient-to-r from-brand-accent to-amber-500 text-brand-dark font-oswald uppercase tracking-wider font-bold py-3 px-8 rounded-lg hover:from-amber-400 hover:to-amber-600 transition shadow-lg shadow-brand-accent/20 text-xs">
+                Next Step &rarr;
+              </button>
+            </div>
+          </div>
+
+          <!-- Step 2: Capacity & Focus -->
+          <div id="step-content-2" class="hidden space-y-4 animate-fade-in">
+            <h3 class="font-oswald text-lg uppercase font-bold text-white">Operations & Painting Capacity</h3>
+            
+            <div class="space-y-4 pt-2">
+              <div>
+                <label class="block text-xs font-semibold text-gray-300 mb-2">How many active crew operations do you run?</label>
+                <select id="form-crews" class="glass-input w-full p-4 rounded-xl text-xs text-white focus:outline-none focus:border-brand-accent">
+                  <option value="1-2">1 – 2 Crews</option>
+                  <option value="3-5" selected>3 – 5 Crews</option>
+                  <option value="6+">6+ Crews</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-gray-300 mb-2">What is your primary project focus?</label>
+                <select id="form-focus" class="glass-input w-full p-4 rounded-xl text-xs text-white focus:outline-none focus:border-brand-accent">
+                  <option value="residential-repaints" selected>Residential Repaints (Interior/Exterior)</option>
+                  <option value="cabinet-refinishing">Cabinet Refinishing & Spraying</option>
+                  <option value="commercial-light">Light Commercial Painting</option>
+                  <option value="new-construction">New Construction Painting</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="pt-4 flex justify-between items-center">
+              <button type="button" onclick="nextFormStep(1)" class="text-xs font-semibold text-gray-400 hover:text-white transition">
+                &larr; Back
+              </button>
+              <button type="button" onclick="nextFormStep(3)" class="btn-shine-effect bg-gradient-to-r from-brand-accent to-amber-500 text-brand-dark font-oswald uppercase tracking-wider font-bold py-3 px-8 rounded-lg hover:from-amber-400 hover:to-amber-600 transition shadow-lg shadow-brand-accent/20 text-xs">
+                Next Step &rarr;
+              </button>
+            </div>
+          </div>
+
+          <!-- Step 3: Contact & Submit -->
+          <div id="step-content-3" class="hidden space-y-4 animate-fade-in">
+            <h3 class="font-oswald text-lg uppercase font-bold text-white">Company Profile Details</h3>
+            <p class="text-xs text-gray-400">Provide contact details to secure territory availability results.</p>
+            
+            <div class="space-y-4 pt-2">
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold text-gray-300 mb-1.5">Company Name</label>
+                  <input type="text" id="form-company" required placeholder="Greenville Painters" class="glass-input w-full p-3.5 rounded-xl text-xs text-white focus:outline-none focus:border-brand-accent">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-gray-300 mb-1.5">Your Name</label>
+                  <input type="text" id="form-contact" required placeholder="Mike Thompson" class="glass-input w-full p-3.5 rounded-xl text-xs text-white focus:outline-none focus:border-brand-accent">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-gray-300 mb-1.5">Business Mobile Phone (For SMS dispatch preview)</label>
+                <input type="tel" id="form-phone" required placeholder="(864) 555-0100" class="glass-input w-full p-3.5 rounded-xl text-xs text-white focus:outline-none focus:border-brand-accent">
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-gray-300 mb-1.5">Primary Email Address</label>
+                <input type="email" id="form-email" required placeholder="mike@company.com" class="glass-input w-full p-3.5 rounded-xl text-xs text-white focus:outline-none focus:border-brand-accent">
+              </div>
+            </div>
+
+            <div class="pt-4 flex justify-between items-center">
+              <button type="button" onclick="nextFormStep(2)" class="text-xs font-semibold text-gray-400 hover:text-white transition">
+                &larr; Back
+              </button>
+              <button type="button" onclick="submitQualificationForm()" class="btn-shine-effect bg-gradient-to-r from-brand-accent to-amber-500 text-brand-dark font-oswald uppercase tracking-wider font-bold py-3.5 px-8 rounded-lg hover:from-amber-400 hover:to-amber-600 transition shadow-lg shadow-brand-accent/20 text-xs">
+                Check Live Availability
+              </button>
+            </div>
+          </div>
+
+        </form>
+
+        <!-- Loader layer modal inside -->
+        <div id="form-loader-mask" class="hidden absolute inset-0 bg-brand-dark/95 flex flex-col items-center justify-center space-y-4 z-20">
+          <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-brand-accent border-r-2 border-brand-accent/30"></div>
+          <div class="text-center space-y-1">
+            <h4 class="font-oswald text-base uppercase font-bold text-white tracking-wide" id="form-loader-title">Scanning Upstate SC Databases</h4>
+            <p class="text-[10px] text-gray-400" id="form-loader-sub">Checking contractor density metrics...</p>
+          </div>
+        </div>
+
+        <!-- Success results state -->
+        <div id="form-success-mask" class="hidden absolute inset-0 bg-brand-dark/95 p-8 flex flex-col items-center justify-center text-center space-y-6 z-20">
+          <div class="h-16 w-16 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 rounded-full flex items-center justify-center text-3xl animate-bounce">
+            ✔
+          </div>
+          <div class="space-y-2 max-w-md">
+            <h3 class="font-oswald text-2xl uppercase font-bold text-white">Exclusive Area Availability Confirmed!</h3>
+            <p class="text-xs text-gray-300 leading-relaxed">
+              Congratulations! We have verified that the Greenville, SC market has open capacity for one additional repaint contractor.
+            </p>
+            <p class="text-xs text-brand-accent font-semibold bg-brand-accent/5 border border-brand-accent/15 py-2 px-4 rounded-xl mt-2">
+              Territory slot locked for <span class="font-bold underline">24 Hours</span> under <span class="font-bold" id="success-email">email</span>.
+            </p>
+          </div>
+          <button onclick="resetQualificationForm()" class="glass-input text-gray-400 text-[10px] py-2 px-4 rounded-lg hover:text-white transition">
+            Test Another Area
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FAQ Section (Accordion Components) -->
+  <section id="faq" class="py-24 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative scroll-reveal">
+    <div class="text-center mb-16 space-y-4">
+      <h2 class="text-3xl sm:text-4xl font-oswald font-bold uppercase text-white tracking-tight">
+        Frequently Asked Questions
+      </h2>
+      <p class="text-gray-300 text-sm">
+        Everything you need to know about our prequalified lead delivery framework.
+      </p>
+    </div>
+
+    <!-- Accordion Group -->
+    <div class="space-y-4">
+      <!-- FAQ item 1 -->
+      <div class="glass-card rounded-xl overflow-hidden border border-white/5">
+        <button onclick="toggleFaq(1)" class="w-full p-6 text-left flex items-center justify-between font-oswald text-base uppercase font-bold text-white hover:text-brand-accent transition-colors">
+          <span>Are these leads shared with other painters?</span>
+          <span id="faq-icon-1" class="text-brand-accent transition-transform duration-300">&plus;</span>
+        </button>
+        <div id="faq-content-1" class="hidden border-t border-white/5 p-6 text-xs leading-relaxed text-gray-300 bg-white/2">
+          Absolutely not. Unlike platforms that sell the same lead to 5 or more contractors, every lead you receive from PaintLead Pro is 100% exclusive to your company. Once a homeowner submits their project scope in your target Zip, the lead is dispatched strictly to you.
+        </div>
+      </div>
+
+      <!-- FAQ item 2 -->
+      <div class="glass-card rounded-xl overflow-hidden border border-white/5">
+        <button onclick="toggleFaq(2)" class="w-full p-6 text-left flex items-center justify-between font-oswald text-base uppercase font-bold text-white hover:text-brand-accent transition-colors">
+          <span>How do you qualify homeowners?</span>
+          <span id="faq-icon-2" class="text-brand-accent transition-transform duration-300">&plus;</span>
+        </button>
+        <div id="faq-content-2" class="hidden border-t border-white/5 p-6 text-xs leading-relaxed text-gray-300 bg-white/2">
+          We use targeted homeowner-facing campaigns offering estimate scheduling assistance. Homeowners must complete a details form including specific repaint categories (exterior siding, walls, cabinet spraying, deck staining), target budgets, specific timeline expectations, and verify their phone numbers.
+        </div>
+      </div>
+
+      <!-- FAQ item 3 -->
+      <div class="glass-card rounded-xl overflow-hidden border border-white/5">
+        <button onclick="toggleFaq(3)" class="w-full p-6 text-left flex items-center justify-between font-oswald text-base uppercase font-bold text-white hover:text-brand-accent transition-colors">
+          <span>Is there a contract or setup fee?</span>
+          <span id="faq-icon-3" class="text-brand-accent transition-transform duration-300">&plus;</span>
+        </button>
+        <div id="faq-content-3" class="hidden border-t border-white/5 p-6 text-xs leading-relaxed text-gray-300 bg-white/2">
+          No setup fees, and zero long-term commitments. You pay strictly on a pay-as-you-go or recurring lead package basis. You can pause or cancel your lead service at any time with a simple 24-hour notice before your next billing cycle.
+        </div>
+      </div>
+
+      <!-- FAQ item 4 -->
+      <div class="glass-card rounded-xl overflow-hidden border border-white/5">
+        <button onclick="toggleFaq(4)" class="w-full p-6 text-left flex items-center justify-between font-oswald text-base uppercase font-bold text-white hover:text-brand-accent transition-colors">
+          <span>How quickly are leads delivered to us?</span>
+          <span id="faq-icon-4" class="text-brand-accent transition-transform duration-300">&plus;</span>
+        </button>
+        <div id="faq-content-4" class="hidden border-t border-white/5 p-6 text-xs leading-relaxed text-gray-300 bg-white/2">
+          Instantly. Within 2 seconds of the homeowner submitting their profile on our Greenville campaigns, the data fires directly to your phone via SMS text message, and a detailed copy is sent to your email inbox.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Photo Modal Component -->
+  <div id="photo-modal" class="hidden fixed inset-0 z-50 overflow-hidden bg-brand-dark/95 backdrop-blur-md flex items-center justify-center p-4" onclick="closePhotoModal()">
+    <div class="relative max-w-4xl w-full flex flex-col items-center">
+      <button class="absolute top-4 right-4 text-white text-3xl font-bold hover:text-brand-accent focus:outline-none" onclick="closePhotoModal()">&times;</button>
+      <img id="photo-modal-img" class="rounded-xl max-h-[80vh] object-contain shadow-2xl border border-white/10" src="" alt="Full size preview">
+      <p id="photo-modal-caption" class="text-gray-300 font-medium text-xs mt-4 bg-brand-dark/80 px-4 py-2 rounded-full border border-white/5"></p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-brand-dark border-t border-brand-border py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+      
+      <!-- Footer Logo -->
+      <div class="flex items-center gap-3">
+        <div class="bg-gradient-to-br from-brand-accent to-amber-500 p-2 rounded-xl text-brand-dark shadow shadow-brand-accent/10">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M19 2H5c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM5 8V4h14v4H5zm12 4H7c-1.1 0-2 .9-2 2v2H3v2h2v4c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2v-4h2v-2h-2v-2c0-1.1-.9-2-2-2zm0 8H7v-4h10v4z"/>
+          </svg>
+        </div>
+        <span class="font-oswald text-xl font-bold tracking-tight text-white">PaintLead<span class="bg-gradient-to-r from-brand-accent to-amber-400 bg-clip-text text-transparent">Pro</span></span>
+      </div>
+
+      <!-- Footer Copy -->
+      <p class="text-xs text-gray-500 text-center md:text-left">
+        &copy; 2026 PaintLead Pro. Dedicated exclusive contractor campaigns for Greenville & Upstate SC. All rights reserved.
+      </p>
+
+      <!-- Footer Links -->
+      <div class="flex items-center gap-6 text-xs text-gray-400">
+        <a href="#how-it-works" class="hover:text-brand-accent transition-colors">How It Works</a>
+        <a href="#lead-quality" class="hover:text-brand-accent transition-colors">Quality</a>
+        <a href="#faq" class="hover:text-brand-accent transition-colors">FAQ</a>
+        <a href="#qualification-form" class="hover:text-brand-accent transition-colors">Availability</a>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Script for Interactive Elements -->
+  <script>
+    // 1. Audio tone generation using Web Audio API (Futuristic Dispatch Tone)
+    function playDispatchTone() {
+      if (!document.getElementById('simulator-sound').checked) return;
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const ctx = new AudioContext();
+        
+        // Pitch 1
+        const osc1 = ctx.createOscillator();
+        const gain1 = ctx.createGain();
+        osc1.connect(gain1);
+        gain1.connect(ctx.destination);
+        osc1.frequency.setValueAtTime(520, ctx.currentTime);
+        gain1.gain.setValueAtTime(0.08, ctx.currentTime);
+        gain1.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+        osc1.start(ctx.currentTime);
+        osc1.stop(ctx.currentTime + 0.12);
+
+        // Pitch 2 (slightly offset)
+        const osc2 = ctx.createOscillator();
+        const gain2 = ctx.createGain();
+        osc2.connect(gain2);
+        gain2.connect(ctx.destination);
+        osc2.frequency.setValueAtTime(660, ctx.currentTime + 0.1);
+        gain2.gain.setValueAtTime(0.08, ctx.currentTime + 0.1);
+        gain2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+        osc2.start(ctx.currentTime + 0.1);
+        osc2.stop(ctx.currentTime + 0.3);
+
+      } catch (e) {
+        console.warn("Web Audio API not allowed/supported in this state: ", e);
+      }
+    }
+
+    // 2. Spots remaining decrease simulation
+    setTimeout(() => {
+      const counterEl = document.getElementById('spots-counter');
+      const bannerTextEl = document.getElementById('banner-spots-text');
+      if (counterEl) {
+        counterEl.textContent = "1 contractor spot";
+        bannerTextEl.classList.add('animate-pulse');
+        // add quick highlight border flash effect
+        bannerTextEl.parentElement.classList.add('border-brand-accent');
+      }
+    }, 9000);
+
+    // 3. Live leads simulator database models
+    const leadTemplates = {
+      siding: {
+        title: "Exterior Siding Painting",
+        budget: "$6,500 - $9,000",
+        location: "Greenville, SC",
+        name: "David K.",
+        timeline: "Within 2 Weeks",
+        notes: "Full exterior repainting on horizontal cement board siding. Need trim, soffit, and gutters coated in contrasting colors. Looking for licensed painters."
+      },
+      interior: {
+        title: "Interior Whole-House",
+        budget: "$4,000 - $6,500",
+        location: "Greer, SC",
+        name: "Patricia L.",
+        timeline: "This Month",
+        notes: "Living room, dining room, kitchen, and hallway ceilings + walls. Minor sheetrock repairs needed. Insured and clean crew only."
+      },
+      cabinet: {
+        title: "Cabinet & Trim Spraying",
+        budget: "$2,500 - $4,200",
+        location: "Simpsonville, SC",
+        name: "Robert M.",
+        timeline: "Next 3 Weeks",
+        notes: "18 maple kitchen cabinets + 8 drawers. Spray finish (lacquer or equivalent durable paint) in white. Hardware replacement prep required."
+      },
+      deck: {
+        title: "Deck & Fence Staining",
+        budget: "$1,800 - $3,000",
+        location: "Mauldin, SC",
+        name: "Jessica P.",
+        timeline: "Immediate",
+        notes: "14x16 elevated pressure-treated wood deck. Needs complete power wash, sanding, and application of premium semi-transparent solid stain."
+      }
+    };
+
+    const firstNames = ["Thomas", "Michael", "Karen", "Sarah", "Richard", "Linda", "John", "Elizabeth", "Kevin", "Charles"];
+    const lastNames = ["H.", "S.", "B.", "G.", "W.", "M.", "R.", "C.", "T.", "N."];
+    const cities = ["Greenville, SC", "Simpsonville, SC", "Greer, SC", "Mauldin, SC", "Easley, SC", "Taylors, SC", "Travelers Rest, SC"];
+    const scopes = [
+      {
+        title: "Exterior Siding Painting",
+        budget: "$7,000 - $11,000",
+        notes: "Clapboard cedar siding needs complete preparation. Sticking sash window frames require scraping. Quality latex exterior coat."
+      },
+      {
+        title: "Cabinet Coating",
+        budget: "$3,200 - $4,500",
+        notes: "Kitchen refinishing. Sanding, priming, double-coat polyurethane spray finish. Modern charcoal gray choice."
+      },
+      {
+        title: "Interior Repaint",
+        budget: "$4,800 - $7,200",
+        notes: "Foyer, stairwell, high ceilings. Wallpaper removal in dining room. Crisp trim coat."
+      },
+      {
+        title: "Stucco Painting",
+        budget: "$5,500 - $8,000",
+        notes: "Cracks repair, elastomeric coating on entire stucco home. Simpsonville area."
+      }
+    ];
+
+    // Track active lead details for the Playbook modal
+    let activeLeadData = {};
+
+    function getTimestamp() {
+      const now = new Date();
+      let hours = now.getHours();
+      let minutes = now.getMinutes();
+      let seconds = now.getSeconds();
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12;
+      hours = hours ? hours : 12; // 0 should be 12
+      minutes = minutes < 10 ? '0'+minutes : minutes;
+      seconds = seconds < 10 ? '0'+seconds : seconds;
+      return `${hours}:${minutes}:${seconds} ${ampm}`;
+    }
+
+    function simulateLead(title, budget, location) {
+      // Find key templates
+      let template = {
+        title: title,
+        budget: budget,
+        location: location,
+        name: "Local Homeowner",
+        timeline: "Within 2-4 Weeks",
+        notes: "Wants premium paint coatings. Needs licensed estimator to perform site walk next week."
+      };
+
+      // Match key template details if possible
+      if (title.includes('Siding')) template = leadTemplates.siding;
+      else if (title.includes('Interior')) template = leadTemplates.interior;
+      else if (title.includes('Cabinet')) template = leadTemplates.cabinet;
+      else if (title.includes('Deck')) template = leadTemplates.deck;
+
+      activeLeadData = template;
+
+      // Update timestamp
+      document.getElementById('simulator-timestamp').textContent = getTimestamp();
+
+      // Play audio beep
+      playDispatchTone();
+
+      // Inject UI card html
+      const container = document.getElementById('simulator-display-container');
+      container.innerHTML = `
+        <div class="space-y-4 animate-fade-in">
+          <div class="flex justify-between items-start flex-wrap gap-2">
+            <div>
+              <h4 class="font-bold text-white text-base">${template.name}</h4>
+              <p class="text-[10px] text-gray-400">${template.location}</p>
+            </div>
+            <span class="bg-brand-accent/10 border border-brand-accent/30 text-brand-accent text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1.5">
+              <span class="h-1.5 w-1.5 rounded-full bg-brand-accent animate-pulse"></span> ⚡ READY FOR DISPATCH
+            </span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4 text-xs bg-black/45 p-4 rounded-xl border border-white/5">
+            <div>
+              <span class="text-gray-500 font-medium block text-[10px] uppercase">Project Scope</span>
+              <strong class="text-white block mt-0.5">${template.title}</strong>
+            </div>
+            <div>
+              <span class="text-gray-500 font-medium block text-[10px] uppercase">Estimated Budget</span>
+              <strong class="text-emerald-400 block mt-0.5">${template.budget}</strong>
+            </div>
+            <div>
+              <span class="text-gray-500 font-medium block text-[10px] uppercase">Client Timeline</span>
+              <strong class="text-brand-accent block mt-0.5">${template.timeline}</strong>
+            </div>
+            <div>
+              <span class="text-gray-500 font-medium block text-[10px] uppercase">Delivery Speed</span>
+              <strong class="text-white block mt-0.5">Instant SMS/Email</strong>
+            </div>
+          </div>
+
+          <div class="space-y-1">
+            <span class="text-[9px] font-bold text-gray-400 uppercase tracking-wider block">Homeowner Notes & Details:</span>
+            <p class="text-xs text-gray-300 bg-white/5 border border-white/5 p-3 rounded-lg leading-relaxed">
+              "${template.notes}"
+            </p>
+          </div>
+
+          <div class="pt-2">
+            <button onclick="openScriptModal()" class="w-full bg-brand-accent hover:bg-brand-accentHover text-brand-dark font-oswald uppercase text-xs tracking-wider py-3 px-4 rounded-xl flex items-center justify-center gap-2 font-bold transition-all shadow-lg shadow-brand-accent/10">
+              <span>📖 Open Gemini Outreach Script Playbook</span>
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function generateAILead() {
+      const loader = document.getElementById('simulator-inner-loader');
+      loader.classList.remove('hidden');
+
+      // simulate API lag of 1.2s
+      setTimeout(() => {
+        loader.classList.add('hidden');
+
+        // random builder
+        const rName = firstNames[Math.floor(Math.random() * firstNames.length)] + " " + lastNames[Math.floor(Math.random() * lastNames.length)];
+        const rCity = cities[Math.floor(Math.random() * cities.length)];
+        const rScope = scopes[Math.floor(Math.random() * scopes.length)];
+        const rTimeline = ["Within 2 Weeks", "Next 30 Days", "Immediate (Need estimates now)"][Math.floor(Math.random() * 3)];
+
+        activeLeadData = {
+          name: rName,
+          location: rCity,
+          title: rScope.title,
+          budget: rScope.budget,
+          timeline: rTimeline,
+          notes: rScope.notes
+        };
+
+        // Timestamp
+        document.getElementById('simulator-timestamp').textContent = getTimestamp();
+
+        // play tone
+        playDispatchTone();
+
+        // Inject HTML
+        const container = document.getElementById('simulator-display-container');
+        container.innerHTML = `
+          <div class="space-y-4 animate-fade-in">
+            <div class="flex justify-between items-start flex-wrap gap-2">
+              <div>
+                <h4 class="font-bold text-white text-base">${activeLeadData.name}</h4>
+                <p class="text-[10px] text-gray-400">${activeLeadData.location}</p>
+              </div>
+              <span class="bg-violet-500/10 border border-violet-500/30 text-violet-400 text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1.5">
+                <span class="h-1.5 w-1.5 rounded-full bg-violet-400 animate-pulse"></span> 🤖 GEMINI AI GENERATED
+              </span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 text-xs bg-black/45 p-4 rounded-xl border border-white/5">
+              <div>
+                <span class="text-gray-500 font-medium block text-[10px] uppercase">Project Scope</span>
+                <strong class="text-white block mt-0.5">${activeLeadData.title}</strong>
+              </div>
+              <div>
+                <span class="text-gray-500 font-medium block text-[10px] uppercase">Estimated Budget</span>
+                <strong class="text-emerald-400 block mt-0.5">${activeLeadData.budget}</strong>
+              </div>
+              <div>
+                <span class="text-gray-500 font-medium block text-[10px] uppercase">Client Timeline</span>
+                <strong class="text-brand-accent block mt-0.5">${activeLeadData.timeline}</strong>
+              </div>
+              <div>
+                <span class="text-gray-500 font-medium block text-[10px] uppercase">Lead Status</span>
+                <strong class="text-white block mt-0.5">Phone Verified</strong>
+              </div>
+            </div>
+
+            <div class="space-y-1">
+              <span class="text-[9px] font-bold text-gray-400 uppercase tracking-wider block">Homeowner Notes & Details:</span>
+              <p class="text-xs text-gray-300 bg-white/5 border border-white/5 p-3 rounded-lg leading-relaxed">
+                "${activeLeadData.notes}"
+              </p>
+            </div>
+
+            <div class="pt-2">
+              <button onclick="openScriptModal()" class="w-full bg-gradient-to-r from-violet-500 to-indigo-600 hover:from-violet-600 hover:to-indigo-700 text-white font-oswald uppercase text-xs tracking-wider py-3 px-4 rounded-xl flex items-center justify-center gap-2 font-bold transition-all shadow-lg">
+                <span>📖 Open Gemini Outreach Script Playbook</span>
+              </button>
+            </div>
+          </div>
+        `;
+
+      }, 1200);
+    }
+
+    // 4. Outreach script popup generator
+    function openScriptModal() {
+      const modal = document.getElementById('ai-script-modal');
+      const content = document.getElementById('ai-script-content');
+      
+      const lead = activeLeadData.name ? activeLeadData : leadTemplates.siding; // fallback
+
+      content.innerHTML = `
+        <div class="space-y-5 animate-fade-in text-sm text-gray-200">
+          <div class="bg-white/5 p-4 rounded-xl border border-white/5 flex flex-col gap-1.5">
+            <div><strong class="text-gray-400">Target Lead Name:</strong> ${lead.name}</div>
+            <div><strong class="text-gray-400">Project Type:</strong> ${lead.title}</div>
+            <div><strong class="text-gray-400">Target Budget:</strong> ${lead.budget}</div>
+            <div><strong class="text-gray-400">Location boundaries:</strong> ${lead.location}</div>
+          </div>
+
+          <div class="space-y-2">
+            <span class="text-[10px] font-bold text-brand-accent uppercase tracking-widest block">Phase 1: Speed-To-Lead Phone Script (Call within 5 mins)</span>
+            <div class="bg-black/40 border border-white/5 p-4 rounded-xl font-mono text-xs leading-relaxed select-all cursor-pointer hover:border-brand-accent/20 transition-all">
+              "Hi ${lead.name.split(' ')[0]}, this is [Your Name] with [Company Name]. I just received your request for an estimate on your ${lead.title} project in ${lead.location.split(',')[0]} and wanted to reach out right away.<br><br>
+              I read your notes about: '${lead.notes.substring(0, 100)}...'<br><br>
+              It sounds like a great project. We specialize in Upstate repaints and can perform a detailed site walk to write a concrete quote. Do you have 10 minutes either tomorrow afternoon or Wednesday morning for us to swing by?"
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <span class="text-[10px] font-bold text-brand-accent uppercase tracking-widest block">Phase 2: Immediate Follow-up SMS (If no answer)</span>
+            <div class="bg-black/40 border border-white/5 p-4 rounded-xl font-mono text-xs leading-relaxed select-all cursor-pointer hover:border-brand-accent/20 transition-all">
+              "Hi ${lead.name.split(' ')[0]}, this is [Your Name] with [Company Name]. Tried calling you regarding your ${lead.title} request in ${lead.location.split(',')[0]}! I want to confirm if you're looking to get estimates this week or next so we can arrange our estimators. Feel free to text me back here!"
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <span class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest block">Key Qualification Questions to Ask:</span>
+            <ul class="list-disc pl-5 space-y-1 text-xs text-gray-300">
+              <li>"Are we matching existing colors, or are you looking to do a full design change?"</li>
+              <li>"I noticed your timeline is ${lead.timeline}. Is there any event or deadline we need to coordinate crew planning around?"</li>
+              <li>"For the budget of ${lead.budget}, are you looking for basic cover coatings or premium lifetime wash-resistant coatings?"</li>
+            </ul>
+          </div>
+        </div>
+      `;
+
+      modal.classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+    }
+
+    function closeScriptModal() {
+      document.getElementById('ai-script-modal').classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    // 5. Qualification multi-step form state management
+    let currentStep = 1;
+    function nextFormStep(step) {
+      // Validate inputs of previous step if advancing
+      if (step > currentStep) {
+        if (currentStep === 1) {
+          // ensure at least one area is checked
+          const checked = document.querySelectorAll('input[name="locations"]:checked');
+          if (checked.length === 0) {
+            alert("Please select at least one Greenville service location to continue.");
+            return;
+          }
+        }
+      }
+
+      // Hide all steps
+      document.getElementById('step-content-1').classList.add('hidden');
+      document.getElementById('step-content-2').classList.add('hidden');
+      document.getElementById('step-content-3').classList.add('hidden');
+
+      // Show requested step
+      document.getElementById(`step-content-${step}`).classList.remove('hidden');
+
+      // Update progress bar UI styling
+      for (let i = 1; i <= 3; i++) {
+        const bar = document.getElementById(`progress-step-${i}`);
+        if (i <= step) {
+          bar.classList.remove('bg-white/10');
+          bar.classList.add('bg-brand-accent');
+        } else {
+          bar.classList.remove('bg-brand-accent');
+          bar.classList.add('bg-white/10');
+        }
+      }
+
+      currentStep = step;
+    }
+
+    function submitQualificationForm() {
+      // Basic validations
+      const company = document.getElementById('form-company').value.trim();
+      const contact = document.getElementById('form-contact').value.trim();
+      const phone = document.getElementById('form-phone').value.trim();
+      const email = document.getElementById('form-email').value.trim();
+
+      if (!company || !contact || !phone || !email) {
+        alert("Please fill in all company and contact fields to proceed.");
+        return;
+      }
+
+      const mask = document.getElementById('form-loader-mask');
+      const maskTitle = document.getElementById('form-loader-title');
+      const maskSub = document.getElementById('form-loader-sub');
+      
+      mask.classList.remove('hidden');
+      
+      // Step 1: Scan area
+      setTimeout(() => {
+        maskTitle.textContent = "Checking Greenville Territory Capacity";
+        maskSub.textContent = "Verifying exclusive zip boundaries...";
+      }, 1000);
+
+      // Step 2: Lock and final
+      setTimeout(() => {
+        maskTitle.textContent = "Finalizing Verification Checks";
+        maskSub.textContent = "Registering lead routing systems...";
+      }, 2000);
+
+      // Success reveal
+      setTimeout(() => {
+        mask.classList.add('hidden');
+        document.getElementById('success-email').textContent = email;
+        document.getElementById('form-success-mask').classList.remove('hidden');
+      }, 3000);
+    }
+
+    function resetQualificationForm() {
+      document.getElementById('multi-step-form').reset();
+      document.getElementById('form-success-mask').classList.add('hidden');
+      nextFormStep(1);
+    }
+
+    // 6. Photo viewer modal
+    function openPhotoModal(imgUrl, captionText) {
+      const modal = document.getElementById('photo-modal');
+      const img = document.getElementById('photo-modal-img');
+      const caption = document.getElementById('photo-modal-caption');
+
+      img.src = imgUrl;
+      caption.textContent = captionText;
+      
+      modal.classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+    }
+
+    function closePhotoModal() {
+      document.getElementById('photo-modal').classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    // 7. FAQ accordion toggle
+    function toggleFaq(index) {
+      const content = document.getElementById(`faq-content-${index}`);
+      const icon = document.getElementById(`faq-icon-${index}`);
+
+      if (content.classList.contains('hidden')) {
+        content.classList.remove('hidden');
+        icon.innerHTML = "&minus;";
+        icon.classList.add('rotate-45');
+      } else {
+        content.classList.add('hidden');
+        icon.innerHTML = "&plus;";
+        icon.classList.remove('rotate-45');
+      }
+    }
+
+    // 8. Scroll reveal animation framework
+    document.addEventListener("DOMContentLoaded", () => {
+      const reveals = document.querySelectorAll('.scroll-reveal');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('reveal-visible');
+          }
+        });
+      }, {
+        threshold: 0.1
+      });
+
+      reveals.forEach(el => observer.observe(el));
+      
+      // Auto-trigger simulation of first card on load
+      simulateLead('Exterior Siding Painting', '$6,500 - $9,000', 'Greenville, SC');
+    });
+  </script>
+</body>
+</html>
