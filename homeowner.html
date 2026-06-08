@@ -132,6 +132,23 @@
     .custom-scrollbar::-webkit-scrollbar-thumb:hover {
       background: #FFC700;
     }
+
+    /* Hero section video container styling with ambient amber glow and lift effect */
+    .hero-video-container {
+      position: relative;
+      border-radius: 1.5rem;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08), 0 0 25px rgba(255, 199, 0, 0.12);
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .hero-video-container:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 30px 50px rgba(0, 0, 0, 0.12), 0 0 35px rgba(255, 199, 0, 0.22);
+    }
+    .hero-video-container video {
+      border: 0;
+      outline: none;
+    }
   </style>
 </head>
 <body class="text-slate-800 font-sans antialiased overflow-x-hidden relative">
@@ -161,16 +178,36 @@
     </div>
   </header>
 
-  <!-- Hero Hero Copy (Sherwin-Williams Banner) -->
-  <section class="py-12 border-b border-slate-200/80">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
-      <span class="bg-amber-100 text-amber-800 font-semibold tracking-wider text-[10px] uppercase px-3 py-1 rounded-full border border-amber-200/30">Homeowner AI Visualizer</span>
-      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-oswald font-bold uppercase text-slate-900 leading-none">
-        See Your Home Repainted <br><span class="bg-gradient-to-r from-amber-500 to-amber-600 bg-clip-text text-transparent">With Gemini AI</span> Instantly
-      </h1>
-      <p class="text-slate-500 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
-        Upload a picture of your house exterior, siding, walls, or kitchen cabinets. Select popular Sherwin-Williams colors recommended by AI, compare before/after with our slider, and get a fast online quote.
-      </p>
+  <!-- Hero Section (Redesigned with video) -->
+  <section class="py-12 md:py-16 border-b border-slate-200/80 relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="grid lg:grid-cols-12 gap-12 items-center">
+        <!-- Left Side: Copy -->
+        <div class="lg:col-span-7 text-center lg:text-left space-y-4">
+          <span class="inline-block bg-amber-100 text-amber-800 font-semibold tracking-wider text-[10px] uppercase px-3 py-1 rounded-full border border-amber-200/30">Homeowner AI Visualizer</span>
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-oswald font-bold uppercase text-slate-900 leading-tight">
+            See Your Home Repainted <br><span class="bg-gradient-to-r from-amber-500 to-amber-600 bg-clip-text text-transparent">With Gemini AI</span> Instantly
+          </h1>
+          <p class="text-slate-500 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto lg:mx-0">
+            Upload a picture of your house exterior, siding, walls, or kitchen cabinets. Select popular Sherwin-Williams colors recommended by AI, compare before/after with our slider, and get a fast online quote.
+          </p>
+        </div>
+
+        <!-- Right Side: Square Video -->
+        <div class="lg:col-span-5 flex justify-center lg:justify-end w-full">
+          <div class="hero-video-container w-full max-w-[420px] aspect-square">
+            <video 
+              id="hero-video"
+              src="videos/paintleadpro_square.mp4" 
+              autoplay 
+              loop 
+              playsinline 
+              controls 
+              class="w-full h-full object-cover block"
+            ></video>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -774,55 +811,82 @@
       const loaderSub = document.getElementById('funnel-loader-sub');
 
       loader.classList.remove('hidden');
+      loaderTitle.textContent = "Analyzing Siding Layers";
+      loaderSub.textContent = "Sending image to Gemini Vision API...";
 
-      setTimeout(() => {
-        loaderTitle.textContent = "Estimating Area Dimensions";
-        loaderSub.textContent = "Calculating coat volume metrics...";
-      }, 1000);
+      // Standard fallback values
+      let computedPrice = "$3,800 - $5,200";
+      if (scope === 'cabinet') computedPrice = "$2,400 - $3,600";
+      else if (scope === 'deck') computedPrice = "$1,600 - $2,500";
+      else if (budget.includes('10,000')) computedPrice = "$9,500 - $12,800";
+      else if (budget.includes('5,000')) computedPrice = "$5,600 - $7,400";
 
-      setTimeout(() => {
-        loaderTitle.textContent = "Connecting Painter Databases";
+      let analysisNotes = "Estimate includes: Complete power washing prep, minor hole filling/caulking, 1 primer basecoat, and 2 full satin duration coatings. Pricing calculated using Upstate Greenville average labor rates.";
+      let paintRecommendation = scope === 'deck' ? 'SW SuperDeck Solid Stain' : 'SW Emerald Interior/Exterior';
+
+      // Execute Vercel Serverless call
+      (async () => {
+        try {
+          const response = await fetch('/api/analyze-surface', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              image: uploadedImageURL || defaultImages[scope] || defaultImages.exterior,
+              color: selectedColorName
+            })
+          });
+
+          if (response.ok) {
+            const result = await response.json();
+            if (result.success) {
+              analysisNotes = `Gemini Prep Notes: ${result.prepNotes} (Estimated Paint: ${result.gallonsEstimate})`;
+              paintRecommendation = result.primerRecommended || paintRecommendation;
+            }
+          }
+        } catch (err) {
+          console.warn("Backend API error or network block. Falling back to local mock defaults.", err);
+        }
+
+        loaderTitle.textContent = "Calculating Quote Brackets";
         loaderSub.textContent = "Querying Greenville contractor rates...";
-      }, 2000);
 
-      setTimeout(() => {
-        loader.classList.add('hidden');
+        setTimeout(() => {
+          loader.classList.add('hidden');
 
-        // Formulate quote price bracket
-        let computedPrice = "$3,800 - $5,200";
-        if (scope === 'cabinet') computedPrice = "$2,400 - $3,600";
-        else if (scope === 'deck') computedPrice = "$1,600 - $2,500";
-        else if (budget.includes('10,000')) computedPrice = "$9,500 - $12,800";
-        else if (budget.includes('5,000')) computedPrice = "$5,600 - $7,400";
+          document.getElementById('quote-price-range').textContent = computedPrice;
+          document.getElementById('quote-paint-recommendation').textContent = paintRecommendation;
+          document.getElementById('quote-color').textContent = selectedColorName;
 
-        document.getElementById('quote-price-range').textContent = computedPrice;
-        document.getElementById('quote-paint-recommendation').textContent = scope === 'deck' ? 'SW SuperDeck Solid Stain' : 'SW Emerald Interior/Exterior';
-        document.getElementById('quote-color').textContent = selectedColorName;
+          // Update notes in quote sheet
+          const detailsParagraph = document.querySelector('#funnel-step-content-4 p.leading-relaxed');
+          if (detailsParagraph) {
+            detailsParagraph.innerHTML = analysisNotes;
+          }
 
-        // Save lead locally to database simulation
-        const leads = JSON.parse(localStorage.getItem('paintlead_leads') || '[]');
-        const newLead = {
-          id: Date.now(),
-          name: name,
-          email: email,
-          phone: phone,
-          address: address,
-          scope: scope.charAt(0).toUpperCase() + scope.slice(1) + " Repaint",
-          budget: computedPrice,
-          timeline: timeline,
-          color: selectedColorName,
-          colorHex: selectedColorHex,
-          photo: uploadedImageURL || defaultImages[scope] || defaultImages.exterior,
-          status: 'Confirmed - Estimator Scheduled',
-          voiceStatus: 'Incoming verification call queued'
-        };
-        leads.unshift(newLead);
-        localStorage.setItem('paintlead_leads', JSON.stringify(leads));
+          // Save lead locally to database simulation
+          const leads = JSON.parse(localStorage.getItem('paintlead_leads') || '[]');
+          const newLead = {
+            id: Date.now(),
+            name: name,
+            email: email,
+            phone: phone,
+            address: address,
+            scope: scope.charAt(0).toUpperCase() + scope.slice(1) + " Repaint",
+            budget: computedPrice,
+            timeline: timeline,
+            color: selectedColorName,
+            colorHex: selectedColorHex,
+            photo: uploadedImageURL || defaultImages[scope] || defaultImages.exterior,
+            status: 'Confirmed - Estimator Scheduled',
+            voiceStatus: 'Incoming verification call queued'
+          };
+          leads.unshift(newLead);
+          localStorage.setItem('paintlead_leads', JSON.stringify(leads));
 
-        // Advance to step 4
-        nextFunnelStep(4);
-
-      }, 3000);
+          // Advance to step 4
+          nextFunnelStep(4);
+        }, 1000);
+      })();
     }
 
     // 6. Floating Chatbot toggle & questions response
@@ -892,6 +956,14 @@
 
       }, 800);
     }
+
+    // Autoplay policy bypass helper: unmute/play on first document interaction
+    document.addEventListener('click', () => {
+      const video = document.getElementById('hero-video');
+      if (video && video.paused) {
+        video.play().catch(err => console.log("Autoplay play blocked by browser policy", err));
+      }
+    }, { once: true });
   </script>
 </body>
 </html>

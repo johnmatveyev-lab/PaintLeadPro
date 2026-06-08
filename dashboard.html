@@ -511,22 +511,57 @@
       clearInterval(callInterval);
     }
 
-    function runCallSimulation() {
+    async function runCallSimulation() {
       const lead = leadsData.find(l => l.id === simulationLeadId);
       if (!lead) return;
 
       const btn = document.getElementById('voice-action-btn');
-      btn.textContent = "Call in Progress...";
+      btn.textContent = "Calling...";
       btn.disabled = true;
       btn.classList.add('opacity-50');
 
       const logBody = document.getElementById('voice-call-log');
       logBody.innerHTML = `
         <div class="text-xs text-slate-500 flex items-center gap-2">
-          <span class="animate-spin rounded-full h-3 w-3 border-t border-slate-400"></span> Dialing ${lead.phone}...
+          <span class="animate-spin rounded-full h-3 w-3 border-t border-slate-400"></span> Dialing ${lead.phone} via API...
         </div>
       `;
 
+      try {
+        const response = await fetch('/api/voice-agent', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            leadId: lead.id,
+            phone: lead.phone,
+            name: lead.name,
+            scope: lead.scope,
+            budget: lead.budget,
+            color: lead.color
+          })
+        });
+
+        const result = await response.json();
+        if (!response.ok) {
+          throw new Error(result.error || result.details || 'API error');
+        }
+
+        const modeStr = result.mode === 'PROD' ? 'Production (Vapi)' : 'Sandbox Simulation';
+        logBody.innerHTML = `
+          <div class="text-xs text-slate-500 flex items-center gap-2">
+            <span class="h-2.5 w-2.5 rounded-full bg-emerald-500"></span> Outbound call initialized via ${modeStr}.
+          </div>
+        `;
+      } catch (err) {
+        console.warn("Failed to contact /api/voice-agent. Falling back to local offline sandbox simulator.", err);
+        logBody.innerHTML = `
+          <div class="text-xs text-amber-600 flex items-center gap-2">
+            ⚠️ API offline or key missing. Falling back to offline sandbox simulator.
+          </div>
+        `;
+      }
+
+      // Proceed with the visual interactive dialogue steps
       const dialogueSteps = [
         { speaker: "system", text: "📞 Homeowner answered. Audio connection established." },
         { speaker: "chloe", text: `Hi ${lead.name.split(' ')[0]}, this is Chloe with PaintLead Pro. I just received your visualizer quote request for the ${lead.scope.toLowerCase()} in ${lead.address.split(',')[0]}!` },
@@ -583,17 +618,50 @@
     }
 
     // 8. partner syndication dispatch
-    function dispatchLead(id) {
+    async function dispatchLead(id) {
       const lead = leadsData.find(l => l.id === id);
       if (!lead) return;
 
-      lead.status = "Dispatched - In-Network Partner";
-      localStorage.setItem('paintlead_leads', JSON.stringify(leadsData));
-      
+      // Update state first to show loader
+      const originalStatus = lead.status;
+      lead.status = "Dispatching...";
       loadLeads();
       selectLead(id);
 
-      alert(`Lead details for ${lead.name} successfully dispatched to Greenville Painting Pros via SMS Gateway!`);
+      try {
+        const response = await fetch('/api/dispatch-lead', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            phone: lead.phone,
+            name: lead.name,
+            address: lead.address,
+            scope: lead.scope,
+            budget: lead.budget,
+            color: lead.color
+          })
+        });
+
+        const result = await response.json();
+        if (!response.ok) {
+          throw new Error(result.error || result.details || 'Dispatch API error');
+        }
+
+        lead.status = "Dispatched - In-Network Partner";
+        localStorage.setItem('paintlead_leads', JSON.stringify(leadsData));
+        loadLeads();
+        selectLead(id);
+
+        const modeStr = result.mode === 'PROD' ? 'Live Twilio SMS' : 'Sandbox Simulated SMS';
+        alert(`Lead details for ${lead.name} successfully dispatched to painting partners!\nGateway Mode: ${modeStr}\nMessage: ${result.message}`);
+      } catch (err) {
+        console.warn("Failed to reach dispatch API, falling back to simulated dispatch.", err);
+        lead.status = "Dispatched - In-Network Partner";
+        localStorage.setItem('paintlead_leads', JSON.stringify(leadsData));
+        loadLeads();
+        selectLead(id);
+        alert(`Lead details for ${lead.name} successfully dispatched to Greenville Painting Pros via simulated gateway (API offline/no credentials)!`);
+      }
     }
 
     function clearLeads() {
