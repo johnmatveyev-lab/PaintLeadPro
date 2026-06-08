@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PaintLead Pro - Transform Your Home with AI Visualization</title>
+  
+  <!-- Google Fonts: Oswald for high-impact headers, Plus Jakarta Sans for body text -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            oswald: ['"Oswald"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              dark: '#020712',
+              navy: '#071126',
+              accent: '#FFC700',
+              accentHover: '#F5B000',
+              lightBlue: '#0F2547',
+              border: 'rgba(0, 0, 0, 0.08)',
+              glassBg: 'rgba(255, 255, 255, 0.8)',
+              glassBgLight: 'rgba(255, 255, 255, 0.4)'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Modern Light Grid system */
+    body {
+      background-color: #f8fafc;
+      background-image: 
+        radial-gradient(rgba(0, 0, 0, 0.03) 1.2px, transparent 1.2px);
+      background-size: 24px 24px;
+      background-attachment: fixed;
+    }
+
+    /* Premium Light Glassmorphism */
+    .glass-navbar {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    .glass-card {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
+    }
+
+    .glass-input {
+      background: rgba(255, 255, 255, 0.6);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(4px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .glass-input:focus {
+      border-color: #FFC700;
+      box-shadow: 0 0 15px rgba(255, 199, 0, 0.2);
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    /* Before/After Visualizer CSS Slider overlay */
+    .visualizer-container {
+      position: relative;
+      overflow: hidden;
+      border-radius: 1rem;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    .slider-after {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 50%;
+      overflow: hidden;
+      border-right: 2px solid #FFC700;
+    }
+
+    .color-tint-overlay {
+      mix-blend-mode: multiply;
+      opacity: 0.8;
+      transition: background-color 0.4s ease;
+    }
+
+    /* Ambient background soft glow orbs */
+    .glow-orb-light {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.45;
+      transition: all 2s ease-in-out;
+    }
+
+    @keyframes drift-slow-1 {
+      0%, 100% { transform: translate(0px, 0px) scale(1); }
+      50% { transform: translate(40px, -50px) scale(1.1); }
+    }
+    .animate-drift-light { animation: drift-slow-1 15s infinite ease-in-out; }
+
+    /* Custom Webkit scrollbar */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.15);
+      border-radius: 3px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #FFC700;
+    }
+  </style>
+</head>
+<body class="text-slate-800 font-sans antialiased overflow-x-hidden relative">
+
+  <!-- Ambient Light Orbs -->
+  <div class="glow-orb-light w-[400px] h-[400px] bg-yellow-200/50 top-12 -left-10 animate-drift-light"></div>
+  <div class="glow-orb-light w-[500px] h-[500px] bg-blue-100/50 top-1/3 right-0 animate-drift-light" style="animation-delay: 2s;"></div>
+
+  <!-- Header / Navigation -->
+  <header class="sticky top-0 z-50 glass-navbar">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <!-- Logo -->
+      <a href="#" class="flex items-center gap-3 group">
+        <div class="bg-gradient-to-br from-brand-accent to-amber-500 p-2 rounded-xl text-brand-dark shadow-md transition-all group-hover:scale-105">
+          <svg class="w-6 h-6 text-slate-900" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M19 2H5c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM5 8V4h14v4H5zm12 4H7c-1.1 0-2 .9-2 2v2H3v2h2v4c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2v-4h2v-2h-2v-2c0-1.1-.9-2-2-2zm0 8H7v-4h10v4z"/>
+          </svg>
+        </div>
+        <span class="font-oswald text-2xl font-bold tracking-tight text-slate-900">PaintLead<span class="bg-gradient-to-r from-amber-500 to-amber-600 bg-clip-text text-transparent">Pro</span></span>
+      </a>
+
+      <!-- Demo Toggle Switcher Links -->
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="text-xs font-semibold text-slate-500 hover:text-slate-900 bg-slate-200/50 px-3.5 py-1.5 rounded-full transition-all">Contractor Portal &rarr;</a>
+        <a href="dashboard.html" class="text-xs font-semibold text-slate-500 hover:text-slate-900 bg-slate-200/50 px-3.5 py-1.5 rounded-full transition-all">Client Lead Hub &rarr;</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Hero Copy (Sherwin-Williams Banner) -->
+  <section class="py-12 border-b border-slate-200/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
+      <span class="bg-amber-100 text-amber-800 font-semibold tracking-wider text-[10px] uppercase px-3 py-1 rounded-full border border-amber-200/30">Homeowner AI Visualizer</span>
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-oswald font-bold uppercase text-slate-900 leading-none">
+        See Your Home Repainted <br><span class="bg-gradient-to-r from-amber-500 to-amber-600 bg-clip-text text-transparent">With Gemini AI</span> Instantly
+      </h1>
+      <p class="text-slate-500 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+        Upload a picture of your house exterior, siding, walls, or kitchen cabinets. Select popular Sherwin-Williams colors recommended by AI, compare before/after with our slider, and get a fast online quote.
+      </p>
+    </div>
+  </section>
+
+  <!-- Funnel Scaffolding Section -->
+  <section class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <div class="grid lg:grid-cols-12 gap-12 items-start">
+      
+      <!-- Left Side: Interactive Paint Visualizer Before/After -->
+      <div class="lg:col-span-6 space-y-6">
+        
+        <div class="glass-card rounded-2xl p-4 sm:p-5 relative border border-slate-200/60 shadow-lg">
+          <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
+            <span class="font-oswald text-sm uppercase font-bold text-slate-800">📸 Interactive Canvas Sandbox</span>
+            <span id="active-sw-color" class="text-[10px] font-bold text-slate-500 bg-slate-100 py-1 px-2.5 rounded-full flex items-center gap-1.5">
+              Select a color below
+            </span>
+          </div>
+
+          <!-- Slider Container -->
+          <div class="visualizer-container aspect-[4/3] bg-slate-100 relative group">
+            
+            <!-- Before Image (Default: Unsplash Clean Exterior Siding) -->
+            <img id="visualizer-before" class="absolute inset-0 w-full h-full object-cover pointer-events-none" src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&q=80&w=800" alt="Home Before Painting">
+            
+            <!-- After Container (Resizable via Slider value) -->
+            <div id="visualizer-after-box" class="slider-after">
+              <!-- After Image -->
+              <img id="visualizer-after-img" class="absolute top-0 left-0 w-full h-full object-cover max-w-none pointer-events-none" src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&q=80&w=800" alt="Home After Painting">
+              <!-- Tint Overlay -->
+              <div id="color-overlay-tint" class="color-tint-overlay absolute inset-0 bg-transparent"></div>
+            </div>
+
+            <!-- Visual Slider Handle line overlay -->
+            <div id="slider-handle" class="absolute top-0 bottom-0 w-0.5 bg-brand-accent pointer-events-none z-20" style="left: 50%;">
+              <div class="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 h-8 w-8 rounded-full bg-slate-900 border-2 border-brand-accent flex items-center justify-center text-white text-[10px] shadow-lg">
+                ↔
+              </div>
+            </div>
+
+            <!-- Invisible range input control slider -->
+            <input type="range" min="0" max="100" value="50" id="before-after-range" class="absolute inset-0 w-full h-full opacity-0 cursor-ew-resize z-30" oninput="updateBeforeAfterSlider(this.value)">
+
+            <!-- Upload file picker overlay mask -->
+            <div id="upload-mask" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm flex flex-col items-center justify-center text-center p-6 transition-all hover:bg-slate-900/70 cursor-pointer z-10 hidden">
+              <span class="text-4xl mb-2">📤</span>
+              <h4 class="font-bold text-white text-sm">Drop Your Home Photo Here</h4>
+              <p class="text-[10px] text-gray-300 mt-1 max-w-xs">Supports JPG, PNG file uploads. House exterior, cabinets, or room walls work best.</p>
+            </div>
+
+            <!-- Loader spinner mask -->
+            <div id="visualizer-loader" class="hidden absolute inset-0 bg-slate-950/90 flex flex-col items-center justify-center space-y-3 z-40 rounded-2xl text-center">
+              <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-brand-accent border-r-2 border-brand-accent/20"></div>
+              <h4 class="font-oswald text-xs uppercase font-bold text-white tracking-wider">Gemini AI Estimating Mask</h4>
+              <p class="text-[9px] text-gray-400">Repainting surface layers dynamically...</p>
+            </div>
+
+          </div>
+
+          <!-- Bottom controls -->
+          <div class="mt-4 flex justify-between items-center gap-4 flex-wrap">
+            <label class="bg-slate-100 hover:bg-slate-200/80 text-slate-800 font-semibold text-xs py-2 px-4 rounded-lg cursor-pointer border border-slate-200 transition-colors">
+              📁 Upload New House Photo
+              <input type="file" id="visualizer-upload" accept="image/*" class="hidden" onchange="handleImageUpload(this)">
+            </label>
+            <span class="text-[10px] text-slate-500 font-medium">← Drag slider back & forth to compare →</span>
+          </div>
+
+        </div>
+
+        <!-- Sherwin-Williams Color Recommendations -->
+        <div class="glass-card rounded-2xl p-5 border border-slate-200/60 shadow-lg space-y-4">
+          <div>
+            <h3 class="font-oswald text-base uppercase font-bold text-slate-900">Recommended Sherwin-Williams Color Schemes</h3>
+            <p class="text-xs text-slate-500 mt-0.5">Click any SW color scheme card to repaint the visualizer above.</p>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <!-- SW Alabaster -->
+            <button onclick="applyColor('Alabaster SW 7008', '#F2EFE9')" class="glass-input hover:border-slate-300 rounded-xl p-3 text-left transition-all hover:bg-slate-50 flex flex-col gap-2">
+              <div class="h-8 w-full rounded border border-slate-200/30" style="background-color: #F2EFE9;"></div>
+              <div>
+                <strong class="text-[10px] block font-bold text-slate-900 leading-tight">Alabaster</strong>
+                <span class="text-[8px] text-slate-400">SW 7008 (Warm White)</span>
+              </div>
+            </button>
+
+            <!-- SW Sea Salt -->
+            <button onclick="applyColor('Sea Salt SW 6204', '#CDD5D1')" class="glass-input hover:border-slate-300 rounded-xl p-3 text-left transition-all hover:bg-slate-50 flex flex-col gap-2">
+              <div class="h-8 w-full rounded border border-slate-200/30" style="background-color: #CDD5D1;"></div>
+              <div>
+                <strong class="text-[10px] block font-bold text-slate-900 leading-tight">Sea Salt</strong>
+                <span class="text-[8px] text-slate-400">SW 6204 (Soft Muted Sage)</span>
+              </div>
+            </button>
+
+            <!-- SW Naval -->
+            <button onclick="applyColor('Naval SW 6244', '#2F3D4A')" class="glass-input hover:border-slate-300 rounded-xl p-3 text-left transition-all hover:bg-slate-50 flex flex-col gap-2">
+              <div class="h-8 w-full rounded border border-slate-200/30" style="background-color: #2F3D4A;"></div>
+              <div>
+                <strong class="text-[10px] block font-bold text-slate-900 leading-tight">Naval</strong>
+                <span class="text-[8px] text-slate-400">SW 6244 (Deep Blue)</span>
+              </div>
+            </button>
+
+            <!-- SW Repose Gray -->
+            <button onclick="applyColor('Repose Gray SW 7015', '#D4D1CB')" class="glass-input hover:border-slate-300 rounded-xl p-3 text-left transition-all hover:bg-slate-50 flex flex-col gap-2">
+              <div class="h-8 w-full rounded border border-slate-200/30" style="background-color: #D4D1CB;"></div>
+              <div>
+                <strong class="text-[10px] block font-bold text-slate-900 leading-tight">Repose Gray</strong>
+                <span class="text-[8px] text-slate-400">SW 7015 (Warm Gray)</span>
+              </div>
+            </button>
+
+            <!-- SW Tricorn Black -->
+            <button onclick="applyColor('Tricorn Black SW 6258', '#3F4042')" class="glass-input hover:border-slate-300 rounded-xl p-3 text-left transition-all hover:bg-slate-50 flex flex-col gap-2">
+              <div class="h-8 w-full rounded border border-slate-200/30" style="background-color: #3F4042;"></div>
+              <div>
+                <strong class="text-[10px] block font-bold text-slate-900 leading-tight">Tricorn Black</strong>
+                <span class="text-[8px] text-slate-400">SW 6258 (Modern Dark)</span>
+              </div>
+            </button>
+
+            <!-- SW Agreeable Gray -->
+            <button onclick="applyColor('Agreeable Gray SW 7029', '#D9D5CD')" class="glass-input hover:border-slate-300 rounded-xl p-3 text-left transition-all hover:bg-slate-50 flex flex-col gap-2">
+              <div class="h-8 w-full rounded border border-slate-200/30" style="background-color: #D9D5CD;"></div>
+              <div>
+                <strong class="text-[10px] block font-bold text-slate-900 leading-tight">Agreeable Gray</strong>
+                <span class="text-[8px] text-slate-400">SW 7029 (Classic Gray)</span>
+              </div>
+            </button>
+
+            <!-- SW Urban Bronze -->
+            <button onclick="applyColor('Urban Bronze SW 7048', '#54514D')" class="glass-input hover:border-slate-300 rounded-xl p-3 text-left transition-all hover:bg-slate-50 flex flex-col gap-2">
+              <div class="h-8 w-full rounded border border-slate-200/30" style="background-color: #54514D;"></div>
+              <div>
+                <strong class="text-[10px] block font-bold text-slate-900 leading-tight">Urban Bronze</strong>
+                <span class="text-[8px] text-slate-400">SW 7048 (Bronze Gray)</span>
+              </div>
+            </button>
+
+            <!-- SW Evergreen Fog -->
+            <button onclick="applyColor('Evergreen Fog SW 9130', '#92978F')" class="glass-input hover:border-slate-300 rounded-xl p-3 text-left transition-all hover:bg-slate-50 flex flex-col gap-2">
+              <div class="h-8 w-full rounded border border-slate-200/30" style="background-color: #92978F;"></div>
+              <div>
+                <strong class="text-[10px] block font-bold text-slate-900 leading-tight">Evergreen Fog</strong>
+                <span class="text-[8px] text-slate-400">SW 9130 (Sage Gray)</span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Side: Step-by-Step Lead Intake Funnel Form -->
+      <div class="lg:col-span-6 bg-white border border-slate-200/80 rounded-2xl p-6 sm:p-8 shadow-xl relative min-h-[500px] flex flex-col justify-between overflow-hidden">
+        
+        <!-- Step Indicator Header -->
+        <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
+          <div class="flex items-center gap-2">
+            <span class="bg-amber-500 text-slate-900 h-6 w-6 rounded-full flex items-center justify-center font-oswald text-xs font-bold" id="funnel-step-badge">1</span>
+            <span class="text-xs uppercase font-semibold tracking-wider text-slate-700" id="funnel-step-title">Scope & Visualizer File</span>
+          </div>
+          <div class="flex items-center gap-1.5" id="funnel-bullets">
+            <span class="h-2 w-2 rounded-full bg-brand-accent" id="bullet-1"></span>
+            <span class="h-2 w-2 rounded-full bg-slate-200" id="bullet-2"></span>
+            <span class="h-2 w-2 rounded-full bg-slate-200" id="bullet-3"></span>
+            <span class="h-2 w-2 rounded-full bg-slate-200" id="bullet-4"></span>
+          </div>
+        </div>
+
+        <form id="funnel-form" onsubmit="event.preventDefault();" class="flex-grow flex flex-col justify-between">
+          
+          <!-- Funnel Step 1: Upload Check -->
+          <div id="funnel-step-content-1" class="space-y-4 animate-fade-in flex-grow">
+            <h3 class="font-oswald text-lg uppercase font-bold text-slate-900">Choose Your Project surface Scope & Upload Photo:</h3>
+            <p class="text-xs text-slate-500">We require at least one photo of the surface to run the AI paint and volume calculator engine.</p>
+            
+            <div class="space-y-4 pt-2">
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1.5">Project Category</label>
+                <select id="funnel-scope-select" class="glass-input w-full p-3.5 rounded-xl text-xs focus:outline-none focus:border-brand-accent text-slate-800" onchange="updateDefaultVisualizerImg(this.value)">
+                  <option value="exterior" selected>🏠 Whole Siding (House Exterior)</option>
+                  <option value="interior">🚪 Room Walls (Interior Repaint)</option>
+                  <option value="cabinet">✨ Kitchen Cabinets (Refinishing)</option>
+                  <option value="deck">🪵 Deck / Fence (Staining)</option>
+                </select>
+              </div>
+
+              <!-- Upload Drag & Drop Area mockup -->
+              <div onclick="document.getElementById('visualizer-upload').click();" class="border-2 border-dashed border-slate-200 rounded-xl p-8 text-center hover:border-brand-accent hover:bg-slate-50 transition-all cursor-pointer">
+                <span class="text-3xl">🖼️</span>
+                <h4 class="font-bold text-xs text-slate-900 mt-2" id="funnel-upload-status">Click to Select Project Photo</h4>
+                <p class="text-[9px] text-slate-400 mt-1">Accepts JPG, PNG house overview photos</p>
+              </div>
+            </div>
+
+            <div class="pt-6 flex justify-end">
+              <button type="button" onclick="nextFunnelStep(2)" class="btn-shine-effect bg-slate-900 text-brand-accent font-oswald uppercase tracking-wider font-bold py-3 px-8 rounded-lg hover:bg-slate-800 transition shadow text-xs">
+                Continue to Quote Details &rarr;
+              </button>
+            </div>
+          </div>
+
+          <!-- Funnel Step 2: Budgets & Timeline -->
+          <div id="funnel-step-content-2" class="hidden space-y-4 animate-fade-in flex-grow">
+            <h3 class="font-oswald text-lg uppercase font-bold text-slate-900">Repaint Budgets & Timelines</h3>
+            <p class="text-xs text-slate-500">Provide estimate ranges so our system can calculate pricing algorithms.</p>
+            
+            <div class="space-y-4 pt-2">
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-2">What is your target budget for this project?</label>
+                <div class="grid grid-cols-2 gap-3">
+                  <label class="glass-input p-3.5 rounded-xl flex items-center gap-3 cursor-pointer hover:border-brand-accent hover:bg-slate-50 transition-all">
+                    <input type="radio" name="funnel-budget" value="$1,000 - $3,000" class="accent-brand-accent">
+                    <span class="text-xs font-medium text-slate-700">$1K – $3K</span>
+                  </label>
+                  <label class="glass-input p-3.5 rounded-xl flex items-center gap-3 cursor-pointer hover:border-brand-accent hover:bg-slate-50 transition-all">
+                    <input type="radio" name="funnel-budget" value="$3,000 - $5,000" class="accent-brand-accent" checked>
+                    <span class="text-xs font-medium text-slate-700">$3K – $5K</span>
+                  </label>
+                  <label class="glass-input p-3.5 rounded-xl flex items-center gap-3 cursor-pointer hover:border-brand-accent hover:bg-slate-50 transition-all">
+                    <input type="radio" name="funnel-budget" value="$5,000 - $10,000" class="accent-brand-accent">
+                    <span class="text-xs font-medium text-slate-700">$5K – $10K</span>
+                  </label>
+                  <label class="glass-input p-3.5 rounded-xl flex items-center gap-3 cursor-pointer hover:border-brand-accent hover:bg-slate-50 transition-all">
+                    <input type="radio" name="funnel-budget" value="$10,000+" class="accent-brand-accent">
+                    <span class="text-xs font-medium text-slate-700">$10K+</span>
+                  </label>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1.5">How quickly do you need this painted?</label>
+                <select id="funnel-timeline-select" class="glass-input w-full p-3.5 rounded-xl text-xs focus:outline-none focus:border-brand-accent text-slate-800">
+                  <option value="Immediate" selected>⚡ ASAP (Need quotes this week)</option>
+                  <option value="Next Month">📅 Next Month</option>
+                  <option value="Planning Mode">🎨 Planning / Exploring Colors</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="pt-6 flex justify-between items-center">
+              <button type="button" onclick="nextFunnelStep(1)" class="text-xs font-semibold text-slate-400 hover:text-slate-800 transition">
+                &larr; Back
+              </button>
+              <button type="button" onclick="nextFunnelStep(3)" class="btn-shine-effect bg-slate-900 text-brand-accent font-oswald uppercase tracking-wider font-bold py-3 px-8 rounded-lg hover:bg-slate-800 transition shadow text-xs">
+                Continue to Contacts &rarr;
+              </button>
+            </div>
+          </div>
+
+          <!-- Funnel Step 3: Contacts -->
+          <div id="funnel-step-content-3" class="hidden space-y-4 animate-fade-in flex-grow">
+            <h3 class="font-oswald text-lg uppercase font-bold text-slate-900">Confirm Your Location & Contact Details</h3>
+            <p class="text-xs text-slate-500">Provide details to receive the AI generated quote report and confirm agent routing.</p>
+            
+            <div class="space-y-4 pt-2">
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Property Street Address (For satellite square footage checks)</label>
+                <input type="text" id="funnel-address" required placeholder="124 Main Street, Greenville, SC" class="glass-input w-full p-3.5 rounded-xl text-xs focus:outline-none focus:border-brand-accent text-slate-800">
+              </div>
+
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">Your Full Name</label>
+                  <input type="text" id="funnel-name" required placeholder="David Henderson" class="glass-input w-full p-3.5 rounded-xl text-xs focus:outline-none focus:border-brand-accent text-slate-800">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">Mobile Phone (For SMS confirmations)</label>
+                  <input type="tel" id="funnel-phone" required placeholder="(864) 555-0199" class="glass-input w-full p-3.5 rounded-xl text-xs focus:outline-none focus:border-brand-accent text-slate-800">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Email Address</label>
+                <input type="email" id="funnel-email" required placeholder="david@company.com" class="glass-input w-full p-3.5 rounded-xl text-xs focus:outline-none focus:border-brand-accent text-slate-800">
+              </div>
+            </div>
+
+            <div class="pt-6 flex justify-between items-center">
+              <button type="button" onclick="nextFunnelStep(2)" class="text-xs font-semibold text-slate-400 hover:text-slate-800 transition">
+                &larr; Back
+              </button>
+              <button type="button" onclick="submitHomeownerLead()" class="btn-shine-effect bg-gradient-to-r from-brand-accent to-amber-500 text-brand-dark font-oswald uppercase tracking-wider font-bold py-3.5 px-8 rounded-lg hover:from-amber-400 hover:to-amber-600 transition shadow-lg shadow-brand-accent/25 text-xs font-bold">
+                Generate AI Estimate Quote &rarr;
+              </button>
+            </div>
+          </div>
+
+          <!-- Funnel Step 4: AI Quote Display -->
+          <div id="funnel-step-content-4" class="hidden space-y-4 animate-fade-in flex-grow flex flex-col justify-between">
+            <div class="space-y-4">
+              <div class="h-12 w-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-xl animate-bounce">
+                ✔
+              </div>
+              <h3 class="font-oswald text-xl uppercase font-bold text-slate-900">Your AI Estimated Quote is Ready!</h3>
+              
+              <!-- Quote Details Board -->
+              <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-4 text-xs">
+                <div class="flex justify-between border-b border-slate-200 pb-2">
+                  <span class="text-slate-500">Estimated Price Range:</span>
+                  <strong class="text-emerald-600 text-base" id="quote-price-range">$3,500 - $4,800</strong>
+                </div>
+                <div class="flex justify-between border-b border-slate-200 pb-2">
+                  <span class="text-slate-500">Materials Recommendation:</span>
+                  <strong class="text-slate-900" id="quote-paint-recommendation">SW Emerald Latex Premium</strong>
+                </div>
+                <div class="flex justify-between border-b border-slate-200 pb-2">
+                  <span class="text-slate-500">Estimated Color:</span>
+                  <strong class="text-slate-900" id="quote-color">Alabaster SW 7008</strong>
+                </div>
+                <div class="space-y-1">
+                  <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Scope Calculation Details:</span>
+                  <p class="text-[11px] text-slate-600 leading-relaxed">
+                    Estimate includes: Complete power washing prep, minor hole filling/caulking, 1 primer basecoat, and 2 full satin duration coatings. Pricing calculated using Upstate Greenville average labor rates.
+                  </p>
+                </div>
+              </div>
+
+              <p class="text-[11px] text-slate-500 leading-relaxed">
+                🎯 **Next Step**: Our AI Voice agent **Chloe** will call you at the number provided in under 10 minutes to verify these details and hook you up with one of our certified in-network painter contractors.
+              </p>
+            </div>
+
+            <div class="pt-6 flex justify-end">
+              <a href="dashboard.html" class="bg-slate-900 hover:bg-slate-800 text-brand-accent font-oswald uppercase text-xs tracking-wider py-3 px-6 rounded-xl transition shadow flex items-center gap-2">
+                <span>View Dashboard (Review Lead Call Status) &rarr;</span>
+              </a>
+            </div>
+          </div>
+
+        </form>
+
+        <!-- Funnel loading mask -->
+        <div id="funnel-loader-mask" class="hidden absolute inset-0 bg-white/95 flex flex-col items-center justify-center space-y-4 z-20">
+          <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-brand-accent border-r-2 border-brand-accent/20"></div>
+          <div class="text-center space-y-1">
+            <h4 class="font-oswald text-base uppercase font-bold text-slate-800" id="funnel-loader-title">Analyzing Siding Layers</h4>
+            <p class="text-[10px] text-slate-500" id="funnel-loader-sub">Measuring paint square-footage via satellite...</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Step-by-Step Info Funnel Showcase Section -->
+  <section class="py-20 bg-slate-100/50 border-t border-slate-200/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-2xl mx-auto mb-16 space-y-4">
+        <h2 class="text-3xl font-oswald font-bold uppercase text-slate-900 tracking-tight">
+          The Automated Estimator Journey
+        </h2>
+        <p class="text-slate-500 text-sm">
+          No waiting around for days. We use direct AI visualizers and automated voice agent confirmations to schedule your paint project in minutes.
+        </p>
+      </div>
+
+      <div class="grid sm:grid-cols-3 gap-8">
+        <!-- Step 1 -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
+          <div class="h-10 w-10 bg-brand-accent text-slate-900 rounded-xl flex items-center justify-center font-oswald text-lg font-bold">1</div>
+          <h4 class="font-oswald text-base uppercase font-bold text-slate-950">AI Surface Analysis</h4>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Our visualizer analyzes the photos you upload, recommends Sherwin-Williams colors, and computes estimate brackets.
+          </p>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
+          <div class="h-10 w-10 bg-brand-accent text-slate-900 rounded-xl flex items-center justify-center font-oswald text-lg font-bold">2</div>
+          <h4 class="font-oswald text-base uppercase font-bold text-slate-950">AI Phone Confirmation</h4>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Our automated voice receptionist dials your number, confirms scope options, and schedules a certified contractor walk.
+          </p>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
+          <div class="h-10 w-10 bg-brand-accent text-slate-900 rounded-xl flex items-center justify-center font-oswald text-lg font-bold">3</div>
+          <h4 class="font-oswald text-base uppercase font-bold text-slate-950">Dispatch to Painters</h4>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            The lead dispatches strictly to one certified in-network contractor who arrives to paint your project.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive AI Chatbot Widget (Floating) -->
+  <div class="fixed bottom-6 right-6 z-50">
+    <!-- Chat Button -->
+    <button onclick="toggleChatbot()" class="h-14 w-14 rounded-full bg-slate-900 text-brand-accent flex items-center justify-center shadow-2xl hover:scale-105 transition-all focus:outline-none relative">
+      <span class="text-2xl" id="chat-btn-icon">💬</span>
+      <span class="absolute top-0 right-0 h-3 w-3 bg-emerald-500 rounded-full border border-slate-900 animate-pulse"></span>
+    </button>
+
+    <!-- Chat Panel -->
+    <div id="chat-panel" class="hidden absolute bottom-18 right-0 w-[350px] h-[450px] bg-white border border-slate-200 shadow-2xl rounded-2xl overflow-hidden flex flex-col justify-between">
+      <!-- Header -->
+      <div class="bg-slate-900 p-4 text-white flex justify-between items-center border-b border-slate-800">
+        <div class="flex items-center gap-2">
+          <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <div>
+            <h4 class="font-oswald text-xs uppercase font-bold text-brand-accent tracking-wider leading-none">Gemini Sales Assistant</h4>
+            <span class="text-[9px] text-gray-400">Ask about SW Colors & Estimates</span>
+          </div>
+        </div>
+        <button onclick="toggleChatbot()" class="text-white text-lg font-bold hover:text-brand-accent">&times;</button>
+      </div>
+
+      <!-- Messages Body -->
+      <div id="chat-messages" class="p-4 flex-grow overflow-y-auto space-y-3 custom-scrollbar bg-slate-50 text-xs">
+        <div class="flex gap-2 items-start">
+          <div class="bg-slate-200 text-slate-800 p-2.5 rounded-2xl rounded-tl-none max-w-[80%] leading-relaxed">
+            Hi! I am your AI Paint assistant. Ask me anything about Sherwin-Williams color combinations, paint durabilities in Greenville, or how our quote system works!
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Input -->
+      <div class="p-3 border-t border-slate-100 flex gap-2 items-center bg-white">
+        <input type="text" id="chat-input" placeholder="Type color name or question..." class="flex-grow glass-input p-2.5 rounded-xl text-xs focus:outline-none focus:border-brand-accent text-slate-800" onkeydown="if(event.key === 'Enter') sendChatMessage()">
+        <button onclick="sendChatMessage()" class="bg-slate-900 hover:bg-slate-800 text-brand-accent p-2.5 rounded-xl transition font-bold text-xs">
+          Send
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-slate-950 border-t border-slate-900 py-12 text-slate-400">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+      
+      <!-- Footer Logo -->
+      <div class="flex items-center gap-3">
+        <div class="bg-gradient-to-br from-brand-accent to-amber-500 p-2 rounded-xl text-brand-dark shadow">
+          <svg class="w-5 h-5 text-slate-900" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M19 2H5c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM5 8V4h14v4H5zm12 4H7c-1.1 0-2 .9-2 2v2H3v2h2v4c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2v-4h2v-2h-2v-2c0-1.1-.9-2-2-2zm0 8H7v-4h10v4z"/>
+          </svg>
+        </div>
+        <span class="font-oswald text-xl font-bold tracking-tight text-white">PaintLead<span class="bg-gradient-to-r from-brand-accent to-amber-400 bg-clip-text text-transparent">Pro</span></span>
+      </div>
+
+      <!-- Footer Copy -->
+      <p class="text-xs text-slate-500 text-center md:text-left">
+        &copy; 2026 PaintLead Pro Homeowner Portal. Supporting Greenville, SC. All rights reserved.
+      </p>
+
+      <!-- Footer Links -->
+      <div class="flex items-center gap-6 text-xs text-slate-500">
+        <a href="index.html" class="hover:text-brand-accent transition-colors">Contractor Portal</a>
+        <a href="dashboard.html" class="hover:text-brand-accent transition-colors">Client Hub</a>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Script logic for Homeowner Page -->
+  <script>
+    // Visualizer color defaults
+    let selectedColorName = "None";
+    let selectedColorHex = "";
+    let uploadedImageURL = "";
+
+    const defaultImages = {
+      exterior: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&q=80&w=800",
+      interior: "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&q=80&w=800",
+      cabinet: "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&q=80&w=800",
+      deck: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&q=80&w=800"
+    };
+
+    function updateDefaultVisualizerImg(scope) {
+      const imgUrl = defaultImages[scope] || defaultImages.exterior;
+      if (!uploadedImageURL) {
+        document.getElementById('visualizer-before').src = imgUrl;
+        document.getElementById('visualizer-after-img').src = imgUrl;
+      }
+      
+      // Update label in step 1 uploader
+      document.getElementById('funnel-upload-status').textContent = `Upload Photo for ${scope.charAt(0).toUpperCase() + scope.slice(1)} Repaint`;
+    }
+
+    // 1. Before/After slider coordinate update
+    function updateBeforeAfterSlider(value) {
+      document.getElementById('visualizer-after-box').style.width = value + '%';
+      document.getElementById('slider-handle').style.left = value + '%';
+    }
+
+    // 2. Select SW color click handler
+    function applyColor(name, hex) {
+      selectedColorName = name;
+      selectedColorHex = hex;
+
+      // Update color badge
+      const badge = document.getElementById('active-sw-color');
+      badge.innerHTML = `<span class="h-2.5 w-2.5 rounded-full border border-slate-200" style="background-color: ${hex};"></span> ${name}`;
+      badge.classList.remove('bg-slate-100');
+      badge.classList.add('bg-white', 'border', 'border-slate-200');
+
+      // Trigger Visualizer AI repainting effect spinner
+      const loader = document.getElementById('visualizer-loader');
+      loader.classList.remove('hidden');
+
+      setTimeout(() => {
+        loader.classList.add('hidden');
+        
+        // Ingest background color overlay
+        const tint = document.getElementById('color-overlay-tint');
+        tint.style.backgroundColor = hex;
+        tint.classList.remove('bg-transparent');
+      }, 1000);
+    }
+
+    // 3. Local file uploads parsing
+    function handleImageUpload(input) {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          uploadedImageURL = e.target.result;
+          
+          // Ingest to visualizer canvas elements
+          document.getElementById('visualizer-before').src = uploadedImageURL;
+          document.getElementById('visualizer-after-img').src = uploadedImageURL;
+
+          // update uploader label
+          document.getElementById('funnel-upload-status').textContent = `File Ready: ${input.files[0].name}`;
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    // 4. Step funnel transitions
+    let activeFunnelStep = 1;
+    function nextFunnelStep(step) {
+      if (step > activeFunnelStep) {
+        if (activeFunnelStep === 1) {
+          // Check if color is selected
+          if (selectedColorName === "None") {
+            alert("Please select one of the recommended Sherwin-Williams colors to preview the AI visualizer first.");
+            return;
+          }
+        }
+      }
+
+      // Hide all steps
+      document.getElementById('funnel-step-content-1').classList.add('hidden');
+      document.getElementById('funnel-step-content-2').classList.add('hidden');
+      document.getElementById('funnel-step-content-3').classList.add('hidden');
+      document.getElementById('funnel-step-content-4').classList.add('hidden');
+
+      // Show step
+      document.getElementById(`funnel-step-content-${step}`).classList.remove('hidden');
+
+      // Update titles
+      const titles = [
+        "Scope & Visualizer File",
+        "Project Budgets & Timelines",
+        "Confirm Locations & Contacts",
+        "AI Quote Confirmation Sheet"
+      ];
+      document.getElementById('funnel-step-title').textContent = titles[step - 1];
+      document.getElementById('funnel-step-badge').textContent = step;
+
+      // Update bullets
+      for (let i = 1; i <= 4; i++) {
+        const bullet = document.getElementById(`bullet-${i}`);
+        if (i <= step) {
+          bullet.classList.remove('bg-slate-200');
+          bullet.classList.add('bg-brand-accent');
+        } else {
+          bullet.classList.remove('bg-brand-accent');
+          bullet.classList.add('bg-slate-200');
+        }
+      }
+
+      activeFunnelStep = step;
+    }
+
+    // 5. Ingest lead and calculate quote
+    function submitHomeownerLead() {
+      const address = document.getElementById('funnel-address').value.trim();
+      const name = document.getElementById('funnel-name').value.trim();
+      const phone = document.getElementById('funnel-phone').value.trim();
+      const email = document.getElementById('funnel-email').value.trim();
+
+      if (!address || !name || !phone || !email) {
+        alert("Please complete the location and contact fields to generate the quote.");
+        return;
+      }
+
+      const scope = document.getElementById('funnel-scope-select').value;
+      const timeline = document.getElementById('funnel-timeline-select').value;
+      const budgetElement = document.querySelector('input[name="funnel-budget"]:checked');
+      const budget = budgetElement ? budgetElement.value : "$3,000 - $5,000";
+
+      // Trigger funnel loading overlay
+      const loader = document.getElementById('funnel-loader-mask');
+      const loaderTitle = document.getElementById('funnel-loader-title');
+      const loaderSub = document.getElementById('funnel-loader-sub');
+
+      loader.classList.remove('hidden');
+
+      setTimeout(() => {
+        loaderTitle.textContent = "Estimating Area Dimensions";
+        loaderSub.textContent = "Calculating coat volume metrics...";
+      }, 1000);
+
+      setTimeout(() => {
+        loaderTitle.textContent = "Connecting Painter Databases";
+        loaderSub.textContent = "Querying Greenville contractor rates...";
+      }, 2000);
+
+      setTimeout(() => {
+        loader.classList.add('hidden');
+
+        // Formulate quote price bracket
+        let computedPrice = "$3,800 - $5,200";
+        if (scope === 'cabinet') computedPrice = "$2,400 - $3,600";
+        else if (scope === 'deck') computedPrice = "$1,600 - $2,500";
+        else if (budget.includes('10,000')) computedPrice = "$9,500 - $12,800";
+        else if (budget.includes('5,000')) computedPrice = "$5,600 - $7,400";
+
+        document.getElementById('quote-price-range').textContent = computedPrice;
+        document.getElementById('quote-paint-recommendation').textContent = scope === 'deck' ? 'SW SuperDeck Solid Stain' : 'SW Emerald Interior/Exterior';
+        document.getElementById('quote-color').textContent = selectedColorName;
+
+        // Save lead locally to database simulation
+        const leads = JSON.parse(localStorage.getItem('paintlead_leads') || '[]');
+        const newLead = {
+          id: Date.now(),
+          name: name,
+          email: email,
+          phone: phone,
+          address: address,
+          scope: scope.charAt(0).toUpperCase() + scope.slice(1) + " Repaint",
+          budget: computedPrice,
+          timeline: timeline,
+          color: selectedColorName,
+          colorHex: selectedColorHex,
+          photo: uploadedImageURL || defaultImages[scope] || defaultImages.exterior,
+          status: 'Confirmed - Estimator Scheduled',
+          voiceStatus: 'Incoming verification call queued'
+        };
+        leads.unshift(newLead);
+        localStorage.setItem('paintlead_leads', JSON.stringify(leads));
+
+        // Advance to step 4
+        nextFunnelStep(4);
+
+      }, 3000);
+    }
+
+    // 6. Floating Chatbot toggle & questions response
+    function toggleChatbot() {
+      const panel = document.getElementById('chat-panel');
+      const icon = document.getElementById('chat-btn-icon');
+      
+      if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+        icon.textContent = "❌";
+      } else {
+        panel.classList.add('hidden');
+        icon.textContent = "💬";
+      }
+    }
+
+    const chatReplies = {
+      naval: "Sherwin-Williams Naval (SW 6244) is an iconic deep blue. It pairs gorgeously with Alabaster (SW 7008) trim for a high-contrast maritime accent look, or Repose Gray (SW 7015) for softer framing.",
+      alabaster: "Alabaster (SW 7008) is a warm, creamy off-white that avoids cool clinical tones. It is a fantastic choice for both interior ceiling/trim work and modern farmhouse siding.",
+      repore: "Repose Gray (SW 7015) is a highly versatile warm greige. It shifts colors dynamically depending on natural window light, making it a perfect neutral interior choice.",
+      exterior: "For Upstate South Carolina exteriors (cedar, stucco, hardy plank), we recommend premium Sherwin-Williams Emerald or Duration. These heavy-duty coatings withstand hot summers and last 8 to 11 years.",
+      cabinet: "Cabinet repaints require durable finishes. We recommend sand prep followed by Sherwin-Williams Gallery Series Waterborne lacquer coating. This provides a hard, scratch-resistant factory finish.",
+      price: "Repaint prices in Greenville SC vary: small kitchen cabinet coating runs $2k-$4k, average interior room walls run $300-$500 per room, and full cedar siding exteriors range $5k-$10k depending on prep scrape labor.",
+      duration: "Sherwin-Williams Duration is self-priming and highly mildew resistant, making it excellent for humid Southern regions."
+    };
+
+    function sendChatMessage() {
+      const input = document.getElementById('chat-input');
+      const text = input.value.trim().toLowerCase();
+      if (!text) return;
+
+      const chatBody = document.getElementById('chat-messages');
+
+      // Append user bubble
+      chatBody.innerHTML += `
+        <div class="flex gap-2 items-start justify-end">
+          <div class="bg-brand-accent text-slate-900 p-2.5 rounded-2xl rounded-tr-none max-w-[80%] leading-relaxed font-semibold">
+            ${input.value}
+          </div>
+        </div>
+      `;
+
+      input.value = "";
+      chatBody.scrollTop = chatBody.scrollHeight;
+
+      // AI response logic parsing
+      setTimeout(() => {
+        let reply = "I understand you have questions about paint systems. Complete our Quote Funnel, and our local voice agent will confirm all details. You can also specify SW colors in the Visualizer!";
+        
+        if (text.includes('naval')) reply = chatReplies.naval;
+        else if (text.includes('alabaster')) reply = chatReplies.alabaster;
+        else if (text.includes('gray') || text.includes('repose')) reply = chatReplies.repore;
+        else if (text.includes('cabinet')) reply = chatReplies.cabinet;
+        else if (text.includes('exterior') || text.includes('siding') || text.includes('last')) reply = chatReplies.exterior;
+        else if (text.includes('cost') || text.includes('price') || text.includes('how much')) reply = chatReplies.price;
+        else if (text.includes('duration') || text.includes('emerald')) reply = chatReplies.duration;
+
+        chatBody.innerHTML += `
+          <div class="flex gap-2 items-start">
+            <div class="bg-slate-200 text-slate-800 p-2.5 rounded-2xl rounded-tl-none max-w-[80%] leading-relaxed">
+              ${reply}
+            </div>
+          </div>
+        `;
+        
+        chatBody.scrollTop = chatBody.scrollHeight;
+
+      }, 800);
+    }
+  </script>
+</body>
+</html>
