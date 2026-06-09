@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PaintLead Pro - Client Partner Hub</title>
   
+  <!-- Supabase Client SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
   <!-- Google Fonts: Oswald for headers, Plus Jakarta Sans for body -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -241,6 +244,42 @@
     let activeUser = localStorage.getItem('paintlead_user') || null;
     let leadsData = [];
     let selectedLeadId = null;
+    let supabaseClient = null;
+
+    // Initialize Supabase Client on Dashboard
+    async function initSupabase() {
+      try {
+        const res = await fetch('/api/config');
+        if (res.ok) {
+          const config = await res.json();
+          if (config.supabaseUrl && config.supabaseAnonKey) {
+            const { createClient } = supabase;
+            supabaseClient = createClient(config.supabaseUrl, config.supabaseAnonKey);
+            console.log("Supabase Client initialized on Dashboard.");
+            subscribeRealtime();
+          } else {
+            console.log("Supabase config not found on backend. Operating in LocalStorage mode.");
+          }
+        }
+      } catch (err) {
+        console.warn("Failed to initialize Supabase on Dashboard. Operating in LocalStorage mode.", err);
+      }
+    }
+
+    function subscribeRealtime() {
+      if (!supabaseClient) return;
+      supabaseClient
+        .channel('public:leads')
+        .on(
+          'postgres_changes',
+          { event: '*', schema: 'public', table: 'leads' },
+          payload => {
+            console.log("Realtime database change received:", payload);
+            loadLeads(); // Reload feed to sync state changes
+          }
+        )
+        .subscribe();
+    }
 
     // Check login state on load
     document.addEventListener('DOMContentLoaded', () => {
@@ -260,7 +299,7 @@
       document.getElementById('auth-screen').classList.add('hidden');
       document.getElementById('dashboard-panel').classList.remove('hidden');
       document.getElementById('logged-in-user').textContent = activeUser;
-      loadLeads();
+      initSupabase().then(() => loadLeads());
     }
 
     function sendMagicLink() {
@@ -319,18 +358,80 @@
       }
     ];
 
-    function loadLeads() {
-      const stored = localStorage.getItem('paintlead_leads');
-      if (stored) {
-        leadsData = JSON.parse(stored);
+    async function loadLeads() {
+      if (supabaseClient) {
+        try {
+          const { data, error } = await supabaseClient
+            .from('leads')
+            .select('*')
+            .order('created_at', { ascending: false });
+          if (error) throw error;
+
+          leadsData = data.map(lead => ({
+            id: lead.id,
+            name: lead.name,
+            email: lead.email,
+            phone: lead.phone,
+            address: lead.address,
+            scope: lead.scope,
+            budget: lead.budget,
+            timeline: lead.timeline,
+            color: lead.color_name,
+            colorHex: lead.color_hex,
+            photo: lead.image_url,
+            status: lead.status,
+            voiceStatus: lead.voice_call_status
+          }));
+        } catch (err) {
+          console.error("Failed to load leads from Supabase. Falling back to local storage:", err);
+          loadLocalStorageLeads();
+        }
       } else {
-        // seed defaults
-        leadsData = [...preseededLeads];
-        localStorage.setItem('paintlead_leads', JSON.stringify(leadsData));
+        loadLocalStorageLeads();
       }
 
       renderLeads();
       updateStats();
+    }
+
+    function loadLocalStorageLeads() {
+      const stored = localStorage.getItem('paintlead_leads');
+      if (stored) {
+        leadsData = JSON.parse(stored);
+      } else {
+        leadsData = [...preseededLeads];
+        localStorage.setItem('paintlead_leads', JSON.stringify(leadsData));
+      }
+    }
+
+    async function saveLeadUpdates(id, updates) {
+      const supabaseUpdates = {};
+      if (updates.status !== undefined) supabaseUpdates.status = updates.status;
+      if (updates.voiceStatus !== undefined) supabaseUpdates.voice_call_status = updates.voiceStatus;
+
+      if (supabaseClient) {
+        try {
+          const { error } = await supabaseClient
+            .from('leads')
+            .update(supabaseUpdates)
+            .eq('id', id);
+          if (error) throw error;
+          console.log(`Lead ${id} updated in Supabase.`);
+        } catch (err) {
+          console.error("Failed to update lead in Supabase:", err);
+        }
+      }
+
+      // Also keep local storage updated so both modes are synchronized
+      const stored = localStorage.getItem('paintlead_leads');
+      if (stored) {
+        const localLeads = JSON.parse(stored);
+        const localLead = localLeads.find(l => String(l.id) === String(id));
+        if (localLead) {
+          Object.assign(localLead, updates);
+          localStorage.setItem('paintlead_leads', JSON.stringify(localLeads));
+        }
+      }
     }
 
     function updateStats() {
@@ -581,7 +682,10 @@
           // Complete simulation in database
           lead.status = "Confirmed - Walk Scheduled";
           lead.voiceStatus = "Spoke with homeowner - details confirmed";
-          localStorage.setItem('paintlead_leads', JSON.stringify(leadsData));
+          await saveLeadUpdates(simulationLeadId, {
+            status: "Confirmed - Walk Scheduled",
+            voiceStatus: "Spoke with homeowner - details confirmed"
+          });
           
           // Refresh views
           loadLeads();
@@ -648,7 +752,7 @@
         }
 
         lead.status = "Dispatched - In-Network Partner";
-        localStorage.setItem('paintlead_leads', JSON.stringify(leadsData));
+        await saveLeadUpdates(id, { status: "Dispatched - In-Network Partner" });
         loadLeads();
         selectLead(id);
 
@@ -657,14 +761,26 @@
       } catch (err) {
         console.warn("Failed to reach dispatch API, falling back to simulated dispatch.", err);
         lead.status = "Dispatched - In-Network Partner";
-        localStorage.setItem('paintlead_leads', JSON.stringify(leadsData));
+        await saveLeadUpdates(id, { status: "Dispatched - In-Network Partner" });
         loadLeads();
         selectLead(id);
         alert(`Lead details for ${lead.name} successfully dispatched to Greenville Painting Pros via simulated gateway (API offline/no credentials)!`);
       }
     }
 
-    function clearLeads() {
+    async function clearLeads() {
+      if (supabaseClient) {
+        try {
+          const { error } = await supabaseClient
+            .from('leads')
+            .delete()
+            .neq('id', '00000000-0000-0000-0000-000000000000');
+          if (error) throw error;
+          console.log("All leads deleted from Supabase.");
+        } catch (err) {
+          console.error("Failed to delete leads in Supabase:", err);
+        }
+      }
       localStorage.removeItem('paintlead_leads');
       loadLeads();
       const rightPanel = document.getElementById('selected-lead-card');

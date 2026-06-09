@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PaintLead Pro - Transform Your Home with AI Visualization</title>
   
+  <!-- Supabase Client SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
   <!-- Google Fonts: Oswald for high-impact headers, Plus Jakarta Sans for body text -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -669,6 +672,27 @@
 
   <!-- Script logic for Homeowner Page -->
   <script>
+    // Supabase Dual-Mode Client Setup
+    let supabaseClient = null;
+
+    (async function initSupabase() {
+      try {
+        const res = await fetch('/api/config');
+        if (res.ok) {
+          const config = await res.json();
+          if (config.supabaseUrl && config.supabaseAnonKey) {
+            const { createClient } = supabase;
+            supabaseClient = createClient(config.supabaseUrl, config.supabaseAnonKey);
+            console.log("Supabase Client initialized successfully.");
+          } else {
+            console.log("Supabase config not found on backend. Operating in LocalStorage mode.");
+          }
+        }
+      } catch (err) {
+        console.warn("Failed to fetch Supabase config. Operating in LocalStorage mode.", err);
+      }
+    })();
+
     // Visualizer color defaults
     let selectedColorName = "None";
     let selectedColorHex = "";
@@ -863,8 +887,7 @@
             detailsParagraph.innerHTML = analysisNotes;
           }
 
-          // Save lead locally to database simulation
-          const leads = JSON.parse(localStorage.getItem('paintlead_leads') || '[]');
+          // Save lead to Supabase if available, else fallback to localStorage
           const newLead = {
             id: Date.now(),
             name: name,
@@ -874,14 +897,59 @@
             scope: scope.charAt(0).toUpperCase() + scope.slice(1) + " Repaint",
             budget: computedPrice,
             timeline: timeline,
-            color: selectedColorName,
-            colorHex: selectedColorHex,
-            photo: uploadedImageURL || defaultImages[scope] || defaultImages.exterior,
-            status: 'Confirmed - Estimator Scheduled',
-            voiceStatus: 'Incoming verification call queued'
+            color_name: selectedColorName,
+            color_hex: selectedColorHex,
+            image_url: uploadedImageURL || defaultImages[scope] || defaultImages.exterior,
+            status: 'New Lead',
+            voice_call_status: 'Verification call queued'
           };
-          leads.unshift(newLead);
-          localStorage.setItem('paintlead_leads', JSON.stringify(leads));
+
+          (async () => {
+            if (supabaseClient) {
+              try {
+                const { error } = await supabaseClient
+                  .from('leads')
+                  .insert([{
+                    name: newLead.name,
+                    email: newLead.email,
+                    phone: newLead.phone,
+                    address: newLead.address,
+                    scope: newLead.scope,
+                    budget: newLead.budget,
+                    timeline: newLead.timeline,
+                    color_name: newLead.color_name,
+                    color_hex: newLead.color_hex,
+                    image_url: newLead.image_url,
+                    status: newLead.status,
+                    voice_call_status: newLead.voice_call_status
+                  }]);
+                if (error) throw error;
+                console.log("Lead inserted successfully into Supabase.");
+              } catch (err) {
+                console.error("Error inserting lead into Supabase. Saving locally instead:", err);
+              }
+            }
+            
+            // Always keep local storage updated so both modes display the new lead in client dashboards
+            const localLead = {
+              id: newLead.id,
+              name: newLead.name,
+              email: newLead.email,
+              phone: newLead.phone,
+              address: newLead.address,
+              scope: newLead.scope,
+              budget: newLead.budget,
+              timeline: newLead.timeline,
+              color: newLead.color_name,
+              colorHex: newLead.color_hex,
+              photo: newLead.image_url,
+              status: newLead.status,
+              voiceStatus: newLead.voice_call_status
+            };
+            const leads = JSON.parse(localStorage.getItem('paintlead_leads') || '[]');
+            leads.unshift(localLead);
+            localStorage.setItem('paintlead_leads', JSON.stringify(leads));
+          })();
 
           // Advance to step 4
           nextFunnelStep(4);
