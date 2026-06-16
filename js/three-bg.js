@@ -41,16 +41,16 @@ class ParticleBackground {
 
     if (isLowEnd) {
       this.performanceMode = true;
-      return 300;
+      return 450;
     }
 
     // Reduced density for light theme (subtler effect)
-    if (this.theme === 'light') return 500;
+    if (this.theme === 'light') return 800;
 
     // Dashboard gets fewer particles
-    if (document.body.classList.contains('dashboard-page')) return 350;
+    if (document.body.classList.contains('dashboard-page')) return 600;
 
-    return 800;
+    return 1200;
   }
 
   _init() {
@@ -98,17 +98,31 @@ class ParticleBackground {
 
     // ── Particles ──
     this.particlesGeometry = new THREE.BufferGeometry();
+    
+    // Set up particles on an XZ grid for wave and swarm effects
+    const amountX = Math.round(Math.sqrt(this.particleCount * 1.8));
+    const amountZ = Math.round(this.particleCount / amountX);
+    this.particleCount = amountX * amountZ; // Align to exact grid count
+    
     const positions = new Float32Array(this.particleCount * 3);
     const sizes = new Float32Array(this.particleCount);
-    const opacities = new Float32Array(this.particleCount);
+
+    const spacingX = 3.6;
+    const spacingZ = 3.6;
+    const offsetX = (amountX * spacingX) / 2;
+    const offsetZ = (amountZ * spacingZ) / 2;
 
     for (let i = 0; i < this.particleCount; i++) {
+      const ix = i % amountX;
+      const iz = Math.floor(i / amountX);
       const i3 = i * 3;
-      positions[i3] = (Math.random() - 0.5) * 120;
-      positions[i3 + 1] = (Math.random() - 0.5) * 80;
-      positions[i3 + 2] = (Math.random() - 0.5) * 60;
-      sizes[i] = Math.random() * 1.5 + 0.5;
-      opacities[i] = Math.random() * 0.5 + 0.3;
+      
+      // X and Z coordinates on a grid, jittered slightly for an organic swarm look
+      positions[i3] = ix * spacingX - offsetX + (Math.random() - 0.5) * 1.5;
+      positions[i3 + 1] = 0; // Y coordinate (starts flat, animated via wave formula)
+      positions[i3 + 2] = iz * spacingZ - offsetZ - 15 + (Math.random() - 0.5) * 1.5;
+      
+      sizes[i] = Math.random() * 0.8 + 0.4;
     }
 
     this.particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
@@ -116,7 +130,7 @@ class ParticleBackground {
 
     this.particlesMaterial = new THREE.PointsMaterial({
       color: particleColor,
-      size: 2.2,
+      size: 1.0, // Smaller particles for a unified swarm look (was 2.2)
       map: glowTexture,
       transparent: true,
       opacity: particleOpacity,
@@ -223,9 +237,22 @@ class ParticleBackground {
     this.camera.rotation.y = this.mouse.x * 0.03;
     this.camera.rotation.x = -this.mouse.y * 0.02;
 
-    // Particle field drift
-    this.particles.rotation.y = time * 0.02;
-    this.particles.rotation.x = Math.sin(time * 0.3) * 0.01;
+    // Particle wave animation
+    const positions = this.particlesGeometry.attributes.position.array;
+    for (let i = 0; i < this.particleCount; i++) {
+      const i3 = i * 3;
+      const x = positions[i3];
+      const z = positions[i3 + 2];
+      
+      // Beautiful complex wave formula
+      positions[i3 + 1] = Math.sin((x * 0.04) + (z * 0.04) + (time * 1.6)) * 4.5 +
+                          Math.sin((x * 0.08) - (z * 0.06) + (time * 1.0)) * 2.0;
+    }
+    this.particlesGeometry.attributes.position.needsUpdate = true;
+
+    // Subtle drift and tilt to show wave depth
+    this.particles.rotation.y = Math.sin(time * 0.08) * 0.04;
+    this.particles.rotation.x = -0.55 + Math.cos(time * 0.05) * 0.02;
 
     // Wireframe animations
     for (const wf of this.wireframes) {
