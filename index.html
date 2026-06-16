@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +10,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
+  <!-- Shared Design System CSS -->
+  <link rel="stylesheet" href="css/design-system.css">
+
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   
@@ -38,58 +41,11 @@
     }
   </script>
 
+  <!-- Three.js Background & Scroll FX -->
+  <script type="module" src="js/three-bg.js"></script>
+  <script src="js/scroll-fx.js"></script>
+
   <style>
-    /* Premium Futuristic Dot Matrix Grid system matching the reference screenshot */
-    body {
-      background-color: #020712;
-      background-image: 
-        radial-gradient(rgba(255, 255, 255, 0.05) 1.2px, transparent 1.2px);
-      background-size: 24px 24px;
-      background-attachment: fixed;
-    }
-
-    /* Premium Glassmorphism Design Tokens */
-    .glass-navbar {
-      background: rgba(2, 7, 18, 0.75);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    }
-    
-    .glass-card {
-      background: rgba(7, 17, 38, 0.65);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-    }
-
-    .glass-card-light {
-      background: rgba(255, 255, 255, 0.03);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .glass-card-accent {
-      background: rgba(255, 199, 0, 0.04);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 199, 0, 0.15);
-    }
-
-    .glass-input {
-      background: rgba(2, 7, 18, 0.5);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(4px);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .glass-input:focus {
-      border-color: #FFC700;
-      box-shadow: 0 0 15px rgba(255, 199, 0, 0.2);
-      background: rgba(2, 7, 18, 0.75);
-    }
-
     /* Elegant Paint Splat Linear Background Stroke Clip */
     .paint-header-stroke {
       background: linear-gradient(135deg, #FFC700 0%, #FFA800 100%);
@@ -97,141 +53,26 @@
       text-shadow: 0 1px 2px rgba(0,0,0,0.2);
     }
 
-    /* Custom Webkit scrollbar matching styling theme */
-    .custom-scrollbar::-webkit-scrollbar {
-      width: 6px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-track {
-      background: #020712;
-    }
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-      background: rgba(255, 199, 0, 0.5);
-      border-radius: 3px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-      background: #FFC700;
+    /* Page-specific glass card helper */
+    .glass-card-light {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
     }
 
-    /* Premium Ambient Shimmering Background Orbs that shift behind the dot grid */
-    .glow-orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(130px);
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.16;
-      transition: all 2s ease-in-out;
-    }
-
-    /* Shifting Background Orbs Keyframe Animations */
-    @keyframes drift-slow-1 {
-      0%, 100% { transform: translate(0px, 0px) scale(1); }
-      33% { transform: translate(60px, -80px) scale(1.2); }
-      66% { transform: translate(-40px, 60px) scale(0.85); }
-    }
-    @keyframes drift-slow-2 {
-      0%, 100% { transform: translate(0px, 0px) scale(1.1); }
-      50% { transform: translate(-70px, 70px) scale(0.9); }
-    }
-    @keyframes drift-slow-3 {
-      0%, 100% { transform: translate(0px, 0px) scale(1); }
-      50% { transform: translate(80px, -60px) scale(1.15); }
-    }
-
-    .animate-drift-1 { animation: drift-slow-1 20s infinite ease-in-out; }
-    .animate-drift-2 { animation: drift-slow-2 24s infinite ease-in-out; }
-    .animate-drift-3 { animation: drift-slow-3 22s infinite ease-in-out; }
-
-    /* Elegant Sweeping Card Shimmer Glare */
-    .shimmer-card {
-      position: relative;
-      overflow: hidden;
-    }
-    .shimmer-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -150%;
-      width: 50%;
-      height: 100%;
-      background: linear-gradient(
-        to right,
-        rgba(255, 255, 255, 0) 0%,
-        rgba(255, 255, 255, 0.1) 50%,
-        rgba(255, 255, 255, 0) 100%
-      );
-      transform: skewX(-25deg);
-      pointer-events: none;
-      z-index: 20;
-    }
-
-    /* Periodic continuous shimmer sweep for key CTAs and featured cards */
-    .shimmer-loop::before {
-      animation: sweep-shimmer 7s infinite ease-in-out;
-    }
-    /* Fast trigger swipe on manual hover */
-    .shimmer-card:hover::before {
-      animation: sweep-shimmer-fast 1.2s ease-out forwards;
-    }
-
-    @keyframes sweep-shimmer {
-      0% { left: -150%; }
-      15%, 100% { left: 150%; }
-    }
-    @keyframes sweep-shimmer-fast {
-      0% { left: -150%; }
-      100% { left: 150%; }
-    }
-
-    /* Sleek CTA Button Gleam Animation */
-    .btn-shine-effect {
-      position: relative;
-      overflow: hidden;
-    }
-    .btn-shine-effect::after {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -60%;
-      width: 30%;
-      height: 200%;
-      background: rgba(255, 255, 255, 0.25);
-      transform: rotate(30deg);
-      transition: none;
-    }
-    .btn-shine-effect:hover::after {
-      left: 130%;
-      transition: all 0.7s ease-in-out;
-    }
-
-    @keyframes pulse-slow {
-      0%, 100% { transform: scale(1); opacity: 0.95; }
-      50% { transform: scale(1.02); opacity: 1; box-shadow: 0 0 30px rgba(255, 199, 0, 0.15); }
-    }
-    .pulse-glow {
-      animation: pulse-slow 4s infinite ease-in-out;
-    }
-
-    /* High-Performance Smooth Scroll-Reveal Effects */
-    .scroll-reveal {
-      opacity: 0;
-      transform: translateY(28px);
-      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-      will-change: opacity, transform;
-    }
-    .scroll-reveal.reveal-visible {
-      opacity: 1;
-      transform: translateY(0);
+    /* Active nav links */
+    .nav-link.active {
+      color: var(--accent) !important;
+      text-shadow: 0 0 8px var(--accent-glow);
     }
   </style>
 </head>
 <body class="text-white font-sans antialiased selection:bg-brand-accent selection:text-brand-dark overflow-x-hidden relative">
 
-  <!-- Background Ambient Shimmering Glow Orbs (Rendered under the dot matrix background) -->
-  <div class="glow-orb w-[450px] h-[450px] bg-blue-600 top-12 -left-20 animate-drift-1"></div>
-  <div class="glow-orb w-[600px] h-[600px] bg-yellow-500 top-1/4 right-0 opacity-[0.06] animate-drift-2"></div>
-  <div class="glow-orb w-[450px] h-[450px] bg-emerald-500 top-2/3 left-10 animate-drift-3"></div>
-  <div class="glow-orb w-[400px] h-[400px] bg-purple-600 bottom-10 right-10 animate-drift-1"></div>
+  <!-- Three.js Canvas Background -->
+  <canvas id="three-canvas"></canvas>
+  <div class="aurora-bg"></div>
 
   <!-- Header / Navigation -->
   <header class="sticky top-0 z-50 glass-navbar">
@@ -249,10 +90,10 @@
 
       <!-- Desktop Navigation links -->
       <nav class="hidden lg:flex items-center gap-8">
-        <a href="#how-it-works" class="text-gray-300 hover:text-brand-accent transition-colors font-medium text-sm tracking-wide">How It Works</a>
-        <a href="#lead-quality" class="text-gray-300 hover:text-brand-accent transition-colors font-medium text-sm tracking-wide">Lead Quality</a>
-        <a href="#faq" class="text-gray-300 hover:text-brand-accent transition-colors font-medium text-sm tracking-wide">FAQ</a>
-        <a href="#qualification-form" class="text-gray-300 hover:text-brand-accent transition-colors font-medium text-sm tracking-wide">Check Availability</a>
+        <a href="#how-it-works" class="nav-link text-gray-300 hover:text-brand-accent transition-colors font-medium text-sm tracking-wide">How It Works</a>
+        <a href="#lead-quality" class="nav-link text-gray-300 hover:text-brand-accent transition-colors font-medium text-sm tracking-wide">Lead Quality</a>
+        <a href="#faq" class="nav-link text-gray-300 hover:text-brand-accent transition-colors font-medium text-sm tracking-wide">FAQ</a>
+        <a href="#qualification-form" class="nav-link text-gray-300 hover:text-brand-accent transition-colors font-medium text-sm tracking-wide">Check Availability</a>
       </nav>
 
       <!-- Header Switcher & CTA Button -->
@@ -282,7 +123,7 @@
       <div class="grid lg:grid-cols-12 gap-12 lg:gap-8 items-center">
         
         <!-- Left Side: Copy and details -->
-        <div class="lg:col-span-7 space-y-6 scroll-reveal reveal-visible">
+        <div class="lg:col-span-7 space-y-6 reveal-left">
           <div class="inline-block paint-header-stroke text-brand-dark px-4 py-1.5 font-oswald uppercase tracking-wider font-bold text-xs rounded shadow-md">
             Exclusive Greenville-Area Leads
           </div>
@@ -326,7 +167,7 @@
         </div>
 
         <!-- Right Side: Beautiful Glass Cards and Layout Mockups -->
-        <div class="lg:col-span-5 relative scroll-reveal reveal-visible transition-all duration-1000 delay-200">
+        <div class="lg:col-span-5 relative reveal-right">
           <!-- Ambient element back glow -->
           <div class="absolute -inset-2 bg-gradient-to-r from-brand-accent/20 to-blue-500/20 rounded-3xl blur-xl opacity-70"></div>
           
@@ -402,7 +243,7 @@
 
   <!-- Interactive Live Leads Feed Simulator Sandbox (Gemini LLM Upgraded) -->
   <section class="py-16 border-b border-brand-border relative">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 scroll-reveal">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 reveal-scale">
       <div class="glass-card shimmer-card rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
         
         <!-- Corner shine reflection decoration -->
@@ -526,7 +367,7 @@
 
   <!-- Section 2: Problem & Fit -->
   <section class="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative border-b border-brand-border">
-    <div class="text-center max-w-2xl mx-auto mb-16 space-y-4 scroll-reveal">
+    <div class="text-center max-w-2xl mx-auto mb-16 space-y-4 reveal-up">
       <h2 class="text-3xl sm:text-4xl lg:text-5xl font-oswald font-bold uppercase text-white tracking-tight">
         Most Painting Leads Are Garbage. <br><span class="bg-gradient-to-r from-brand-accent to-amber-400 bg-clip-text text-transparent">These Aren't.</span>
       </h2>
@@ -537,7 +378,7 @@
 
     <div class="grid md:grid-cols-2 gap-8 items-start">
       <!-- Who This Is Fit For (Sleek Glass Look) -->
-      <div class="glass-card shimmer-card rounded-2xl p-8 space-y-6 relative border-t-2 border-t-emerald-500/50 scroll-reveal">
+      <div class="glass-card shimmer-card rounded-2xl p-8 space-y-6 relative border-t-2 border-t-emerald-500/50 reveal-left">
         <h3 class="text-xl font-oswald uppercase font-bold text-emerald-400 border-b border-white/5 pb-4 flex items-center gap-2.5">
           <span class="bg-emerald-500/10 p-1.5 rounded text-lg leading-none">👍</span> This is a fit if you:
         </h3>
@@ -575,7 +416,7 @@
       </div>
 
       <!-- Who This Is NOT Fit For (Sleek Dark Accent Glass Look) -->
-      <div class="glass-card rounded-2xl p-8 space-y-6 relative border-t-2 border-t-red-500/40 scroll-reveal">
+      <div class="glass-card rounded-2xl p-8 space-y-6 relative border-t-2 border-t-red-500/40 reveal-right">
         <h3 class="text-xl font-oswald uppercase font-bold text-red-400 border-b border-white/5 pb-4 flex items-center gap-2.5">
           <span class="bg-red-500/10 p-1.5 rounded text-lg leading-none">🛑</span> NOT a fit if you:
         </h3>
@@ -610,7 +451,7 @@
   <!-- Section 3: How The Lead System Works -->
   <section id="how-it-works" class="bg-brand-navy/30 py-24 border-y border-brand-border">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center max-w-2xl mx-auto mb-16 space-y-4 scroll-reveal">
+      <div class="text-center max-w-2xl mx-auto mb-16 space-y-4 reveal-up">
         <h2 class="text-3xl sm:text-4xl lg:text-5xl font-oswald font-bold uppercase text-white tracking-tight">
           How The Lead System Works
         </h2>
@@ -620,10 +461,10 @@
       </div>
 
       <!-- Steps Workflow Grid -->
-      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 relative">
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 relative stagger-group">
         
         <!-- Step 1 -->
-        <div class="glass-card shimmer-card p-6 rounded-2xl relative overflow-hidden group hover:border-brand-accent/40 transition-colors scroll-reveal">
+        <div class="glass-card shimmer-card p-6 rounded-2xl relative overflow-hidden group hover:border-brand-accent/40 transition-colors stagger-item reveal-up tilt-card">
           <div class="absolute -right-4 -bottom-4 font-oswald text-8xl font-bold text-white/5 select-none transition-transform group-hover:scale-105">
             01
           </div>
@@ -639,7 +480,7 @@
         </div>
 
         <!-- Step 2 -->
-        <div class="glass-card shimmer-card p-6 rounded-2xl relative overflow-hidden group hover:border-brand-accent/40 transition-colors scroll-reveal">
+        <div class="glass-card shimmer-card p-6 rounded-2xl relative overflow-hidden group hover:border-brand-accent/40 transition-colors stagger-item reveal-up tilt-card">
           <div class="absolute -right-4 -bottom-4 font-oswald text-8xl font-bold text-white/5 select-none transition-transform group-hover:scale-105">
             02
           </div>
@@ -655,7 +496,7 @@
         </div>
 
         <!-- Step 3 -->
-        <div class="glass-card shimmer-card p-6 rounded-2xl relative overflow-hidden group hover:border-brand-accent/40 transition-colors scroll-reveal">
+        <div class="glass-card shimmer-card p-6 rounded-2xl relative overflow-hidden group hover:border-brand-accent/40 transition-colors stagger-item reveal-up tilt-card">
           <div class="absolute -right-4 -bottom-4 font-oswald text-8xl font-bold text-white/5 select-none transition-transform group-hover:scale-105">
             03
           </div>
@@ -671,7 +512,7 @@
         </div>
 
         <!-- Step 4 -->
-        <div class="glass-card shimmer-card p-6 rounded-2xl relative overflow-hidden group hover:border-brand-accent/40 transition-colors scroll-reveal">
+        <div class="glass-card shimmer-card p-6 rounded-2xl relative overflow-hidden group hover:border-brand-accent/40 transition-colors stagger-item reveal-up tilt-card">
           <div class="absolute -right-4 -bottom-4 font-oswald text-8xl font-bold text-white/5 select-none transition-transform group-hover:scale-105">
             04
           </div>
@@ -742,7 +583,7 @@
       </div>
 
       <!-- High-fidelity John D Example Card right -->
-      <div class="lg:col-span-6 bg-slate-900/40 backdrop-blur-md border border-white/10 text-white rounded-2xl p-6 sm:p-8 shadow-2xl relative scroll-reveal transition-all duration-1000">
+      <div class="lg:col-span-6 relative reveal-right tilt-card glass-card p-6 sm:p-8">
         <div class="absolute top-4 right-4 bg-white/5 border border-white/10 text-brand-accent font-oswald text-[10px] uppercase tracking-widest px-3 py-1 rounded font-semibold">
           High-Fidelity Sample Card
         </div>
@@ -822,7 +663,7 @@
   <!-- Section 5: Testimonials Grid -->
   <section class="bg-brand-navy/40 py-24 border-b border-brand-border">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center max-w-2xl mx-auto mb-16 space-y-4 scroll-reveal">
+      <div class="text-center max-w-2xl mx-auto mb-16 space-y-4 reveal-up">
         <h2 class="text-3xl sm:text-4xl lg:text-5xl font-oswald font-bold uppercase text-white tracking-tight">
           Greenville Contractors <br><span class="bg-gradient-to-r from-brand-accent to-amber-400 bg-clip-text text-transparent">Are Booking Real Jobs</span>
         </h2>
@@ -831,9 +672,9 @@
         </p>
       </div>
 
-      <div class="grid md:grid-cols-3 gap-8">
+      <div class="grid md:grid-cols-3 gap-8 stagger-group">
         <!-- Testimonial 1 -->
-        <div class="glass-card shimmer-card p-6 rounded-2xl border border-white/5 space-y-5 flex flex-col justify-between hover:border-brand-accent/25 transition-all scroll-reveal">
+        <div class="glass-card shimmer-card p-6 rounded-2xl border border-white/5 space-y-5 flex flex-col justify-between hover:border-brand-accent/25 transition-all stagger-item reveal-up tilt-card">
           <div class="space-y-3">
             <div class="text-brand-accent text-sm tracking-wide">★★★★★</div>
             <p class="text-gray-300 text-xs italic leading-relaxed">
@@ -850,7 +691,7 @@
         </div>
 
         <!-- Testimonial 2 -->
-        <div class="glass-card shimmer-card p-6 rounded-2xl border border-white/5 space-y-5 flex flex-col justify-between hover:border-brand-accent/25 transition-all scroll-reveal">
+        <div class="glass-card shimmer-card p-6 rounded-2xl border border-white/5 space-y-5 flex flex-col justify-between hover:border-brand-accent/25 transition-all stagger-item reveal-up tilt-card">
           <div class="space-y-3">
             <div class="text-brand-accent text-sm tracking-wide">★★★★★</div>
             <p class="text-gray-300 text-xs italic leading-relaxed">
@@ -867,7 +708,7 @@
         </div>
 
         <!-- Testimonial 3 -->
-        <div class="glass-card shimmer-card p-6 rounded-2xl border border-white/5 space-y-5 flex flex-col justify-between hover:border-brand-accent/25 transition-all scroll-reveal">
+        <div class="glass-card shimmer-card p-6 rounded-2xl border border-white/5 space-y-5 flex flex-col justify-between hover:border-brand-accent/25 transition-all stagger-item reveal-up tilt-card">
           <div class="space-y-3">
             <div class="text-brand-accent text-sm tracking-wide">★★★★★</div>
             <p class="text-gray-300 text-xs italic leading-relaxed">
@@ -891,7 +732,7 @@
     <div class="grid lg:grid-cols-12 gap-12 items-start">
       
       <!-- Copy details text left -->
-      <div class="lg:col-span-5 space-y-6 scroll-reveal">
+      <div class="lg:col-span-5 space-y-6 reveal-left">
         <h2 class="text-3xl sm:text-4xl lg:text-5xl font-oswald font-bold uppercase text-white leading-tight tracking-tight">
           Secure Exclusive <br><span class="bg-gradient-to-r from-brand-accent to-amber-400 bg-clip-text text-transparent">Homeowner Leads</span> <br>In Your Area
         </h2>
@@ -1072,7 +913,7 @@
   </section>
 
   <!-- FAQ Section (Accordion Components) -->
-  <section id="faq" class="py-24 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative scroll-reveal">
+  <section id="faq" class="py-24 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative reveal-up">
     <div class="text-center mb-16 space-y-4">
       <h2 class="text-3xl sm:text-4xl font-oswald font-bold uppercase text-white tracking-tight">
         Frequently Asked Questions
@@ -1083,9 +924,9 @@
     </div>
 
     <!-- Accordion Group -->
-    <div class="space-y-4">
+    <div class="space-y-4 stagger-group">
       <!-- FAQ item 1 -->
-      <div class="glass-card rounded-xl overflow-hidden border border-white/5">
+      <div class="glass-card rounded-xl overflow-hidden border border-white/5 stagger-item reveal-up">
         <button onclick="toggleFaq(1)" class="w-full p-6 text-left flex items-center justify-between font-oswald text-base uppercase font-bold text-white hover:text-brand-accent transition-colors">
           <span>Are these leads shared with other painters?</span>
           <span id="faq-icon-1" class="text-brand-accent transition-transform duration-300">&plus;</span>
@@ -1096,7 +937,7 @@
       </div>
 
       <!-- FAQ item 2 -->
-      <div class="glass-card rounded-xl overflow-hidden border border-white/5">
+      <div class="glass-card rounded-xl overflow-hidden border border-white/5 stagger-item reveal-up">
         <button onclick="toggleFaq(2)" class="w-full p-6 text-left flex items-center justify-between font-oswald text-base uppercase font-bold text-white hover:text-brand-accent transition-colors">
           <span>How do you qualify homeowners?</span>
           <span id="faq-icon-2" class="text-brand-accent transition-transform duration-300">&plus;</span>
@@ -1107,7 +948,7 @@
       </div>
 
       <!-- FAQ item 3 -->
-      <div class="glass-card rounded-xl overflow-hidden border border-white/5">
+      <div class="glass-card rounded-xl overflow-hidden border border-white/5 stagger-item reveal-up">
         <button onclick="toggleFaq(3)" class="w-full p-6 text-left flex items-center justify-between font-oswald text-base uppercase font-bold text-white hover:text-brand-accent transition-colors">
           <span>Is there a contract or setup fee?</span>
           <span id="faq-icon-3" class="text-brand-accent transition-transform duration-300">&plus;</span>
@@ -1118,7 +959,7 @@
       </div>
 
       <!-- FAQ item 4 -->
-      <div class="glass-card rounded-xl overflow-hidden border border-white/5">
+      <div class="glass-card rounded-xl overflow-hidden border border-white/5 stagger-item reveal-up">
         <button onclick="toggleFaq(4)" class="w-full p-6 text-left flex items-center justify-between font-oswald text-base uppercase font-bold text-white hover:text-brand-accent transition-colors">
           <span>How quickly are leads delivered to us?</span>
           <span id="faq-icon-4" class="text-brand-accent transition-transform duration-300">&plus;</span>
@@ -1617,22 +1458,8 @@
       }
     }
 
-    // 8. Scroll reveal animation framework
+    // Trigger simulation of first card on load
     document.addEventListener("DOMContentLoaded", () => {
-      const reveals = document.querySelectorAll('.scroll-reveal');
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('reveal-visible');
-          }
-        });
-      }, {
-        threshold: 0.1
-      });
-
-      reveals.forEach(el => observer.observe(el));
-      
-      // Auto-trigger simulation of first card on load
       simulateLead('Exterior Siding Painting', '$6,500 - $9,000', 'Greenville, SC');
     });
   </script>
