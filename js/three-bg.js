@@ -76,10 +76,23 @@ class ParticleBackground {
     );
     this.camera.position.z = 50;
 
-    // Colors based on theme
+    // Generate soft circular glow texture
+    const glowCanvas = document.createElement('canvas');
+    glowCanvas.width = 16;
+    glowCanvas.height = 16;
+    const glowContext = glowCanvas.getContext('2d');
+    const glowGradient = glowContext.createRadialGradient(8, 8, 0, 8, 8, 8);
+    glowGradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+    glowGradient.addColorStop(0.3, 'rgba(255, 255, 255, 0.7)');
+    glowGradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    glowContext.fillStyle = glowGradient;
+    glowContext.fillRect(0, 0, 16, 16);
+    const glowTexture = new THREE.CanvasTexture(glowCanvas);
+
+    // Colors based on theme (Greenish glowing particles)
     const isDark = this.theme === 'dark';
-    const particleColor = isDark ? 0xffffff : 0x64748b;
-    const particleOpacity = isDark ? 0.15 : 0.06;
+    const particleColor = isDark ? 0x10B981 : 0x059669;
+    const particleOpacity = isDark ? 0.35 : 0.25;
     const wireColor = isDark ? 0xFFD036 : 0xF5A623;
     const wireOpacity = isDark ? 0.06 : 0.04;
 
@@ -103,7 +116,8 @@ class ParticleBackground {
 
     this.particlesMaterial = new THREE.PointsMaterial({
       color: particleColor,
-      size: 1.2,
+      size: 2.2,
+      map: glowTexture,
       transparent: true,
       opacity: particleOpacity,
       sizeAttenuation: true,
