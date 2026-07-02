@@ -1630,5 +1630,203 @@
       simulateLead('Exterior Siding Painting', '$6,500 - $9,000', 'Greenville, SC');
     });
   </script>
+
+  <!-- AI Chat Widget (xAI realtime agent via /ws/chat relay) -->
+  <div id="chat-widget" class="fixed bottom-6 right-6 z-40 font-sans">
+    <!-- Chat Panel -->
+    <div id="chat-panel" class="hidden mb-4 w-[min(92vw,380px)] h-[520px] max-h-[70vh] glass-card rounded-2xl border border-brand-border shadow-2xl shadow-black/50 flex-col overflow-hidden">
+      <!-- Header -->
+      <div class="flex items-center justify-between px-4 py-3 border-b border-brand-border bg-brand-navy/80">
+        <div class="flex items-center gap-3">
+          <div class="relative">
+            <div class="w-9 h-9 rounded-full bg-brand-accent flex items-center justify-center text-lg">🎨</div>
+            <span id="chat-status-dot" class="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-gray-500 border-2 border-brand-navy"></span>
+          </div>
+          <div>
+            <p class="text-white font-oswald uppercase tracking-wider text-sm leading-tight">PaintLead Assistant</p>
+            <p id="chat-status-text" class="text-gray-400 text-[10px]">Connecting…</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-1">
+          <button id="chat-sound-toggle" onclick="toggleChatSound()" title="Toggle voice audio" class="text-gray-400 hover:text-white text-base px-2 py-1 rounded-lg hover:bg-white/5 transition">🔊</button>
+          <button onclick="toggleChatPanel()" class="text-gray-400 hover:text-white font-bold text-xl px-2 py-1 rounded-lg hover:bg-white/5 transition">&times;</button>
+        </div>
+      </div>
+
+      <!-- Messages -->
+      <div id="chat-messages" class="flex-grow overflow-y-auto custom-scrollbar p-4 space-y-3">
+        <div class="flex justify-start">
+          <div class="max-w-[85%] bg-white/5 border border-white/5 text-gray-200 text-sm rounded-2xl rounded-bl-md px-4 py-2.5">
+            Hey! 👋 Have questions about prequalified painting leads in Greenville? Ask away.
+          </div>
+        </div>
+      </div>
+
+      <!-- Input -->
+      <form id="chat-form" class="p-3 border-t border-brand-border bg-brand-navy/60 flex items-center gap-2" onsubmit="sendChatMessage(event)">
+        <input id="chat-input" type="text" autocomplete="off" placeholder="Type your question…"
+          class="flex-grow bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-brand-accent/60 transition" />
+        <button id="chat-send-btn" type="submit"
+          class="bg-brand-accent hover:bg-brand-accentHover text-brand-dark font-bold rounded-xl px-4 py-2.5 text-sm transition disabled:opacity-40 disabled:cursor-not-allowed">➤</button>
+      </form>
+    </div>
+
+    <!-- Launcher Button -->
+    <button id="chat-launcher" onclick="toggleChatPanel()"
+      class="ml-auto flex items-center justify-center w-14 h-14 rounded-full bg-brand-accent hover:bg-brand-accentHover text-brand-dark text-2xl shadow-lg shadow-brand-accent/25 transition-all hover:scale-105">
+      💬
+    </button>
+  </div>
+
+  <script>
+    // ===== AI Chat Widget (talks to the xAI realtime agent through /ws/chat) =====
+    (() => {
+      // Override this global before the widget script if the relay runs on another host.
+      const RELAY_URL = window.CHAT_RELAY_URL ||
+        ((location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host + '/ws/chat');
+
+      let ws = null;
+      let soundOn = true;
+      let streamingBubble = null;   // assistant bubble currently receiving deltas
+      let audioCtx = null;
+      let audioPlayhead = 0;        // scheduled end time of queued audio
+
+      const el = (id) => document.getElementById(id);
+
+      function setStatus(state, text) {
+        const colors = { on: 'bg-emerald-400', off: 'bg-gray-500', err: 'bg-red-400' };
+        el('chat-status-dot').className =
+          'absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-brand-navy ' + colors[state];
+        el('chat-status-text').textContent = text;
+      }
+
+      function appendBubble(role, text) {
+        const row = document.createElement('div');
+        row.className = role === 'user' ? 'flex justify-end' : 'flex justify-start';
+        const bubble = document.createElement('div');
+        bubble.className = role === 'user'
+          ? 'max-w-[85%] bg-brand-accent text-brand-dark text-sm font-medium rounded-2xl rounded-br-md px-4 py-2.5'
+          : 'max-w-[85%] bg-white/5 border border-white/5 text-gray-200 text-sm rounded-2xl rounded-bl-md px-4 py-2.5 whitespace-pre-wrap';
+        bubble.textContent = text;
+        row.appendChild(bubble);
+        el('chat-messages').appendChild(row);
+        el('chat-messages').scrollTop = el('chat-messages').scrollHeight;
+        return bubble;
+      }
+
+      function connect() {
+        if (ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) return;
+        if (!location.host) {
+          setStatus('err', 'Unavailable');
+          appendBubble('assistant', '⚠️ Chat needs the site to be served by its server (npm start) — it can\'t run from a local file.');
+          return;
+        }
+        setStatus('off', 'Connecting…');
+        ws = new WebSocket(RELAY_URL);
+
+        ws.onopen = () => setStatus('on', 'Online');
+
+        ws.onmessage = (msg) => {
+          let event;
+          try { event = JSON.parse(msg.data); } catch { return; }
+
+          switch (event.type) {
+            // Streaming text of the agent's reply (voice transcript or plain text)
+            case 'response.output_audio_transcript.delta':
+            case 'response.output_text.delta':
+              if (!streamingBubble) streamingBubble = appendBubble('assistant', '');
+              streamingBubble.textContent += event.delta;
+              el('chat-messages').scrollTop = el('chat-messages').scrollHeight;
+              break;
+
+            // Spoken audio (base64 PCM16 @ 24kHz) — play if sound is on
+            case 'response.output_audio.delta':
+              if (soundOn) playPcmChunk(event.delta);
+              break;
+
+            case 'response.done':
+            case 'response.completed':
+              streamingBubble = null;
+              el('chat-send-btn').disabled = false;
+              break;
+
+            case 'relay.error':
+            case 'error':
+              appendBubble('assistant', '⚠️ ' + (event.message || event.error?.message || 'Something went wrong. Please try again.'));
+              streamingBubble = null;
+              el('chat-send-btn').disabled = false;
+              break;
+          }
+        };
+
+        ws.onclose = () => {
+          setStatus('off', 'Disconnected');
+          el('chat-send-btn').disabled = false;
+          ws = null;
+        };
+        ws.onerror = () => setStatus('err', 'Connection error');
+      }
+
+      function playPcmChunk(b64) {
+        try {
+          if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 24000 });
+          if (audioCtx.state === 'suspended') audioCtx.resume();
+
+          const bytes = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+          const pcm = new Int16Array(bytes.buffer, 0, Math.floor(bytes.byteLength / 2));
+          const buffer = audioCtx.createBuffer(1, pcm.length, 24000);
+          const channel = buffer.getChannelData(0);
+          for (let i = 0; i < pcm.length; i++) channel[i] = pcm[i] / 32768;
+
+          const src = audioCtx.createBufferSource();
+          src.buffer = buffer;
+          src.connect(audioCtx.destination);
+          const startAt = Math.max(audioCtx.currentTime, audioPlayhead);
+          src.start(startAt);
+          audioPlayhead = startAt + buffer.duration;
+        } catch (e) { /* bad chunk — skip */ }
+      }
+
+      window.toggleChatPanel = function () {
+        const panel = el('chat-panel');
+        const opening = panel.classList.contains('hidden');
+        panel.classList.toggle('hidden');
+        panel.classList.toggle('flex');
+        el('chat-launcher').textContent = opening ? '▾' : '💬';
+        if (opening) {
+          connect();
+          el('chat-input').focus();
+        }
+      };
+
+      window.toggleChatSound = function () {
+        soundOn = !soundOn;
+        el('chat-sound-toggle').textContent = soundOn ? '🔊' : '🔇';
+        if (!soundOn && audioCtx) { audioCtx.close(); audioCtx = null; audioPlayhead = 0; }
+      };
+
+      window.sendChatMessage = function (e) {
+        e.preventDefault();
+        const input = el('chat-input');
+        const text = input.value.trim();
+        if (!text) return;
+        if (!ws || ws.readyState !== WebSocket.OPEN) {
+          connect();
+          appendBubble('assistant', '⚠️ Not connected yet — please try again in a second.');
+          return;
+        }
+        appendBubble('user', text);
+        input.value = '';
+        el('chat-send-btn').disabled = true;
+        streamingBubble = null;
+
+        ws.send(JSON.stringify({
+          type: 'conversation.item.create',
+          item: { type: 'message', role: 'user', content: [{ type: 'input_text', text }] },
+        }));
+        ws.send(JSON.stringify({ type: 'response.create' }));
+      };
+    })();
+  </script>
 </body>
 </html>
