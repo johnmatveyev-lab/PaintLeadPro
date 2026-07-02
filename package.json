@@ -1,0 +1,16 @@
+{
+  "name": "paintleadpro",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "PaintLead Pro landing page with xAI realtime chat widget",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}
