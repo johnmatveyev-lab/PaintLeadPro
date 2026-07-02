@@ -35,3 +35,7 @@ CREATE POLICY "Allow read access to all leads" ON public.leads
 -- Allow anonymous and authenticated update access (so the app can write status updates back to the leads table)
 CREATE POLICY "Allow lead updates" ON public.leads
   FOR UPDATE USING (true);
+
+-- Allow anonymous and authenticated delete access (so the dashboard can clear leads in the demo sandbox)
+CREATE POLICY "Allow lead deletes" ON public.leads
+  FOR DELETE USING (true);

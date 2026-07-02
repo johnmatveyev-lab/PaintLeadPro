@@ -91,10 +91,15 @@ class ParticleBackground {
 
     // Colors based on theme (Greenish glowing particles)
     const isDark = this.theme === 'dark';
-    const particleColor = isDark ? 0x10B981 : 0x059669;
-    const particleOpacity = isDark ? 0.35 : 0.25;
+    const particleOpacity = isDark ? 0.45 : 0.35; // increased slightly for premium visibility
     const wireColor = isDark ? 0xFFD036 : 0xF5A623;
-    const wireOpacity = isDark ? 0.06 : 0.04;
+    const wireOpacity = isDark ? 0.08 : 0.06;
+
+    // Set colors for vertex-color gradients
+    // Dark: Emerald (0.06, 0.73, 0.48) at bottom, Gold (1.0, 0.81, 0.21) at top
+    // Light: Emerald (0.02, 0.58, 0.41) at bottom, Orange (0.96, 0.65, 0.14) at top
+    this.colorPeak = isDark ? { r: 1.0, g: 0.81, b: 0.21 } : { r: 0.96, g: 0.65, b: 0.14 };
+    this.colorBase = isDark ? { r: 0.06, g: 0.73, b: 0.48 } : { r: 0.02, g: 0.58, b: 0.41 };
 
     // ── Particles ──
     this.particlesGeometry = new THREE.BufferGeometry();
@@ -105,6 +110,7 @@ class ParticleBackground {
     this.particleCount = amountX * amountZ; // Align to exact grid count
     
     const positions = new Float32Array(this.particleCount * 3);
+    const colors = new Float32Array(this.particleCount * 3);
     const sizes = new Float32Array(this.particleCount);
 
     const spacingX = 3.6;
@@ -122,15 +128,21 @@ class ParticleBackground {
       positions[i3 + 1] = 0; // Y coordinate (starts flat, animated via wave formula)
       positions[i3 + 2] = iz * spacingZ - offsetZ - 15 + (Math.random() - 0.5) * 1.5;
       
-      sizes[i] = Math.random() * 0.8 + 0.4;
+      sizes[i] = Math.random() * 0.9 + 0.4;
+
+      // Initialize base colors
+      colors[i3] = this.colorBase.r;
+      colors[i3 + 1] = this.colorBase.g;
+      colors[i3 + 2] = this.colorBase.b;
     }
 
     this.particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    this.particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
     this.particlesGeometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
 
     this.particlesMaterial = new THREE.PointsMaterial({
-      color: particleColor,
-      size: 1.0, // Smaller particles for a unified swarm look (was 2.2)
+      vertexColors: true, // Enable multi-color gradient based on height
+      size: 1.3, // Slightly larger glowing particles
       map: glowTexture,
       transparent: true,
       opacity: particleOpacity,
@@ -142,12 +154,13 @@ class ParticleBackground {
     this.particles = new THREE.Points(this.particlesGeometry, this.particlesMaterial);
     this.scene.add(this.particles);
 
-    // ── Wireframe Shapes ──
+    // ── Wireframe Shapes with Orbital Rings ──
     this.wireframes = [];
+    this.orbits = [];
     const geometries = [
-      new THREE.IcosahedronGeometry(6, 1),
-      new THREE.OctahedronGeometry(5, 0),
-      new THREE.TetrahedronGeometry(4, 0)
+      new THREE.IcosahedronGeometry(5, 1),
+      new THREE.OctahedronGeometry(4, 0),
+      new THREE.TetrahedronGeometry(3, 0)
     ];
 
     for (let i = 0; i < this.wireframeCount; i++) {
@@ -161,25 +174,40 @@ class ParticleBackground {
       });
       const wireframe = new THREE.LineSegments(edges, material);
 
+      // Create an orbital torus ring around the wireframe
+      const ringGeo = new THREE.TorusGeometry(8, 0.05, 8, 48);
+      const ringMat = new THREE.LineBasicMaterial({
+        color: wireColor,
+        transparent: true,
+        opacity: wireOpacity * 1.5,
+        depthWrite: false
+      });
+      const orbitRing = new THREE.LineLoop(ringGeo, ringMat);
+      // Random tilt on the ring
+      orbitRing.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, 0);
+      wireframe.add(orbitRing);
+
       // Position in deep background
       wireframe.position.set(
-        (Math.random() - 0.5) * 60,
-        (Math.random() - 0.5) * 40,
-        -20 - Math.random() * 20
+        (Math.random() - 0.5) * 70,
+        (Math.random() - 0.5) * 45,
+        -25 - Math.random() * 25
       );
 
       wireframe.userData = {
         rotSpeed: {
-          x: (Math.random() - 0.5) * 0.003,
-          y: (Math.random() - 0.5) * 0.003,
-          z: (Math.random() - 0.5) * 0.002
+          x: (Math.random() - 0.5) * 0.004,
+          y: (Math.random() - 0.5) * 0.004,
+          z: (Math.random() - 0.5) * 0.003
         },
-        floatSpeed: Math.random() * 0.5 + 0.3,
+        orbitSpeed: (Math.random() * 0.005 + 0.005) * (Math.random() > 0.5 ? 1 : -1),
+        floatSpeed: Math.random() * 0.4 + 0.2,
         floatOffset: Math.random() * Math.PI * 2,
         baseY: wireframe.position.y
       };
 
       this.wireframes.push(wireframe);
+      this.orbits.push(orbitRing);
       this.scene.add(wireframe);
     }
 
@@ -234,33 +262,67 @@ class ParticleBackground {
     this.mouse.y += (this.mouse.targetY - this.mouse.y) * 0.02;
 
     // Camera subtle rotation following mouse
-    this.camera.rotation.y = this.mouse.x * 0.03;
-    this.camera.rotation.x = -this.mouse.y * 0.02;
+    this.camera.rotation.y = this.mouse.x * 0.04;
+    this.camera.rotation.x = -this.mouse.y * 0.03;
 
-    // Particle wave animation
+    // Map 2D mouse position to estimated XZ coordinate grid workspace
+    const mouseWorldX = this.mouse.x * 35;
+    const mouseWorldZ = this.mouse.y * 25 - 20;
+
+    // Particle wave + interactive repulsion + height-based colors
     const positions = this.particlesGeometry.attributes.position.array;
+    const colors = this.particlesGeometry.attributes.color.array;
+
     for (let i = 0; i < this.particleCount; i++) {
       const i3 = i * 3;
       const x = positions[i3];
       const z = positions[i3 + 2];
       
-      // Beautiful complex wave formula
-      positions[i3 + 1] = Math.sin((x * 0.04) + (z * 0.04) + (time * 1.6)) * 4.5 +
-                          Math.sin((x * 0.08) - (z * 0.06) + (time * 1.0)) * 2.0;
+      // Beautiful complex wave base formula
+      let baseHeight = Math.sin((x * 0.04) + (z * 0.04) + (time * 1.5)) * 4.5 +
+                         Math.sin((x * 0.08) - (z * 0.06) + (time * 0.9)) * 2.0;
+
+      // Mouse repulsion: push down wave peaks locally near cursor position
+      const dx = x - mouseWorldX;
+      const dz = z - mouseWorldZ;
+      const dist = Math.sqrt(dx * dx + dz * dz);
+      if (dist < 14) {
+        const force = (14 - dist) / 14;
+        baseHeight -= force * 5.0; // dynamic mouse ripple dent
+      }
+
+      positions[i3 + 1] = baseHeight;
+
+      // Height color gradient mapping: map baseHeight [-6.5, 6.5] to [0, 1] t-value
+      const t = Math.max(0, Math.min(1, (baseHeight + 6.5) / 13));
+      
+      colors[i3] = this.colorBase.r + (this.colorPeak.r - this.colorBase.r) * t;
+      colors[i3 + 1] = this.colorBase.g + (this.colorPeak.g - this.colorBase.g) * t;
+      colors[i3 + 2] = this.colorBase.b + (this.colorPeak.b - this.colorBase.b) * t;
     }
     this.particlesGeometry.attributes.position.needsUpdate = true;
+    this.particlesGeometry.attributes.color.needsUpdate = true;
 
     // Subtle drift and tilt to show wave depth
-    this.particles.rotation.y = Math.sin(time * 0.08) * 0.04;
-    this.particles.rotation.x = -0.55 + Math.cos(time * 0.05) * 0.02;
+    this.particles.rotation.y = Math.sin(time * 0.06) * 0.03;
+    this.particles.rotation.x = -0.55 + Math.cos(time * 0.04) * 0.02;
 
-    // Wireframe animations
-    for (const wf of this.wireframes) {
-      const { rotSpeed, floatSpeed, floatOffset, baseY } = wf.userData;
+    // Wireframe & orbit ring animations
+    for (let i = 0; i < this.wireframes.length; i++) {
+      const wf = this.wireframes[i];
+      const orbit = this.orbits[i];
+      const { rotSpeed, orbitSpeed, floatSpeed, floatOffset, baseY } = wf.userData;
+
       wf.rotation.x += rotSpeed.x;
       wf.rotation.y += rotSpeed.y;
       wf.rotation.z += rotSpeed.z;
       wf.position.y = baseY + Math.sin(time * floatSpeed + floatOffset) * 2;
+
+      // Orbit ring spin independent from main geometry rotation
+      if (orbit) {
+        orbit.rotation.z += orbitSpeed;
+        orbit.rotation.x += orbitSpeed * 0.5;
+      }
     }
 
     this.renderer.render(this.scene, this.camera);
@@ -274,6 +336,10 @@ class ParticleBackground {
     for (const wf of this.wireframes) {
       wf.geometry.dispose();
       wf.material.dispose();
+    }
+    for (const orbit of this.orbits) {
+      orbit.geometry.dispose();
+      orbit.material.dispose();
     }
   }
 }

@@ -1,7 +1,6 @@
-.DS_Store
-.vercel
 node_modules
-*.log
 .env
-.env.*
-scratch/
+.vercel
+*.log
+test-results
+playwright-report

@@ -3,6 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="PaintLead Pro Partner Hub — Manage prequalified homeowner painting leads, run AI voice verification, and dispatch to local contractors in Greenville, SC.">
+  <meta property="og:title" content="PaintLead Pro — Partner Hub Dashboard">
+  <meta property="og:description" content="Real-time painting lead management with AI voice agent verification and one-click dispatch to your contractor network.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>">
   <title>PaintLead Pro - Client Partner Hub</title>
   
   <!-- Supabase Client SDK -->
@@ -64,7 +70,7 @@
           </svg>
         </div>
         <h2 class="font-oswald text-2xl uppercase font-bold text-slate-900 tracking-wide mt-3">Partner Hub Login</h2>
-        <p class="text-xs text-slate-500">Sign in securely using simulated magic links.</p>
+        <p class="text-xs text-slate-500">Sign in securely with a magic link sent to your business email.</p>
       </div>
 
       <form id="auth-form" onsubmit="event.preventDefault(); sendMagicLink();" class="space-y-4">
@@ -81,10 +87,10 @@
       <div id="auth-success" class="hidden space-y-4 text-center p-4 bg-emerald-50 border border-emerald-100 rounded-xl">
         <span class="text-2xl">✉️</span>
         <h4 class="font-bold text-emerald-800 text-xs">Magic Link Dispatched!</h4>
-        <p class="text-[10px] text-slate-500 leading-relaxed">
+        <p id="auth-success-copy" class="text-[10px] text-slate-500 leading-relaxed">
           We sent a sign-in link. To bypass external email inbox checks, you can proceed directly by clicking below:
         </p>
-        <button onclick="loginUser()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs py-2.5 px-4 rounded-lg transition-colors">
+        <button id="auth-proceed-btn" onclick="loginUser()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs py-2.5 px-4 rounded-lg transition-colors">
           🔗 Proceed to Lead Hub
         </button>
       </div>
@@ -155,7 +161,9 @@
           <!-- Selected Lead details card -->
           <div id="selected-lead-card" class="glass-card-elevated rounded-2xl p-5 space-y-5">
             <div class="text-center py-12 space-y-3">
-              <span class="text-4xl">☝️</span>
+              <svg class="mx-auto h-12 w-12 text-slate-400 animate-bounce mb-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+              </svg>
               <h4 class="font-oswald text-sm uppercase font-bold text-slate-900">Select a lead card on the left to examine details, run voice verification checks, or dispatch partners.</h4>
             </div>
           </div>
@@ -214,10 +222,11 @@
 
   <!-- Dashboard Script Logic -->
   <script>
-    let activeUser = localStorage.getItem('paintlead_user') || null;
+    let activeUser = null;
     let leadsData = [];
     let selectedLeadId = null;
     let supabaseClient = null;
+    let demoMode = true; // true until a configured Supabase backend is detected
 
     // Initialize Supabase Client on Dashboard
     async function initSupabase() {
@@ -228,14 +237,14 @@
           if (config.supabaseUrl && config.supabaseAnonKey) {
             const { createClient } = supabase;
             supabaseClient = createClient(config.supabaseUrl, config.supabaseAnonKey);
+            demoMode = false;
             console.log("Supabase Client initialized on Dashboard.");
-            subscribeRealtime();
           } else {
-            console.log("Supabase config not found on backend. Operating in LocalStorage mode.");
+            console.log("Supabase config not found on backend. Operating in LocalStorage demo mode.");
           }
         }
       } catch (err) {
-        console.warn("Failed to initialize Supabase on Dashboard. Operating in LocalStorage mode.", err);
+        console.warn("Failed to initialize Supabase on Dashboard. Operating in LocalStorage demo mode.", err);
       }
     }
 
@@ -255,52 +264,97 @@
     }
 
     // Check login state on load
-    document.addEventListener('DOMContentLoaded', () => {
-      if (activeUser) {
-        showDashboard();
+    document.addEventListener('DOMContentLoaded', async () => {
+      await initSupabase();
+
+      if (!demoMode) {
+        // Real Supabase Auth: restore session (also handles magic-link redirects)
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (session) {
+          activeUser = session.user.email;
+          showDashboard();
+        } else {
+          showAuth();
+        }
+        supabaseClient.auth.onAuthStateChange((event, session) => {
+          if (event === 'SIGNED_IN' && session && !activeUser) {
+            activeUser = session.user.email;
+            showDashboard();
+          } else if (event === 'SIGNED_OUT') {
+            activeUser = null;
+            showAuth();
+          }
+        });
       } else {
-        showAuth();
+        // Demo sandbox mode (no Supabase configured)
+        activeUser = localStorage.getItem('paintlead_user') || null;
+        if (activeUser) showDashboard(); else showAuth();
       }
     });
 
     function showAuth() {
       document.getElementById('auth-screen').classList.remove('hidden');
       document.getElementById('dashboard-panel').classList.add('hidden');
+      document.getElementById('auth-form').classList.remove('hidden');
+      document.getElementById('auth-success').classList.add('hidden');
     }
 
     function showDashboard() {
       document.getElementById('auth-screen').classList.add('hidden');
       document.getElementById('dashboard-panel').classList.remove('hidden');
       document.getElementById('logged-in-user').textContent = activeUser;
-      initSupabase().then(() => loadLeads());
+      subscribeRealtime();
+      loadLeads();
     }
 
-    function sendMagicLink() {
+    async function sendMagicLink() {
       const email = document.getElementById('auth-email').value.trim();
       if (!email) return;
 
+      if (!demoMode) {
+        // Real magic link via Supabase Auth
+        const { error } = await supabaseClient.auth.signInWithOtp({
+          email,
+          options: { emailRedirectTo: window.location.origin + window.location.pathname }
+        });
+        if (error) {
+          alert('Sign-in failed: ' + error.message);
+          return;
+        }
+        document.getElementById('auth-form').classList.add('hidden');
+        document.getElementById('auth-success').classList.remove('hidden');
+        // Hide the demo bypass button in production mode — user must click the emailed link
+        document.getElementById('auth-proceed-btn').classList.add('hidden');
+        document.getElementById('auth-success-copy').textContent =
+          'We emailed you a secure sign-in link. Open it on this device to access the Lead Hub.';
+        return;
+      }
+
+      // Demo sandbox: simulated magic link
       activeUser = email;
       document.getElementById('auth-form').classList.add('hidden');
       document.getElementById('auth-success').classList.remove('hidden');
     }
 
     function loginUser() {
+      if (!demoMode) return; // bypass is demo-only
       localStorage.setItem('paintlead_user', activeUser);
       showDashboard();
     }
 
-    function logoutUser() {
+    async function logoutUser() {
+      if (!demoMode && supabaseClient) {
+        await supabaseClient.auth.signOut();
+      }
       localStorage.removeItem('paintlead_user');
       activeUser = null;
-      document.getElementById('auth-form').classList.remove('hidden');
-      document.getElementById('auth-success').classList.add('hidden');
       showAuth();
     }
 
     // Default pre-seeded leads to keep the dashboard interesting
     const preseededLeads = [
       {
-        id: 1110001,
+        id: 'seed-1110001',
         name: "Sarah M.",
         email: "sarahm@gmail.com",
         phone: "(864) 555-0102",
@@ -315,7 +369,7 @@
         voiceStatus: "Verification call queued"
       },
       {
-        id: 1110002,
+        id: 'seed-1110002',
         name: "James R.",
         email: "jamesr@hotmail.com",
         phone: "(864) 555-0187",
@@ -437,10 +491,10 @@
         else if (lead.status.includes('Dispatched')) statusBadgeColor = "bg-indigo-100 text-indigo-800 border-indigo-200";
 
         return `
-          <div onclick="selectLead(${lead.id})" class="glass-card p-4 rounded-xl border cursor-pointer hover:shadow-md transition-all flex justify-between gap-4 items-center ${selectedBorder}">
+          <div onclick="selectLead('${lead.id}')" class="glass-card p-4 rounded-xl border cursor-pointer hover:shadow-md transition-all flex justify-between gap-4 items-center ${selectedBorder}">
             <div class="flex gap-3 items-center min-w-0">
               <div class="h-10 w-10 bg-slate-100 rounded-lg overflow-hidden border border-slate-200/30 shrink-0">
-                <img class="h-full w-full object-cover" src="${lead.photo}" alt="Paint visualizer thumbnail">
+                <img class="h-full w-full object-cover" src="${lead.photo}" alt="Paint visualizer thumbnail" loading="lazy">
               </div>
               <div class="min-w-0">
                 <h4 class="font-bold text-xs text-slate-900 truncate leading-tight">${lead.name}</h4>
@@ -465,7 +519,7 @@
       selectedLeadId = id;
       renderLeads();
 
-      const lead = leadsData.find(l => l.id === id);
+      const lead = leadsData.find(l => String(l.id) === String(id));
       if (!lead) return;
 
       const rightPanel = document.getElementById('selected-lead-card');
@@ -473,8 +527,9 @@
       let dispatchButton = "";
       if (lead.status === "New Lead" || lead.status.includes('Scheduled')) {
         dispatchButton = `
-          <button onclick="dispatchLead(${lead.id})" class="w-full bg-slate-900 hover:bg-slate-800 text-brand-accent font-oswald uppercase text-xs tracking-wider py-3.5 px-4 rounded-xl transition shadow font-bold mt-2">
-            🚀 Dispatch Lead to In-Network Painters
+          <button onclick="dispatchLead('${lead.id}')" class="w-full bg-slate-900 hover:bg-slate-800 text-brand-accent font-oswald uppercase text-xs tracking-wider py-3.5 px-4 rounded-xl transition shadow font-bold mt-2 flex items-center justify-center gap-2">
+            <svg class="w-4 h-4 text-brand-accent animate-bounce" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            Dispatch Lead to In-Network Painters
           </button>
         `;
       } else if (lead.status.includes('Dispatched')) {
@@ -488,8 +543,9 @@
       let voiceAgentButton = "";
       if (lead.voiceStatus.includes('queued') || lead.voiceStatus.includes('Incoming')) {
         voiceAgentButton = `
-          <button onclick="openVoiceModal(${lead.id})" class="w-full bg-gradient-to-r from-violet-500 to-indigo-600 hover:from-violet-600 hover:to-indigo-700 text-white font-oswald uppercase text-xs tracking-wider py-3.5 px-4 rounded-xl transition shadow font-bold flex items-center justify-center gap-2">
-            <span>📞 Launch AI Voice Agent Simulation</span>
+          <button onclick="openVoiceModal('${lead.id}')" class="w-full bg-gradient-to-r from-violet-500 to-indigo-600 hover:from-violet-600 hover:to-indigo-700 text-white font-oswald uppercase text-xs tracking-wider py-3.5 px-4 rounded-xl transition shadow font-bold flex items-center justify-center gap-2">
+            <svg class="w-4 h-4 text-white animate-pulse" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+            <span>Launch AI Voice Agent Simulation</span>
           </button>
         `;
       } else {
@@ -556,7 +612,7 @@
 
     function openVoiceModal(id) {
       simulationLeadId = id;
-      const lead = leadsData.find(l => l.id === id);
+      const lead = leadsData.find(l => String(l.id) === String(id));
       if (!lead) return;
 
       document.getElementById('voice-modal-target-number').textContent = `Dail Target: ${lead.phone}`;
@@ -564,7 +620,9 @@
       const logBody = document.getElementById('voice-call-log');
       logBody.innerHTML = `
         <div class="text-center py-6 space-y-2 text-slate-500 text-xs">
-          <span class="text-2xl block animate-pulse">📞</span>
+          <svg class="mx-auto h-10 w-10 text-violet-500 animate-pulse mb-1" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+          </svg>
           <p>Press "Initiate Call Verification" to start the Chloe AI phone dialogue pipeline.</p>
         </div>
       `;
@@ -586,7 +644,7 @@
     }
 
     async function runCallSimulation() {
-      const lead = leadsData.find(l => l.id === simulationLeadId);
+      const lead = leadsData.find(l => String(l.id) === String(simulationLeadId));
       if (!lead) return;
 
       const btn = document.getElementById('voice-action-btn');
@@ -696,7 +754,7 @@
 
     // 8. partner syndication dispatch
     async function dispatchLead(id) {
-      const lead = leadsData.find(l => l.id === id);
+      const lead = leadsData.find(l => String(l.id) === String(id));
       if (!lead) return;
 
       // Update state first to show loader
@@ -730,14 +788,14 @@
         selectLead(id);
 
         const modeStr = result.mode === 'PROD' ? 'Live Twilio SMS' : 'Sandbox Simulated SMS';
-        alert(`Lead details for ${lead.name} successfully dispatched to painting partners!\nGateway Mode: ${modeStr}\nMessage: ${result.message}`);
+        showToast(`Lead details for ${lead.name} successfully dispatched to painting partners! Gateway Mode: ${modeStr}. Message: ${result.message}`, 'success');
       } catch (err) {
         console.warn("Failed to reach dispatch API, falling back to simulated dispatch.", err);
         lead.status = "Dispatched - In-Network Partner";
         await saveLeadUpdates(id, { status: "Dispatched - In-Network Partner" });
         loadLeads();
         selectLead(id);
-        alert(`Lead details for ${lead.name} successfully dispatched to Greenville Painting Pros via simulated gateway (API offline/no credentials)!`);
+        showToast(`Lead details for ${lead.name} successfully dispatched to Greenville Painting Pros via simulated gateway (API offline/no credentials)!`, 'success');
       }
     }
 
@@ -759,11 +817,40 @@
       const rightPanel = document.getElementById('selected-lead-card');
       rightPanel.innerHTML = `
         <div class="text-center py-12 space-y-3">
-          <span class="text-4xl">☝️</span>
+          <svg class="mx-auto h-12 w-12 text-slate-400 animate-bounce mb-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+          </svg>
           <h4 class="font-oswald text-sm uppercase font-bold text-slate-900">Select a lead card on the left to examine details, run voice verification checks, or dispatch partners.</h4>
         </div>
       `;
     }
+
+    // Toast notification system
+    function showToast(message, type = 'success') {
+      let container = document.getElementById('dashboard-toast-container');
+      if (!container) {
+        container = document.createElement('div');
+        container.id = 'dashboard-toast-container';
+        container.style.cssText = 'position:fixed;top:1.5rem;right:1.5rem;z-index:9999;display:flex;flex-direction:column;gap:0.5rem;pointer-events:none;';
+        document.body.appendChild(container);
+      }
+      const toast = document.createElement('div');
+      toast.style.cssText = `pointer-events:auto;background:rgba(15,23,42,0.95);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.1);border-radius:0.75rem;padding:0.75rem 1.25rem;color:white;font-size:0.75rem;font-weight:500;max-width:320px;box-shadow:0 8px 30px rgba(0,0,0,0.3);border-left:3px solid ${type === 'error' ? '#EF4444' : '#10B981'};animation:toast-in 0.3s ease;`;
+      toast.textContent = message;
+      container.appendChild(toast);
+      setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s'; }, 3500);
+      setTimeout(() => toast.remove(), 4000);
+    }
+
+    // Global Escape key handler
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const voiceModal = document.getElementById('voice-modal');
+        if (voiceModal && !voiceModal.classList.contains('hidden')) {
+          closeVoiceModal();
+        }
+      }
+    });
   </script>
 </body>
 </html>

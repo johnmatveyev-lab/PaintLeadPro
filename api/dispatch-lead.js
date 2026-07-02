@@ -1,27 +1,24 @@
 import twilio from 'twilio';
+import { applyCors, requireMethod, rateLimit, cleanString, isValidPhone, isConfigured } from './_utils.js';
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-  );
+  if (applyCors(req, res)) return;
+  if (!requireMethod(req, res, 'POST')) return;
+  if (!rateLimit(req, res, { key: 'dispatch', limit: 6, windowMs: 60_000 })) return;
 
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
-  }
-
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method Not Allowed' });
-  }
-
-  const { phone, name, address, scope, budget, color } = req.body;
+  const body = req.body || {};
+  const phone = cleanString(body.phone, 24);
+  const name = cleanString(body.name, 80);
+  const address = cleanString(body.address, 160);
+  const scope = cleanString(body.scope, 80);
+  const budget = cleanString(body.budget, 60);
+  const color = cleanString(body.color, 60);
 
   if (!phone || !name || !address) {
     return res.status(400).json({ error: 'Missing lead contact details or address' });
+  }
+  if (!isValidPhone(phone)) {
+    return res.status(400).json({ error: 'Invalid phone number format' });
   }
 
   const accountSid = process.env.TWILIO_ACCOUNT_SID;
@@ -30,11 +27,7 @@ export default async function handler(req, res) {
   const partnerNumber = process.env.PARTNER_NOTIFY_PHONE || '+18645550100'; // Default notification number
 
   // Fallback to Mock SMS if Twilio is not configured or are placeholders
-  if (
-    !accountSid || accountSid.includes('your_') || accountSid === '' ||
-    !authToken || authToken.includes('your_') || authToken === '' ||
-    !fromNumber || fromNumber.includes('your_') || fromNumber === ''
-  ) {
+  if (!isConfigured(accountSid) || !isConfigured(authToken) || !isConfigured(fromNumber)) {
     console.log("Twilio credentials not found or are placeholders. Returning mock SMS dispatch payload.");
     
     return res.status(200).json({
@@ -75,9 +68,8 @@ Status: Confirmed - Ready for estimate.`;
 
   } catch (error) {
     console.error("Twilio SMS dispatch failed: ", error);
-    return res.status(500).json({
-      error: 'Twilio SMS dispatch failed',
-      details: error.message
+    return res.status(502).json({
+      error: 'SMS dispatch failed. Please try again.'
     });
   }
 }

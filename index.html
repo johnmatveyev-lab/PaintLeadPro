@@ -3,6 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Get exclusive, prequalified homeowner painting leads delivered instantly to your inbox in Greenville, SC. No shared leads. Cancel anytime.">
+  <meta property="og:title" content="PaintLead Pro — Exclusive Painter Contractor Leads">
+  <meta property="og:description" content="Stop chasing cold leads. Get prequalified Greenville homeowners looking for interior, exterior, cabinet, and deck staining estimates.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>">
   <title>PaintLead Pro - Prequalified Painter Contractor Leads in Greenville</title>
   
   <!-- Google Fonts: Oswald for high-impact headers, Plus Jakarta Sans for body text -->
@@ -66,6 +72,71 @@
       color: var(--accent) !important;
       text-shadow: 0 0 8px var(--accent-glow);
     }
+
+    /* Mobile nav overlay */
+    .mobile-nav-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      background: rgba(2, 7, 18, 0.97);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .mobile-nav-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .mobile-nav-overlay a {
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    .mobile-nav-overlay a:hover {
+      color: #FFC700;
+    }
+
+    /* Toast notification */
+    .toast-container {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      pointer-events: none;
+    }
+    .toast {
+      pointer-events: auto;
+      background: rgba(7, 17, 38, 0.95);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.75rem;
+      padding: 0.75rem 1.25rem;
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 500;
+      max-width: 320px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+      animation: toast-in 0.3s ease, toast-out 0.3s ease 3.5s forwards;
+    }
+    .toast.toast-error { border-left: 3px solid #EF4444; }
+    .toast.toast-success { border-left: 3px solid #10B981; }
+    @keyframes toast-in { from { opacity: 0; transform: translateX(100%); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes toast-out { from { opacity: 1; } to { opacity: 0; } }
   </style>
 </head>
 <body class="text-white font-sans antialiased selection:bg-brand-accent selection:text-brand-dark overflow-x-hidden relative">
@@ -102,12 +173,34 @@
           <a href="homeowner.html" class="text-[10px] uppercase font-bold text-gray-400 hover:text-white px-3 py-1.5 rounded-full transition-all hover:bg-white/5">Homeowner App &rarr;</a>
           <a href="dashboard.html" class="text-[10px] uppercase font-bold text-gray-400 hover:text-white px-3 py-1.5 rounded-full transition-all hover:bg-white/5">Partner Hub &rarr;</a>
         </div>
-        <a href="#qualification-form" class="btn-shine-effect bg-gradient-to-r from-brand-accent to-amber-500 text-brand-dark font-oswald uppercase tracking-wider font-bold py-2.5 px-6 rounded-lg hover:from-amber-400 hover:to-amber-600 transition shadow-lg shadow-brand-accent/20 text-sm">
+        <a href="#qualification-form" class="hidden sm:inline-flex btn-shine-effect bg-gradient-to-r from-brand-accent to-amber-500 text-brand-dark font-oswald uppercase tracking-wider font-bold py-2.5 px-6 rounded-lg hover:from-amber-400 hover:to-amber-600 transition shadow-lg shadow-brand-accent/20 text-sm">
           Get Leads
         </a>
+        <!-- Mobile Hamburger Button -->
+        <button id="mobile-menu-btn" onclick="toggleMobileNav()" class="lg:hidden flex flex-col items-center justify-center w-10 h-10 rounded-lg bg-white/5 border border-white/10 gap-1.5 transition-all hover:bg-white/10" aria-label="Open navigation menu">
+          <span class="block w-5 h-0.5 bg-white rounded-full transition-all" id="burger-line-1"></span>
+          <span class="block w-5 h-0.5 bg-white rounded-full transition-all" id="burger-line-2"></span>
+          <span class="block w-3.5 h-0.5 bg-white rounded-full transition-all" id="burger-line-3"></span>
+        </button>
       </div>
     </div>
   </header>
+
+  <!-- Mobile Navigation Overlay -->
+  <div id="mobile-nav" class="mobile-nav-overlay">
+    <button onclick="toggleMobileNav()" class="absolute top-6 right-6 text-white text-3xl font-bold hover:text-brand-accent focus:outline-none" aria-label="Close navigation menu">&times;</button>
+    <a href="#how-it-works" onclick="toggleMobileNav()">How It Works</a>
+    <a href="#lead-quality" onclick="toggleMobileNav()">Lead Quality</a>
+    <a href="#faq" onclick="toggleMobileNav()">FAQ</a>
+    <a href="#qualification-form" onclick="toggleMobileNav()">Check Availability</a>
+    <div class="flex flex-col gap-3 pt-4 border-t border-white/10 items-center">
+      <a href="homeowner.html" class="!text-sm !text-gray-400">Homeowner App &rarr;</a>
+      <a href="dashboard.html" class="!text-sm !text-gray-400">Partner Hub &rarr;</a>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
 
   <!-- Sticky Spots Remaining Counter Banner -->
   <div class="glass-navbar relative z-40 bg-brand-accent/5 border-b border-brand-accent/15 py-3 px-4 text-center">
@@ -151,17 +244,21 @@
 
           <!-- Trust Signals list bar -->
           <div class="grid grid-cols-2 gap-y-3 sm:grid-cols-4 pt-6 border-t border-brand-border">
-            <div class="flex items-center gap-2.5 text-xs text-gray-300">
-              <span class="text-brand-accent font-bold text-sm">✔</span> Exclusive Local Leads
+            <div class="flex items-center gap-2 text-xs text-gray-300">
+              <svg class="w-4 h-4 text-brand-accent shrink-0" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              <span>Exclusive Local Leads</span>
             </div>
-            <div class="flex items-center gap-2.5 text-xs text-gray-300">
-              <span class="text-brand-accent font-bold text-sm">✔</span> Prequalified Demands
+            <div class="flex items-center gap-2 text-xs text-gray-300">
+              <svg class="w-4 h-4 text-brand-accent shrink-0" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              <span>Prequalified Demands</span>
             </div>
-            <div class="flex items-center gap-2.5 text-xs text-gray-300">
-              <span class="text-brand-accent font-bold text-sm">✔</span> Cancel Anytime
+            <div class="flex items-center gap-2 text-xs text-gray-300">
+              <svg class="w-4 h-4 text-brand-accent shrink-0" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              <span>Cancel Anytime</span>
             </div>
-            <div class="flex items-center gap-2.5 text-xs text-gray-300">
-              <span class="text-brand-accent font-bold text-sm">✔</span> Instant Delivery
+            <div class="flex items-center gap-2 text-xs text-gray-300">
+              <svg class="w-4 h-4 text-brand-accent shrink-0" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              <span>Instant Delivery</span>
             </div>
           </div>
         </div>
@@ -468,8 +565,10 @@
           <div class="absolute -right-4 -bottom-4 font-oswald text-8xl font-bold text-white/5 select-none transition-transform group-hover:scale-105">
             01
           </div>
-          <div class="h-10 w-10 rounded-xl bg-brand-accent/15 border border-brand-accent/30 text-brand-accent font-oswald font-bold text-lg flex items-center justify-center mb-5">
-            1
+          <div class="h-10 w-10 rounded-xl bg-brand-accent/15 border border-brand-accent/30 text-brand-accent flex items-center justify-center mb-5 transition-transform group-hover:scale-110">
+            <svg class="w-5 h-5 text-brand-accent animate-pulse" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
           </div>
           <div class="space-y-2 relative z-10">
             <h4 class="font-oswald text-lg uppercase font-bold text-white">Homeowner Requests Estimate</h4>
@@ -484,8 +583,10 @@
           <div class="absolute -right-4 -bottom-4 font-oswald text-8xl font-bold text-white/5 select-none transition-transform group-hover:scale-105">
             02
           </div>
-          <div class="h-10 w-10 rounded-xl bg-brand-accent/15 border border-brand-accent/30 text-brand-accent font-oswald font-bold text-lg flex items-center justify-center mb-5">
-            2
+          <div class="h-10 w-10 rounded-xl bg-brand-accent/15 border border-brand-accent/30 text-brand-accent flex items-center justify-center mb-5 transition-transform group-hover:scale-110">
+            <svg class="w-5 h-5 text-brand-accent" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+            </svg>
           </div>
           <div class="space-y-2 relative z-10">
             <h4 class="font-oswald text-lg uppercase font-bold text-white">We Prequalify Projects</h4>
@@ -500,8 +601,10 @@
           <div class="absolute -right-4 -bottom-4 font-oswald text-8xl font-bold text-white/5 select-none transition-transform group-hover:scale-105">
             03
           </div>
-          <div class="h-10 w-10 rounded-xl bg-brand-accent/15 border border-brand-accent/30 text-brand-accent font-oswald font-bold text-lg flex items-center justify-center mb-5">
-            3
+          <div class="h-10 w-10 rounded-xl bg-brand-accent/15 border border-brand-accent/30 text-brand-accent flex items-center justify-center mb-5 transition-transform group-hover:scale-110">
+            <svg class="w-5 h-5 text-brand-accent" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
           </div>
           <div class="space-y-2 relative z-10">
             <h4 class="font-oswald text-lg uppercase font-bold text-white">You Get Lead Instantly</h4>
@@ -516,8 +619,10 @@
           <div class="absolute -right-4 -bottom-4 font-oswald text-8xl font-bold text-white/5 select-none transition-transform group-hover:scale-105">
             04
           </div>
-          <div class="h-10 w-10 rounded-xl bg-brand-accent/15 border border-brand-accent/30 text-brand-accent font-oswald font-bold text-lg flex items-center justify-center mb-5">
-            4
+          <div class="h-10 w-10 rounded-xl bg-brand-accent/15 border border-brand-accent/30 text-brand-accent flex items-center justify-center mb-5 transition-transform group-hover:scale-110">
+            <svg class="w-5 h-5 text-brand-accent" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
           </div>
           <div class="space-y-2 relative z-10">
             <h4 class="font-oswald text-lg uppercase font-bold text-white">You Quote & Close Job</h4>
@@ -1012,6 +1117,56 @@
 
   <!-- Script for Interactive Elements -->
   <script>
+    // 0. Utility: HTML-safe text escaping to prevent XSS
+    function escapeHtml(str) {
+      if (!str) return '';
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // 0b. Toast notification system
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.textContent = message;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 4000);
+    }
+
+    // 0c. Mobile navigation toggle
+    function toggleMobileNav() {
+      const nav = document.getElementById('mobile-nav');
+      nav.classList.toggle('open');
+      document.body.classList.toggle('overflow-hidden');
+    }
+
+    // 0d. Global Escape key handler
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        // Close mobile nav
+        const mobileNav = document.getElementById('mobile-nav');
+        if (mobileNav && mobileNav.classList.contains('open')) {
+          toggleMobileNav();
+          return;
+        }
+        // Close script modal
+        const scriptModal = document.getElementById('ai-script-modal');
+        if (scriptModal && !scriptModal.classList.contains('hidden')) {
+          closeScriptModal();
+          return;
+        }
+        // Close photo modal
+        const photoModal = document.getElementById('photo-modal');
+        if (photoModal && !photoModal.classList.contains('hidden')) {
+          closePhotoModal();
+          return;
+        }
+      }
+    });
+
     // 1. Audio tone generation using Web Audio API (Futuristic Dispatch Tone)
     function playDispatchTone() {
       if (!document.getElementById('simulator-sound').checked) return;
@@ -1163,12 +1318,19 @@
 
       // Inject UI card html
       const container = document.getElementById('simulator-display-container');
+      const safeName = escapeHtml(template.name);
+      const safeLocation = escapeHtml(template.location);
+      const safeTitle = escapeHtml(template.title);
+      const safeBudget = escapeHtml(template.budget);
+      const safeTimeline = escapeHtml(template.timeline);
+      const safeNotes = escapeHtml(template.notes);
+
       container.innerHTML = `
         <div class="space-y-4 animate-fade-in">
           <div class="flex justify-between items-start flex-wrap gap-2">
             <div>
-              <h4 class="font-bold text-white text-base">${template.name}</h4>
-              <p class="text-[10px] text-gray-400">${template.location}</p>
+              <h4 class="font-bold text-white text-base">${safeName}</h4>
+              <p class="text-[10px] text-gray-400">${safeLocation}</p>
             </div>
             <span class="bg-brand-accent/10 border border-brand-accent/30 text-brand-accent text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1.5">
               <span class="h-1.5 w-1.5 rounded-full bg-brand-accent animate-pulse"></span> ⚡ READY FOR DISPATCH
@@ -1178,15 +1340,15 @@
           <div class="grid grid-cols-2 gap-4 text-xs bg-black/45 p-4 rounded-xl border border-white/5">
             <div>
               <span class="text-gray-500 font-medium block text-[10px] uppercase">Project Scope</span>
-              <strong class="text-white block mt-0.5">${template.title}</strong>
+              <strong class="text-white block mt-0.5">${safeTitle}</strong>
             </div>
             <div>
               <span class="text-gray-500 font-medium block text-[10px] uppercase">Estimated Budget</span>
-              <strong class="text-emerald-400 block mt-0.5">${template.budget}</strong>
+              <strong class="text-emerald-400 block mt-0.5">${safeBudget}</strong>
             </div>
             <div>
               <span class="text-gray-500 font-medium block text-[10px] uppercase">Client Timeline</span>
-              <strong class="text-brand-accent block mt-0.5">${template.timeline}</strong>
+              <strong class="text-brand-accent block mt-0.5">${safeTimeline}</strong>
             </div>
             <div>
               <span class="text-gray-500 font-medium block text-[10px] uppercase">Delivery Speed</span>
@@ -1195,9 +1357,9 @@
           </div>
 
           <div class="space-y-1">
-            <span class="text-[9px] font-bold text-gray-400 uppercase tracking-wider block">Homeowner Notes & Details:</span>
+            <span class="text-[9px] font-bold text-gray-400 uppercase tracking-wider block">Homeowner Notes &amp; Details:</span>
             <p class="text-xs text-gray-300 bg-white/5 border border-white/5 p-3 rounded-lg leading-relaxed">
-              "${template.notes}"
+              "${safeNotes}"
             </p>
           </div>
 
@@ -1241,12 +1403,19 @@
 
         // Inject HTML
         const container = document.getElementById('simulator-display-container');
+        const aiName = escapeHtml(activeLeadData.name);
+        const aiLocation = escapeHtml(activeLeadData.location);
+        const aiTitle = escapeHtml(activeLeadData.title);
+        const aiBudget = escapeHtml(activeLeadData.budget);
+        const aiTimeline = escapeHtml(activeLeadData.timeline);
+        const aiNotes = escapeHtml(activeLeadData.notes);
+
         container.innerHTML = `
           <div class="space-y-4 animate-fade-in">
             <div class="flex justify-between items-start flex-wrap gap-2">
               <div>
-                <h4 class="font-bold text-white text-base">${activeLeadData.name}</h4>
-                <p class="text-[10px] text-gray-400">${activeLeadData.location}</p>
+                <h4 class="font-bold text-white text-base">${aiName}</h4>
+                <p class="text-[10px] text-gray-400">${aiLocation}</p>
               </div>
               <span class="bg-violet-500/10 border border-violet-500/30 text-violet-400 text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1.5">
                 <span class="h-1.5 w-1.5 rounded-full bg-violet-400 animate-pulse"></span> 🤖 GEMINI AI GENERATED
@@ -1256,15 +1425,15 @@
             <div class="grid grid-cols-2 gap-4 text-xs bg-black/45 p-4 rounded-xl border border-white/5">
               <div>
                 <span class="text-gray-500 font-medium block text-[10px] uppercase">Project Scope</span>
-                <strong class="text-white block mt-0.5">${activeLeadData.title}</strong>
+                <strong class="text-white block mt-0.5">${aiTitle}</strong>
               </div>
               <div>
                 <span class="text-gray-500 font-medium block text-[10px] uppercase">Estimated Budget</span>
-                <strong class="text-emerald-400 block mt-0.5">${activeLeadData.budget}</strong>
+                <strong class="text-emerald-400 block mt-0.5">${aiBudget}</strong>
               </div>
               <div>
                 <span class="text-gray-500 font-medium block text-[10px] uppercase">Client Timeline</span>
-                <strong class="text-brand-accent block mt-0.5">${activeLeadData.timeline}</strong>
+                <strong class="text-brand-accent block mt-0.5">${aiTimeline}</strong>
               </div>
               <div>
                 <span class="text-gray-500 font-medium block text-[10px] uppercase">Lead Status</span>
@@ -1273,9 +1442,9 @@
             </div>
 
             <div class="space-y-1">
-              <span class="text-[9px] font-bold text-gray-400 uppercase tracking-wider block">Homeowner Notes & Details:</span>
+              <span class="text-[9px] font-bold text-gray-400 uppercase tracking-wider block">Homeowner Notes &amp; Details:</span>
               <p class="text-xs text-gray-300 bg-white/5 border border-white/5 p-3 rounded-lg leading-relaxed">
-                "${activeLeadData.notes}"
+                "${aiNotes}"
               </p>
             </div>
 
@@ -1351,7 +1520,7 @@
           // ensure at least one area is checked
           const checked = document.querySelectorAll('input[name="locations"]:checked');
           if (checked.length === 0) {
-            alert("Please select at least one Greenville service location to continue.");
+            showToast("Please select at least one Greenville service location to continue.", "error");
             return;
           }
         }
@@ -1388,7 +1557,7 @@
       const email = document.getElementById('form-email').value.trim();
 
       if (!company || !contact || !phone || !email) {
-        alert("Please fill in all company and contact fields to proceed.");
+        showToast("Please fill in all company and contact fields to proceed.", "error");
         return;
       }
 

@@ -3,6 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Visualize your dream paint colors with AI-powered before & after previews. Get an instant quote from top-rated Greenville SC painters.">
+  <meta property="og:title" content="PaintLead Pro — AI Paint Visualizer">
+  <meta property="og:description" content="Upload a photo of your home and see Sherwin-Williams colors come to life with AI. Get a free estimate in minutes.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>">
   <title>PaintLead Pro - Transform Your Home with AI Visualization</title>
   
   <!-- Supabase Client SDK -->
@@ -68,6 +74,36 @@
       border: 0;
       outline: none;
     }
+
+    /* Toast notification */
+    .toast-container {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      pointer-events: none;
+    }
+    .toast {
+      pointer-events: auto;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.75rem;
+      padding: 0.75rem 1.25rem;
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 500;
+      max-width: 320px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+      animation: toast-in 0.3s ease, toast-out 0.3s ease 3.5s forwards;
+    }
+    .toast.toast-error { border-left: 3px solid #EF4444; }
+    .toast.toast-success { border-left: 3px solid #10B981; }
+    @keyframes toast-in { from { opacity: 0; transform: translateX(100%); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes toast-out { from { opacity: 1; } to { opacity: 0; } }
   </style>
 </head>
 <body class="text-slate-800 font-sans antialiased overflow-x-hidden relative">
@@ -120,8 +156,8 @@
               src="videos/paintleadpro_square.mp4" 
               autoplay 
               loop 
+              muted
               playsinline 
-              controls 
               class="w-full h-full object-cover block"
             ></video>
           </div>
@@ -171,7 +207,9 @@
 
             <!-- Upload file picker overlay mask -->
             <div id="upload-mask" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm flex flex-col items-center justify-center text-center p-6 transition-all hover:bg-slate-900/70 cursor-pointer z-10 hidden">
-              <span class="text-4xl mb-2">📤</span>
+              <svg class="mx-auto h-12 w-12 text-white animate-bounce mb-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+              </svg>
               <h4 class="font-bold text-white text-sm">Drop Your Home Photo Here</h4>
               <p class="text-[10px] text-gray-300 mt-1 max-w-xs">Supports JPG, PNG file uploads. House exterior, cabinets, or room walls work best.</p>
             </div>
@@ -316,8 +354,10 @@
               </div>
 
               <!-- Upload Drag & Drop Area mockup -->
-              <div onclick="document.getElementById('visualizer-upload').click();" class="border-2 border-dashed border-slate-200 rounded-xl p-8 text-center hover:border-brand-accent hover:bg-slate-50 transition-all cursor-pointer">
-                <span class="text-3xl">🖼️</span>
+              <div onclick="document.getElementById('visualizer-upload').click();" class="group border-2 border-dashed border-slate-200 rounded-xl p-8 text-center hover:border-brand-accent hover:bg-slate-50 transition-all cursor-pointer">
+                <svg class="mx-auto h-12 w-12 text-slate-400 group-hover:text-brand-accent transition-colors duration-300 mb-2" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                  <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
                 <h4 class="font-bold text-xs text-slate-900 mt-2" id="funnel-upload-status">Click to Select Project Photo</h4>
                 <p class="text-[9px] text-slate-400 mt-1">Accepts JPG, PNG house overview photos</p>
               </div>
@@ -526,7 +566,7 @@
     </button>
 
     <!-- Chat Panel -->
-    <div id="chat-panel" class="hidden absolute bottom-18 right-0 w-[350px] h-[450px] glass-card-elevated overflow-hidden flex flex-col justify-between">
+    <div id="chat-panel" class="hidden absolute bottom-20 right-0 w-[350px] h-[450px] glass-card-elevated overflow-hidden flex flex-col justify-between">
       <!-- Header -->
       <div class="bg-slate-900 p-4 text-white flex justify-between items-center border-b border-slate-800">
         <div class="flex items-center gap-2">
@@ -588,6 +628,22 @@
 
   <!-- Script logic for Homeowner Page -->
   <script>
+    // 0b. Toast notification system
+    function showToast(message, type = 'success') {
+      let container = document.getElementById('toast-container');
+      if (!container) {
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        container.className = 'toast-container';
+        document.body.appendChild(container);
+      }
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.textContent = message;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 4000);
+    }
+
     // Supabase Dual-Mode Client Setup
     let supabaseClient = null;
 
@@ -688,7 +744,7 @@
         if (activeFunnelStep === 1) {
           // Check if color is selected
           if (selectedColorName === "None") {
-            alert("Please select one of the recommended Sherwin-Williams colors to preview the AI visualizer first.");
+            showToast("Please select one of the recommended Sherwin-Williams colors to preview the AI visualizer first.", "error");
             return;
           }
         }
@@ -736,7 +792,7 @@
       const email = document.getElementById('funnel-email').value.trim();
 
       if (!address || !name || !phone || !email) {
-        alert("Please complete the location and contact fields to generate the quote.");
+        showToast("Please complete the location and contact fields to generate the quote.", "error");
         return;
       }
 
@@ -904,14 +960,14 @@
 
       const chatBody = document.getElementById('chat-messages');
 
-      // Append user bubble
-      chatBody.innerHTML += `
-        <div class="flex gap-2 items-start justify-end">
-          <div class="bg-brand-accent text-slate-900 p-2.5 rounded-2xl rounded-tr-none max-w-[80%] leading-relaxed font-semibold">
-            ${input.value}
-          </div>
-        </div>
-      `;
+      // Append user bubble (XSS-safe: use textContent pattern)
+      const userBubble = document.createElement('div');
+      userBubble.className = 'flex gap-2 items-start justify-end';
+      const userMsg = document.createElement('div');
+      userMsg.className = 'bg-brand-accent text-slate-900 p-2.5 rounded-2xl rounded-tr-none max-w-[80%] leading-relaxed font-semibold';
+      userMsg.textContent = input.value;
+      userBubble.appendChild(userMsg);
+      chatBody.appendChild(userBubble);
 
       input.value = "";
       chatBody.scrollTop = chatBody.scrollHeight;
@@ -948,6 +1004,16 @@
         video.play().catch(err => console.log("Autoplay play blocked by browser policy", err));
       }
     }, { once: true });
+
+    // Global Escape key handler
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const chatPanel = document.getElementById('chat-panel');
+        if (chatPanel && !chatPanel.classList.contains('hidden')) {
+          toggleChatbot();
+        }
+      }
+    });
   </script>
 </body>
 </html>

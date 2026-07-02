@@ -1,34 +1,23 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { applyCors, requireMethod, rateLimit, cleanString, validateImageInput, isConfigured } from './_utils.js';
 
 export default async function handler(req, res) {
-  // CORS support
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-  );
+  if (applyCors(req, res)) return;
+  if (!requireMethod(req, res, 'POST')) return;
+  if (!rateLimit(req, res, { key: 'analyze', limit: 10, windowMs: 60_000 })) return;
 
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
-  }
+  const { image } = req.body || {};
+  const color = cleanString((req.body || {}).color, 60);
 
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method Not Allowed' });
-  }
-
-  const { image, color } = req.body;
-
-  if (!image) {
-    return res.status(400).json({ error: 'Missing image data' });
+  const imageCheck = validateImageInput(image);
+  if (!imageCheck.ok) {
+    return res.status(400).json({ error: imageCheck.error });
   }
 
   const apiKey = process.env.GEMINI_API_KEY;
 
   // Fallback to Mock response if API key is not configured or is a placeholder
-  if (!apiKey || apiKey.includes('your_') || apiKey === '') {
+  if (!isConfigured(apiKey)) {
     console.log("GEMINI_API_KEY not found or is a placeholder. Returning mock analysis report.");
     
     // Simulate a slight database search delay
@@ -48,17 +37,22 @@ export default async function handler(req, res) {
     let base64Data = '';
     let mimeType = '';
 
-    if (image.startsWith('data:')) {
-      base64Data = image.split(',')[1] || image;
+    if (imageCheck.kind === 'dataurl') {
+      base64Data = image.split(',')[1] || '';
       mimeType = image.split(';')[0].split(':')[1] || 'image/jpeg';
-    } else if (image.startsWith('http://') || image.startsWith('https://')) {
+    } else {
       const imgRes = await fetch(image);
+      if (!imgRes.ok) {
+        return res.status(400).json({ error: 'Could not fetch image from URL' });
+      }
       const arrayBuffer = await imgRes.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
       base64Data = buffer.toString('base64');
       mimeType = imgRes.headers.get('content-type') || 'image/jpeg';
-    } else {
-      return res.status(400).json({ error: 'Unsupported image format' });
+    }
+
+    if (!base64Data) {
+      return res.status(400).json({ error: 'Empty image payload' });
     }
 
     const genAI = new GoogleGenerativeAI(apiKey);
@@ -98,9 +92,8 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error("Gemini API call failed: ", error);
-    return res.status(500).json({
-      error: 'Failed to analyze surface image via Gemini',
-      details: error.message
+    return res.status(502).json({
+      error: 'Failed to analyze surface image. Please try again.'
     });
   }
 }
