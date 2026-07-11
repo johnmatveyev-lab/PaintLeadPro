@@ -192,16 +192,7 @@ body {
   min-height: 100dvh;
 }
 
-/* Dot grid background */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: var(--z-bg);
-  background-image: radial-gradient(circle, var(--dot-color) 1px, transparent 1px);
-  background-size: 28px 28px;
-  pointer-events: none;
-}
+/* Three.js Canvas is positioned relative to the viewport background */
 
 /* ── 5. Three.js Canvas ─────────────────────────────────────── */
 #three-canvas {
