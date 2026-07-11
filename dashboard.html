@@ -50,49 +50,50 @@
     }
   </script>
 
-  <!-- Three.js Background & Scroll FX -->
-  <script type="module" src="js/three-bg.js"></script>
+  <!-- Scroll FX (particle canvas intentionally omitted: keeps the hub fast and calm) -->
   <script src="js/scroll-fx.js"></script>
 </head>
-<body class="dashboard-page text-slate-800 font-sans antialiased overflow-x-hidden relative min-h-screen flex flex-col justify-between">
-
-  <!-- Three.js Canvas Background -->
-  <canvas id="three-canvas"></canvas>
-  <div class="aurora-bg"></div>
+<body class="dashboard-page bg-slate-50 text-slate-800 font-sans antialiased overflow-x-hidden relative min-h-screen flex flex-col justify-between" style="background-image: radial-gradient(circle at 50% -20%, rgba(255,199,0,0.06), transparent 60%);">
 
   <!-- Magic Link Authenticator Screen -->
   <div id="auth-screen" class="flex-grow flex items-center justify-center p-4">
-    <div class="glass-card max-w-md w-full p-6 sm:p-8 space-y-6 reveal-scale">
-      <div class="text-center space-y-2">
-        <div class="bg-gradient-to-br from-brand-accent to-amber-500 p-2.5 rounded-xl text-brand-dark shadow inline-block">
-          <svg class="w-6 h-6 text-slate-900" fill="currentColor" viewBox="0 0 24 24">
+    <div class="bg-white max-w-md w-full rounded-3xl border border-slate-200/80 shadow-xl shadow-slate-900/5 overflow-hidden">
+      <div class="bg-slate-950 px-8 pt-8 pb-7 text-center relative overflow-hidden">
+        <span class="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-transparent via-brand-accent to-transparent"></span>
+        <div class="bg-gradient-to-br from-brand-accent to-amber-500 p-2.5 rounded-xl inline-block">
+          <svg class="w-6 h-6 text-slate-950" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M19 2H5c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM5 8V4h14v4H5zm12 4H7c-1.1 0-2 .9-2 2v2H3v2h2v4c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2v-4h2v-2h-2v-2c0-1.1-.9-2-2-2zm0 8H7v-4h10v4z"/>
           </svg>
         </div>
-        <h2 class="font-oswald text-2xl uppercase font-bold text-slate-900 tracking-wide mt-3">Partner Hub Login</h2>
-        <p class="text-xs text-slate-500">Sign in securely with a magic link sent to your business email.</p>
+        <h2 class="font-oswald text-2xl uppercase font-bold text-white tracking-wide mt-4">Partner Hub</h2>
+        <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">Sign in with a secure magic link sent to your business email.</p>
       </div>
 
-      <form id="auth-form" onsubmit="event.preventDefault(); sendMagicLink();" class="space-y-4">
-        <div>
-          <label class="block text-xs font-semibold text-slate-700 mb-1.5">Business Email Address</label>
-          <input type="email" id="auth-email" required placeholder="contractor@greenvillepainting.com" class="glass-input w-full p-3.5 rounded-xl text-xs focus:outline-none focus:border-brand-accent text-slate-800">
-        </div>
-        <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-brand-accent font-oswald uppercase text-xs tracking-wider py-3.5 px-4 rounded-xl transition shadow font-bold">
-          Send Magic Login Link &rarr;
-        </button>
-      </form>
+      <div class="p-6 sm:p-8 space-y-5">
+        <form id="auth-form" onsubmit="event.preventDefault(); sendMagicLink();" class="space-y-4">
+          <div>
+            <label for="auth-email" class="block text-xs font-semibold text-slate-700 mb-2">Business email</label>
+            <input type="email" id="auth-email" required placeholder="you@yourcompany.com" autocomplete="email"
+                   class="w-full px-4 py-3.5 rounded-xl text-base sm:text-sm bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-accent/60 focus:border-brand-accent focus:bg-white transition-colors duration-200 text-slate-900 placeholder:text-slate-400">
+          </div>
+          <button type="submit" class="cursor-pointer w-full bg-slate-900 hover:bg-slate-800 text-brand-accent font-oswald uppercase text-xs tracking-[0.14em] py-4 px-4 rounded-xl transition-colors duration-200 shadow-sm font-bold min-h-[48px]">
+            Email me a sign-in link
+          </button>
+        </form>
 
-      <!-- Magic Link Success Indicator -->
-      <div id="auth-success" class="hidden space-y-4 text-center p-4 bg-emerald-50 border border-emerald-100 rounded-xl">
-        <span class="text-2xl">✉️</span>
-        <h4 class="font-bold text-emerald-800 text-xs">Magic Link Dispatched!</h4>
-        <p id="auth-success-copy" class="text-[10px] text-slate-500 leading-relaxed">
-          We sent a sign-in link. To bypass external email inbox checks, you can proceed directly by clicking below:
-        </p>
-        <button id="auth-proceed-btn" onclick="loginUser()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs py-2.5 px-4 rounded-lg transition-colors">
-          🔗 Proceed to Lead Hub
-        </button>
+        <!-- Magic Link Success Indicator -->
+        <div id="auth-success" class="hidden space-y-4 text-center p-5 bg-emerald-50 border border-emerald-100 rounded-2xl">
+          <div class="mx-auto h-10 w-10 rounded-full bg-emerald-100 flex items-center justify-center">
+            <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"/></svg>
+          </div>
+          <h4 class="font-semibold text-emerald-800 text-sm">Check your inbox</h4>
+          <p id="auth-success-copy" class="text-xs text-slate-500 leading-relaxed">
+            We sent a sign-in link. To bypass external email inbox checks, you can proceed directly by clicking below:
+          </p>
+          <button id="auth-proceed-btn" onclick="loginUser()" class="cursor-pointer w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs py-3 px-4 rounded-xl transition-colors duration-200 min-h-[44px]">
+            Continue to Lead Hub
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -100,19 +101,28 @@
   <!-- Dashboard Main Panel (Hidden by default, shown on login) -->
   <div id="dashboard-panel" class="hidden flex-grow flex flex-col">
     <!-- Navbar -->
-    <header class="glass-navbar border-b border-slate-200">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <div class="bg-gradient-to-br from-brand-accent to-amber-500 p-2 rounded-xl text-brand-dark shadow">
-            <svg class="w-5 h-5 text-slate-900" fill="currentColor" viewBox="0 0 24 24">
+    <header class="sticky top-0 z-40 bg-slate-950/95 backdrop-blur-md border-b border-white/5 shadow-lg shadow-slate-950/10">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
+        <div class="flex items-center gap-2.5 min-w-0">
+          <div class="bg-gradient-to-br from-brand-accent to-amber-500 p-1.5 rounded-lg shrink-0">
+            <svg class="w-4 h-4 text-slate-950" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M19 2H5c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM5 8V4h14v4H5zm12 4H7c-1.1 0-2 .9-2 2v2H3v2h2v4c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2v-4h2v-2h-2v-2c0-1.1-.9-2-2-2zm0 8H7v-4h10v4z"/>
             </svg>
           </div>
-          <span class="font-oswald text-xl font-bold text-slate-900">PaintLead<span class="bg-gradient-to-r from-amber-500 to-amber-600 bg-clip-text text-transparent">Pro</span> <span class="text-xs uppercase text-slate-400 font-bold ml-1 tracking-widest">Lead Hub</span></span>
+          <div class="flex items-baseline gap-2 min-w-0 whitespace-nowrap">
+            <span class="font-oswald text-lg font-bold text-white tracking-wide">PaintLead<span class="text-brand-accent">Pro</span></span>
+            <span class="hidden sm:inline text-[10px] uppercase text-slate-400 font-bold tracking-[0.2em]">Partner Hub</span>
+          </div>
         </div>
-        <div class="flex items-center gap-4">
-          <span class="text-xs text-slate-500 font-semibold" id="logged-in-user">contractor@painting.com</span>
-          <button onclick="logoutUser()" class="text-xs font-bold text-red-500 hover:text-red-700 hover:underline">Logout</button>
+        <div class="flex items-center gap-3 shrink-0">
+          <div class="hidden md:flex items-center gap-2 bg-white/5 border border-white/10 rounded-full py-1.5 pl-1.5 pr-4">
+            <span class="h-6 w-6 rounded-full bg-brand-accent text-slate-950 text-[10px] font-extrabold flex items-center justify-center uppercase" id="user-avatar-initial">C</span>
+            <span class="text-xs text-slate-300 font-medium truncate max-w-[180px]" id="logged-in-user">contractor@painting.com</span>
+          </div>
+          <span class="md:hidden h-8 w-8 rounded-full bg-brand-accent text-slate-950 text-[11px] font-extrabold flex items-center justify-center uppercase" id="user-avatar-initial-sm">C</span>
+          <button onclick="logoutUser()" class="cursor-pointer text-xs font-semibold text-slate-400 hover:text-white border border-white/10 hover:border-white/25 rounded-full px-3.5 py-1.5 transition-colors duration-200 min-h-[32px]" aria-label="Log out">
+            Logout
+          </button>
         </div>
       </div>
     </header>
@@ -121,22 +131,30 @@
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow space-y-6 w-full">
       
       <!-- Quick Info Stats Cards -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 stagger-group">
-        <div class="glass-card stagger-item reveal-up tilt-card p-5 flex flex-col justify-between">
-          <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Total Leads Feed</span>
-          <strong class="text-2xl text-slate-900 mt-2 font-oswald" id="stat-total-leads" data-counter="2">2</strong>
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow duration-200 p-5 relative overflow-hidden">
+          <span class="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-brand-accent to-amber-500"></span>
+          <span class="text-[11px] uppercase font-semibold text-slate-500 tracking-[0.14em]">Total Leads</span>
+          <strong class="block text-3xl leading-none text-slate-900 mt-3 font-oswald [font-variant-numeric:tabular-nums]" id="stat-total-leads" data-counter="2">2</strong>
+          <span class="text-[11px] text-slate-400 mt-1.5 block">in your feed</span>
         </div>
-        <div class="glass-card stagger-item reveal-up tilt-card p-5 flex flex-col justify-between">
-          <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Confirmed Walks</span>
-          <strong class="text-2xl text-emerald-600 mt-2 font-oswald" id="stat-confirmed-walks" data-counter="1">1</strong>
+        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow duration-200 p-5 relative overflow-hidden">
+          <span class="absolute inset-x-0 top-0 h-0.5 bg-emerald-500"></span>
+          <span class="text-[11px] uppercase font-semibold text-slate-500 tracking-[0.14em]">Confirmed Walks</span>
+          <strong class="block text-3xl leading-none text-emerald-600 mt-3 font-oswald [font-variant-numeric:tabular-nums]" id="stat-confirmed-walks" data-counter="1">1</strong>
+          <span class="text-[11px] text-slate-400 mt-1.5 block">site visits booked</span>
         </div>
-        <div class="glass-card stagger-item reveal-up tilt-card p-5 flex flex-col justify-between">
-          <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Pending Calls</span>
-          <strong class="text-2xl text-amber-500 mt-2 font-oswald" id="stat-pending-calls" data-counter="1">1</strong>
+        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow duration-200 p-5 relative overflow-hidden">
+          <span class="absolute inset-x-0 top-0 h-0.5 bg-amber-400"></span>
+          <span class="text-[11px] uppercase font-semibold text-slate-500 tracking-[0.14em]">Pending Calls</span>
+          <strong class="block text-3xl leading-none text-amber-600 mt-3 font-oswald [font-variant-numeric:tabular-nums]" id="stat-pending-calls" data-counter="1">1</strong>
+          <span class="text-[11px] text-slate-400 mt-1.5 block">awaiting verification</span>
         </div>
-        <div class="glass-card stagger-item reveal-up tilt-card p-5 flex flex-col justify-between">
-          <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Partner Networks</span>
-          <strong class="text-2xl text-indigo-600 mt-2 font-oswald" data-counter="8" data-counter-suffix=" Partners">8 Partners</strong>
+        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow duration-200 p-5 relative overflow-hidden">
+          <span class="absolute inset-x-0 top-0 h-0.5 bg-slate-800"></span>
+          <span class="text-[11px] uppercase font-semibold text-slate-500 tracking-[0.14em]">Partner Network</span>
+          <strong class="block text-3xl leading-none text-slate-900 mt-3 font-oswald [font-variant-numeric:tabular-nums]" data-counter="8">8</strong>
+          <span class="text-[11px] text-slate-400 mt-1.5 block">painting partners</span>
         </div>
       </div>
 
@@ -145,9 +163,15 @@
         
         <!-- Left Column: Leads List -->
         <div class="lg:col-span-7 space-y-4">
-          <div class="flex justify-between items-center">
-            <h3 class="font-oswald text-base uppercase font-bold text-slate-900 tracking-wide">Greenville Area Homeowner Inquiries</h3>
-            <button onclick="clearLeads()" class="text-[10px] text-slate-400 hover:text-slate-700 hover:underline">Reset Demo Data</button>
+          <div class="flex justify-between items-end gap-3 flex-wrap">
+            <div>
+              <h3 class="font-oswald text-lg uppercase font-bold text-slate-900 tracking-wide leading-tight">Homeowner Inquiries</h3>
+              <p class="text-xs text-slate-500 mt-0.5">Greenville, SC service area</p>
+            </div>
+            <button onclick="clearLeads()" class="cursor-pointer inline-flex items-center gap-1.5 text-[11px] font-medium text-slate-400 hover:text-slate-600 transition-colors duration-200 py-1" aria-label="Reset demo data">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"/></svg>
+              Reset demo data
+            </button>
           </div>
 
           <div id="leads-list-container" class="space-y-4">
@@ -159,24 +183,29 @@
         <div class="lg:col-span-5 space-y-6 sticky top-24">
           
           <!-- Selected Lead details card -->
-          <div id="selected-lead-card" class="glass-card-elevated rounded-2xl p-5 space-y-5">
-            <div class="text-center py-12 space-y-3">
-              <svg class="mx-auto h-12 w-12 text-slate-400 animate-bounce mb-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
-              </svg>
-              <h4 class="font-oswald text-sm uppercase font-bold text-slate-900">Select a lead card on the left to examine details, run voice verification checks, or dispatch partners.</h4>
+          <div id="selected-lead-card" class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 space-y-5">
+            <div class="text-center py-14 px-4">
+              <div class="mx-auto h-12 w-12 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center justify-center mb-4">
+                <svg class="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 13.5h3.86a2.25 2.25 0 0 1 2.012 1.244l.256.512a2.25 2.25 0 0 0 2.013 1.244h3.218a2.25 2.25 0 0 0 2.013-1.244l.256-.512a2.25 2.25 0 0 1 2.013-1.244h3.859m-19.5.338V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 0 0-2.15-1.588H6.911a2.25 2.25 0 0 0-2.15 1.588L2.35 13.177a2.25 2.25 0 0 0-.1.661Z"/>
+                </svg>
+              </div>
+              <h4 class="font-oswald text-sm uppercase font-bold text-slate-700 tracking-wide">No lead selected</h4>
+              <p class="text-xs text-slate-500 mt-1.5 leading-relaxed max-w-[240px] mx-auto">Choose an inquiry from the list to review details, run voice verification, or dispatch to your network.</p>
             </div>
           </div>
 
           <!-- Quick Navigation Panel -->
-          <div class="glass-card rounded-2xl border border-slate-200/60 shadow-lg p-5 space-y-4">
-            <h4 class="font-oswald text-xs uppercase font-bold text-slate-900 tracking-wider">Developer Sandbox Shortcuts</h4>
-            <div class="grid grid-cols-2 gap-2 text-xs">
-              <a href="homeowner.html" class="bg-slate-100 hover:bg-slate-200/80 p-3 rounded-xl font-semibold transition text-center border border-slate-200 text-slate-800">
-                🏡 Homeowner Form
+          <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 space-y-3">
+            <h4 class="text-[11px] uppercase font-semibold text-slate-500 tracking-[0.14em]">Quick Links</h4>
+            <div class="grid grid-cols-2 gap-2">
+              <a href="homeowner.html" class="cursor-pointer group flex items-center justify-center gap-2 bg-slate-50 hover:bg-slate-100 py-3 px-3 rounded-xl text-xs font-semibold transition-colors duration-200 border border-slate-200/80 text-slate-700 min-h-[44px]">
+                <svg class="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-colors duration-200" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75"/></svg>
+                Homeowner App
               </a>
-              <a href="index.html" class="bg-slate-100 hover:bg-slate-200/80 p-3 rounded-xl font-semibold transition text-center border border-slate-200 text-slate-800">
-                💼 Contractor Landing
+              <a href="index.html" class="cursor-pointer group flex items-center justify-center gap-2 bg-slate-50 hover:bg-slate-100 py-3 px-3 rounded-xl text-xs font-semibold transition-colors duration-200 border border-slate-200/80 text-slate-700 min-h-[44px]">
+                <svg class="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-colors duration-200" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z"/></svg>
+                Landing Page
               </a>
             </div>
           </div>
@@ -216,8 +245,8 @@
   </div>
 
   <!-- Footer -->
-  <footer class="bg-slate-900 border-t border-slate-950 py-8 text-slate-500 text-center text-xs mt-12 w-full">
-    &copy; 2026 PaintLead Pro Partner Hub. Local demo sandbox environment.
+  <footer class="py-8 text-center text-xs text-slate-400 mt-12 w-full border-t border-slate-200/60">
+    &copy; 2026 PaintLead<span class="font-semibold text-slate-500">Pro</span> &middot; Partner Hub
   </footer>
 
   <!-- Dashboard Script Logic -->
@@ -303,6 +332,9 @@
       document.getElementById('auth-screen').classList.add('hidden');
       document.getElementById('dashboard-panel').classList.remove('hidden');
       document.getElementById('logged-in-user').textContent = activeUser;
+      const initial = (activeUser || 'C').charAt(0).toUpperCase();
+      document.getElementById('user-avatar-initial').textContent = initial;
+      document.getElementById('user-avatar-initial-sm').textContent = initial;
       subscribeRealtime();
       loadLeads();
     }
@@ -475,44 +507,50 @@
       const container = document.getElementById('leads-list-container');
       if (leadsData.length === 0) {
         container.innerHTML = `
-          <div class="glass-card p-8 text-center rounded-2xl border border-slate-200/60">
-            <p class="text-xs text-slate-500">No leads generated yet. Visit the homeowner facing page and complete the Quote Funnel to populate this feed!</p>
+          <div class="bg-white p-10 text-center rounded-2xl border border-dashed border-slate-300">
+            <p class="text-sm font-medium text-slate-600">No leads yet</p>
+            <p class="text-xs text-slate-400 mt-1">New homeowner inquiries from the visualizer funnel will appear here in real time.</p>
           </div>
         `;
         return;
       }
 
-      container.innerHTML = leadsData.map(lead => {
+      container.innerHTML = leadsData.map(lead => renderLeadCard(lead)).join('');
+    }
+
+    function renderLeadCard(lead) {
         const isSelected = lead.id === selectedLeadId;
-        const selectedBorder = isSelected ? 'border-brand-accent border-2 bg-slate-50/50' : 'border-slate-200/60';
-        
-        let statusBadgeColor = "bg-amber-100 text-amber-800 border-amber-200";
-        if (lead.status.includes('Confirmed')) statusBadgeColor = "bg-emerald-100 text-emerald-800 border-emerald-200";
-        else if (lead.status.includes('Dispatched')) statusBadgeColor = "bg-indigo-100 text-indigo-800 border-indigo-200";
+        const selectedClasses = isSelected
+          ? 'border-brand-accent ring-1 ring-brand-accent/60 bg-amber-50/40 shadow-md'
+          : 'border-slate-200/80 hover:border-slate-300 hover:shadow-md';
+
+        let statusBadge = "bg-amber-50 text-amber-700 border-amber-200/80";
+        if (lead.status.includes('Confirmed')) statusBadge = "bg-emerald-50 text-emerald-700 border-emerald-200/80";
+        else if (lead.status.includes('Dispatched')) statusBadge = "bg-indigo-50 text-indigo-700 border-indigo-200/80";
 
         return `
-          <div onclick="selectLead('${lead.id}')" class="glass-card p-4 rounded-xl border cursor-pointer hover:shadow-md transition-all flex justify-between gap-4 items-center ${selectedBorder}">
-            <div class="flex gap-3 items-center min-w-0">
-              <div class="h-10 w-10 bg-slate-100 rounded-lg overflow-hidden border border-slate-200/30 shrink-0">
-                <img class="h-full w-full object-cover" src="${lead.photo}" alt="Paint visualizer thumbnail" loading="lazy">
+          <div onclick="selectLead('${lead.id}')" role="button" tabindex="0" onkeydown="if(event.key==='Enter')selectLead('${lead.id}')" aria-label="View lead ${lead.name}"
+               class="bg-white p-4 rounded-2xl border cursor-pointer transition-all duration-200 flex justify-between gap-4 items-center min-h-[72px] ${selectedClasses}">
+            <div class="flex gap-3.5 items-center min-w-0">
+              <div class="h-12 w-12 bg-slate-100 rounded-xl overflow-hidden ring-1 ring-slate-200/60 shrink-0">
+                <img class="h-full w-full object-cover" src="${lead.photo}" alt="Property photo for ${lead.name}" loading="lazy">
               </div>
               <div class="min-w-0">
-                <h4 class="font-bold text-xs text-slate-900 truncate leading-tight">${lead.name}</h4>
-                <p class="text-[9px] text-slate-400 mt-0.5 truncate">${lead.address.split(',')[0]}</p>
-                <div class="flex items-center gap-1.5 mt-1 flex-wrap">
-                  <span class="text-[8px] bg-slate-100 text-slate-500 py-0.5 px-2 rounded-full font-semibold border border-slate-200/50">${lead.scope}</span>
-                  <span class="text-[8px] py-0.5 px-2 rounded-full font-semibold border ${statusBadgeColor}">${lead.status}</span>
+                <h4 class="font-semibold text-sm text-slate-900 truncate leading-tight">${lead.name}</h4>
+                <p class="text-xs text-slate-500 mt-0.5 truncate">${lead.address.split(',')[0]}</p>
+                <div class="flex items-center gap-1.5 mt-1.5 flex-wrap">
+                  <span class="text-[10px] bg-slate-50 text-slate-600 py-0.5 px-2 rounded-full font-medium border border-slate-200/80">${lead.scope}</span>
+                  <span class="text-[10px] py-0.5 px-2 rounded-full font-semibold border ${statusBadge}">${lead.status}</span>
                 </div>
               </div>
             </div>
-            
+
             <div class="text-right shrink-0">
-              <span class="text-[10px] font-bold font-mono text-emerald-600 block">${lead.budget}</span>
-              <span class="text-[8px] text-slate-400 font-medium block mt-0.5">${lead.timeline}</span>
+              <span class="text-sm font-bold text-slate-900 block [font-variant-numeric:tabular-nums]">${lead.budget}</span>
+              <span class="text-[11px] text-slate-400 font-medium block mt-0.5">${lead.timeline}</span>
             </div>
           </div>
         `;
-      }).join('');
     }
 
     function selectLead(id) {
@@ -527,15 +565,16 @@
       let dispatchButton = "";
       if (lead.status === "New Lead" || lead.status.includes('Scheduled')) {
         dispatchButton = `
-          <button onclick="dispatchLead('${lead.id}')" class="w-full bg-slate-900 hover:bg-slate-800 text-brand-accent font-oswald uppercase text-xs tracking-wider py-3.5 px-4 rounded-xl transition shadow font-bold mt-2 flex items-center justify-center gap-2">
-            <svg class="w-4 h-4 text-brand-accent animate-bounce" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-            Dispatch Lead to In-Network Painters
+          <button onclick="dispatchLead('${lead.id}')" class="cursor-pointer w-full bg-slate-900 hover:bg-slate-800 text-brand-accent font-oswald uppercase text-xs tracking-[0.12em] py-3.5 px-4 rounded-xl transition-colors duration-200 shadow-sm font-bold flex items-center justify-center gap-2 min-h-[48px]">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            Dispatch to Partner Network
           </button>
         `;
       } else if (lead.status.includes('Dispatched')) {
         dispatchButton = `
-          <div class="text-center py-2 bg-indigo-50 border border-indigo-100 text-indigo-700 text-[10px] font-bold rounded-xl mt-2 uppercase tracking-wide">
-            Lead Syndicated to Local Contractors
+          <div class="flex items-center justify-center gap-2 py-3 bg-indigo-50 border border-indigo-100 text-indigo-700 text-[11px] font-semibold rounded-xl uppercase tracking-wide">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+            Syndicated to local contractors
           </div>
         `;
       }
@@ -543,61 +582,59 @@
       let voiceAgentButton = "";
       if (lead.voiceStatus.includes('queued') || lead.voiceStatus.includes('Incoming')) {
         voiceAgentButton = `
-          <button onclick="openVoiceModal('${lead.id}')" class="w-full bg-gradient-to-r from-violet-500 to-indigo-600 hover:from-violet-600 hover:to-indigo-700 text-white font-oswald uppercase text-xs tracking-wider py-3.5 px-4 rounded-xl transition shadow font-bold flex items-center justify-center gap-2">
-            <svg class="w-4 h-4 text-white animate-pulse" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-            <span>Launch AI Voice Agent Simulation</span>
+          <button onclick="openVoiceModal('${lead.id}')" class="cursor-pointer w-full bg-violet-600 hover:bg-violet-700 text-white font-oswald uppercase text-xs tracking-[0.12em] py-3.5 px-4 rounded-xl transition-colors duration-200 shadow-sm font-bold flex items-center justify-center gap-2 min-h-[48px]">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+            Run AI Voice Verification
           </button>
         `;
       } else {
         voiceAgentButton = `
-          <div class="bg-emerald-50 border border-emerald-100 text-emerald-700 p-3 rounded-xl text-xs space-y-1">
-            <span class="font-bold text-[9px] uppercase tracking-wider block text-emerald-600">AI Voice Agent Confirmation:</span>
-            <p class="text-[11px] leading-relaxed italic">"Verified budget of ${lead.budget} with color ${lead.color}. Siding photo matches estimation constraints. Walk booked."</p>
+          <div class="bg-emerald-50 border border-emerald-100 p-3.5 rounded-xl space-y-1">
+            <span class="font-semibold text-[10px] uppercase tracking-[0.14em] block text-emerald-600">Voice agent confirmation</span>
+            <p class="text-xs text-emerald-800 leading-relaxed">"Verified budget of ${lead.budget} with color ${lead.color}. Photo matches estimate constraints. Walk booked."</p>
           </div>
         `;
       }
 
       rightPanel.innerHTML = `
-        <div class="space-y-4 animate-fade-in text-xs text-slate-700">
-          
-          <div class="flex justify-between items-start flex-wrap gap-2 border-b border-slate-100 pb-3">
-            <div>
-              <h3 class="font-oswald text-base uppercase font-bold text-slate-950">${lead.name}</h3>
-              <p class="text-[9px] text-slate-500 mt-0.5">${lead.email} | ${lead.phone}</p>
+        <div class="space-y-5 animate-fade-in text-sm text-slate-700">
+
+          <div class="flex justify-between items-start gap-3 border-b border-slate-100 pb-4">
+            <div class="min-w-0">
+              <h3 class="font-oswald text-lg uppercase font-bold text-slate-900 leading-tight truncate">${lead.name}</h3>
+              <p class="text-xs text-slate-500 mt-1 truncate">${lead.email} &middot; ${lead.phone}</p>
             </div>
-            <span class="text-[8px] bg-slate-100 border border-slate-200 text-slate-500 py-0.5 px-2 rounded-full font-bold uppercase tracking-wider font-mono">ID: ${lead.id}</span>
+            <span class="shrink-0 text-[10px] bg-slate-50 border border-slate-200/80 text-slate-400 py-1 px-2.5 rounded-full font-medium [font-variant-numeric:tabular-nums]">#${String(lead.id).slice(0, 8)}</span>
           </div>
 
           <!-- Lead visualizer details -->
-          <div class="grid grid-cols-3 gap-3">
-            <div class="col-span-2 space-y-2.5">
+          <div class="grid grid-cols-3 gap-4">
+            <div class="col-span-2 space-y-3.5">
               <div>
-                <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Property Address</span>
-                <p class="font-semibold text-slate-800 mt-0.5 leading-tight">${lead.address}</p>
+                <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-[0.14em]">Property address</span>
+                <p class="text-sm font-medium text-slate-800 mt-1 leading-snug">${lead.address}</p>
               </div>
-              <div class="grid grid-cols-2 gap-2">
+              <div class="grid grid-cols-2 gap-3">
                 <div>
-                  <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Color Selection</span>
-                  <p class="font-semibold text-slate-800 mt-0.5 flex items-center gap-1 leading-none">
-                    <span class="h-2 w-2 rounded-full border border-slate-200" style="background-color: ${lead.colorHex || '#f8fafc'};"></span>
-                    ${lead.color || 'None'}
+                  <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-[0.14em]">Color</span>
+                  <p class="text-xs font-medium text-slate-800 mt-1 flex items-center gap-1.5">
+                    <span class="h-3 w-3 rounded-full ring-1 ring-slate-300 shrink-0" style="background-color: ${lead.colorHex || '#f8fafc'};"></span>
+                    <span class="truncate">${lead.color || 'None'}</span>
                   </p>
                 </div>
                 <div>
-                  <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Timeline</span>
-                  <p class="font-semibold text-slate-800 mt-0.5 leading-none">${lead.timeline}</p>
+                  <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-[0.14em]">Timeline</span>
+                  <p class="text-xs font-medium text-slate-800 mt-1">${lead.timeline}</p>
                 </div>
               </div>
             </div>
-            <div class="h-24 bg-slate-100 border border-slate-200/50 rounded-xl overflow-hidden shadow-inner">
-              <img class="h-full w-full object-cover" src="${lead.photo}" alt="House view">
+            <div class="aspect-square bg-slate-100 ring-1 ring-slate-200/60 rounded-xl overflow-hidden">
+              <img class="h-full w-full object-cover" src="${lead.photo}" alt="Property photo">
             </div>
           </div>
 
-          <div class="border-t border-slate-100 pt-4 space-y-3">
-            <!-- Voice action -->
+          <div class="border-t border-slate-100 pt-4 space-y-2.5">
             ${voiceAgentButton}
-            <!-- Dispatch Action -->
             ${dispatchButton}
           </div>
 
@@ -615,7 +652,7 @@
       const lead = leadsData.find(l => String(l.id) === String(id));
       if (!lead) return;
 
-      document.getElementById('voice-modal-target-number').textContent = `Dail Target: ${lead.phone}`;
+      document.getElementById('voice-modal-target-number').textContent = `Dial target: ${lead.phone}`;
       
       const logBody = document.getElementById('voice-call-log');
       logBody.innerHTML = `
