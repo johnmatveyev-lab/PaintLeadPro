@@ -1,5 +1,19 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+/**
+ * analyze-surface.js — AI siding/surface analysis for the Paint Visualizer.
+ *
+ * MIGRATED: Google Gemini → NVIDIA NIM (build.nvidia.com).
+ *   - Endpoint: https://integrate.api.nvidia.com/v1/chat/completions (OpenAI-compatible)
+ *   - Model: nvidia/nemotron-3-nano-omni-30b-a3b-reasoning (multimodal — image input)
+ *   - Env: NVIDIA_API_KEY replaces GEMINI_API_KEY
+ *   - Dependency @google/generative-ai removed (plain fetch, zero deps)
+ *
+ * Response contract is unchanged: { success, mode, prepNotes, gallonsEstimate,
+ * primerRecommended, suggestedCoats }.
+ */
 import { applyCors, requireMethod, rateLimit, cleanString, validateImageInput, isConfigured } from './_utils.js';
+
+const NIM_URL = 'https://integrate.api.nvidia.com/v1/chat/completions';
+const NIM_VISION_MODEL = 'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning';
 
 export default async function handler(req, res) {
   if (applyCors(req, res)) return;
@@ -14,13 +28,12 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: imageCheck.error });
   }
 
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = process.env.NVIDIA_API_KEY;
 
   // Fallback to Mock response if API key is not configured or is a placeholder
   if (!isConfigured(apiKey)) {
-    console.log("GEMINI_API_KEY not found or is a placeholder. Returning mock analysis report.");
-    
-    // Simulate a slight database search delay
+    console.log('NVIDIA_API_KEY not found or is a placeholder. Returning mock analysis report.');
+
     await new Promise((resolve) => setTimeout(resolve, 800));
 
     return res.status(200).json({
@@ -55,33 +68,52 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Empty image payload' });
     }
 
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ 
-      model: 'gemini-2.5-flash-lite',
-      generationConfig: { responseMimeType: 'application/json' }
+    const prompt = `Analyze this residential surface image for a repaint estimate in ${color || 'neutral'} color.
+Output a structured JSON object strictly with the following keys and nothing else:
+- prepNotes: detailed string summarizing wall condition and scraping/washing prep work needed.
+- gallonsEstimate: string range of estimated paint gallons needed.
+- primerRecommended: string name of Sherwin-Williams primer needed.
+- suggestedCoats: integer number of topcoats (default 2).
+Respond with raw JSON only — no markdown fences, no commentary.`;
+
+    const nimRes = await fetch(NIM_URL, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: NIM_VISION_MODEL,
+        messages: [
+          {
+            role: 'user',
+            content: [
+              { type: 'text', text: prompt },
+              { type: 'image_url', image_url: { url: `data:${mimeType};base64,${base64Data}` } }
+            ]
+          }
+        ],
+        max_tokens: 1024,
+        temperature: 0.2,
+        // Nano Omni reasons by default; the estimator wants fast structured output.
+        chat_template_kwargs: { enable_thinking: false }
+      })
     });
 
-    const prompt = `Analyze this residential surface image for a repaint estimate in ${color || 'neutral'} color. 
-    Output a structured JSON strictly with the following keys:
-    - prepNotes: detailed string summarizing wall condition and scraping/washing prep work needed.
-    - gallonsEstimate: string range of estimated paint gallons needed.
-    - primerRecommended: string name of Sherwin-Williams primer needed.
-    - suggestedCoats: integer number of topcoats (default 2).`;
+    if (!nimRes.ok) {
+      const detail = await nimRes.text().catch(() => '');
+      console.error('NIM API error:', nimRes.status, detail.slice(0, 300));
+      return res.status(502).json({ error: 'Failed to analyze surface image. Please try again.' });
+    }
 
-    const result = await model.generateContent([
-      prompt,
-      {
-        inlineData: {
-          data: base64Data,
-          mimeType
-        }
-      }
-    ]);
+    const data = await nimRes.json();
+    const responseText = data?.choices?.[0]?.message?.content || '';
 
-    const responseText = result.response.text();
-    
-    // Sanitize JSON markers if returned
+    // Sanitize JSON markers if returned, then extract the JSON object.
     let cleanJson = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
+    const start = cleanJson.indexOf('{');
+    const end = cleanJson.lastIndexOf('}');
+    if (start >= 0 && end > start) cleanJson = cleanJson.slice(start, end + 1);
     const analysis = JSON.parse(cleanJson);
 
     return res.status(200).json({
@@ -91,7 +123,7 @@ export default async function handler(req, res) {
     });
 
   } catch (error) {
-    console.error("Gemini API call failed: ", error);
+    console.error('NIM API call failed: ', error);
     return res.status(502).json({
       error: 'Failed to analyze surface image. Please try again.'
     });
